@@ -39,4 +39,18 @@ class Contract < ActiveRecord::Base
       errors.add :end_date, :greater_than_start_date
     end
   end
+
+  if Rails.env.test?
+    generator_for :name, :method => :next_name
+    generator_for :executed => true
+    generator_for(:start_date) { Date.yesterday }
+    generator_for(:end_date) { Date.tomorrow }
+
+    def self.next_name
+      @last_name ||= 'Contract 0000'
+      @last_name.succ!
+    end
+
+  end
+  
 end
