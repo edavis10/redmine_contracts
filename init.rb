@@ -24,7 +24,11 @@ end
 
 require 'dispatcher'
 Dispatcher.to_prepare :redmine_contracts do
+
   gem 'inherited_resources', :version => '1.0.6'
   require_dependency 'inherited_resources'
   require_dependency 'inherited_resources/base'
+
+  require_dependency 'project'
+  Project.send(:include, RedmineContracts::Patches::ProjectPatch)
 end
