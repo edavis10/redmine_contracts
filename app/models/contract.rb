@@ -29,6 +29,10 @@ class Contract < ActiveRecord::Base
   attr_accessible :po_number
   attr_accessible :details
 
+  def after_initialize
+    self.executed = false unless self.executed.present?
+  end
+
   def start_and_end_date_are_valid
     if start_date && end_date && end_date < start_date
       errors.add :end_date, :greater_than_start_date

@@ -26,6 +26,11 @@ class ContractTest < ActiveSupport::TestCase
   end
 
   should "QUESTION: name be unique"
-  should "default executed to false"
+
+  should "default executed to false" do
+    @contract = Contract.new
+    
+    assert_equal false, @contract.executed
+  end
   
 end
