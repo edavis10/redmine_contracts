@@ -12,7 +12,6 @@ class Contract < ActiveRecord::Base
   validates_presence_of :project
   validates_presence_of :start_date
   validates_presence_of :end_date
-  validates_presence_of :executed
   validates_inclusion_of :discount_type, :in => %w($ %), :allow_blank => true, :allow_nil => true
   validate :start_and_end_date_are_valid
 

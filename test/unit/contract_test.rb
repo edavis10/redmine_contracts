@@ -10,7 +10,6 @@ class ContractTest < ActiveSupport::TestCase
   should_validate_presence_of :project
   should_validate_presence_of :start_date
   should_validate_presence_of :end_date
-  should_validate_presence_of :executed
 
   should_not_allow_mass_assignment_of :project_id, :project, :discount_type
   
