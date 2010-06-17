@@ -1,1 +1,25 @@
-Yay!
+<% if collection.empty? %>
+<p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+<table class="list" cellspacing="0" border="0" cellpadding="0" id="contracts">
+  <thead>
+    <th><%= l(:field_id) %></th>
+    <th><%= l(:field_name) %></th>
+    <%# TODO: Status %>
+    <%# TODO: Type %>
+    <th><%= l(:field_account_executive_short) %></th>
+    <%# TODO: Total Budget %>
+    <th><%= l(:field_end_date) %></th>
+  </thead>
+  <tbody>
+    <% collection.each do |contract| %>
+      <% content_tag_for(:tr, contract) do %>
+        <td><%= h contract.id %></td>
+        <td><%= h contract.name %></td>
+        <td><%= h contract.account_executive.name %></td>
+        <td><%= h format_date(contract.end_date) %></td>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

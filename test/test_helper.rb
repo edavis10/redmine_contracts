@@ -31,6 +31,14 @@ module IntegrationTestHelper
     assert_response :success
   end
 
+  def visit_contracts_for_project(project)
+    visit_project(project)
+    click_link "Contracts"
+
+    assert_response :success
+    assert_template 'contracts/index'
+  end
+
   def assert_forbidden
     assert_response :forbidden
     assert_template 'common/403'

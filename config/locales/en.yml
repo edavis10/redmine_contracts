@@ -2,4 +2,8 @@ en:
   field_end_date: End Date
   field_executed: Executed
   text_contracts: Contracts
+  field_id: ID
+  field_account_executive: Account Executive
+  field_account_executive_short: "Acct. Mgr."
+  field_end_date: "End Date"
 
