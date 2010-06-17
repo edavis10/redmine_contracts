@@ -4,6 +4,7 @@ class Contract < ActiveRecord::Base
   # Associations
   belongs_to :project
   belongs_to :account_executive, :class_name => 'User', :foreign_key => 'account_executive_id'
+  has_many :deliverables
 
   # Validations
   validates_presence_of :name

@@ -3,6 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 class ContractTest < ActiveSupport::TestCase
   should_belong_to :account_executive
   should_belong_to :project
+  should_have_many :deliverables
 
   should_validate_presence_of :name
   should_validate_presence_of :account_executive
