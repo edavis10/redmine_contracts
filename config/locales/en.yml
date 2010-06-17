@@ -1,3 +1,5 @@
-# English strings go here for Rails i18n
 en:
-  my_label: "My label"
+  field_end_date: End Date
+  field_executed: Executed
+  text_contracts: Contracts
+
