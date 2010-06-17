@@ -14,10 +14,10 @@
   <tbody>
     <% collection.each do |contract| %>
       <% content_tag_for(:tr, contract) do %>
-        <td><%= h contract.id %></td>
-        <td><%= h contract.name %></td>
-        <td><%= h contract.account_executive.name %></td>
-        <td><%= h format_date(contract.end_date) %></td>
+        <td class="id"><%= h contract.id %></td>
+        <td class="name"><%= h contract.name %></td>
+        <td class="account-executive"><%= h contract.account_executive.name %></td>
+        <td class="end-date"><%= h format_date(contract.end_date) %></td>
       <% end %>
     <% end %>
   </tbody>

@@ -6,6 +6,12 @@ class ContractsController < InheritedResources::Base
   before_filter :find_project
   before_filter :authorize
 
+  protected
+
+  def begin_of_association_chain
+    @project
+  end
+  
   private
   
   def find_project
