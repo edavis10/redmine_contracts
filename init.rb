@@ -12,8 +12,14 @@ Redmine::Plugin.register :redmine_contracts do
   requires_redmine_plugin :redmine_rate, :version_or_higher => '0.1.0'
 
   project_module :contracts do
-    permission :manage_budget, {}, :require => :member
+    permission :manage_budget, {:contracts => [:index] }, :public => true
   end
+
+  menu(:project_menu,
+       :contracts,
+       {:controller => 'contracts', :action => 'index'},
+       :caption => :text_contracts,
+       :param => :project_id)
 end
 
 require 'dispatcher'
