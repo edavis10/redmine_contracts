@@ -1,3 +1,31 @@
-= contracts
+= Contracts
 
-Description goes here
+A system to manage the execution of a client contract by separating it into deliverables and milestones.
+
+== Features
+
+TODO: fill in features
+
+== Getting the plugin
+
+A copy of the plugin can be downloaded from {Little Stream Software}[https://projects.littlestreamsoftware.com/projects/redmine-contracts/files] or from {GitHub}[http://github.com/edavis10/redmine_contracts]
+
+
+== Installation and Setup
+
+1. Follow the Redmine plugin installation steps at: http://www.redmine.org/wiki/redmine/Plugins 
+2. Run the plugin migrations +rake db:migrate_plugins+
+3. Restart your Redmine web servers (e.g. mongrel, thin, mod_rails)
+
+== Usage
+
+TODO: Add usage
+
+== License
+
+This plugin is licensed under the GNU GPL v2.  See COPYRIGHT.txt and GPL.txt for details.
+
+== Project help
+
+If you need help you can contact the maintainer at the Bug Tracker.  The bug tracker is located at  https://projects.littlestreamsoftware.com
+
