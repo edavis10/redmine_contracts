@@ -16,8 +16,13 @@ class ContractTest < ActiveSupport::TestCase
   should_allow_values_for :discount_type, "$", "%", nil, ''
   should_not_allow_values_for :discount_type, ["amount", "percent", "bar"]
 
-  context "start_date" do
-    should "be before end_date"
+  context "end_date" do
+    should "be after start_date" do
+      @contract = Contract.new(:start_date => Date.today, :end_date => Date.yesterday)
+
+      assert @contract.invalid?
+      assert_equal "must be greater than start date", @contract.errors.on(:end_date)
+    end
   end
 
   should "QUESTION: name be unique"

@@ -13,6 +13,7 @@ class Contract < ActiveRecord::Base
   validates_presence_of :end_date
   validates_presence_of :executed
   validates_inclusion_of :discount_type, :in => %w($ %), :allow_blank => true, :allow_nil => true
+  validate :start_and_end_date_are_valid
 
   # Accessors
   attr_accessible :name
@@ -28,4 +29,9 @@ class Contract < ActiveRecord::Base
   attr_accessible :po_number
   attr_accessible :details
 
+  def start_and_end_date_are_valid
+    if start_date && end_date && end_date < start_date
+      errors.add :end_date, :greater_than_start_date
+    end
+  end
 end
