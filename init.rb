@@ -11,3 +11,10 @@ Redmine::Plugin.register :redmine_contracts do
   requires_redmine :version_or_higher => '0.9.0'
   requires_redmine_plugin :redmine_rate, :version_or_higher => '0.1.0'
 end
+
+require 'dispatcher'
+Dispatcher.to_prepare :redmine_contracts do
+  gem 'inherited_resources', :version => '1.0.6'
+  require_dependency 'inherited_resources'
+  require_dependency 'inherited_resources/base'
+end
