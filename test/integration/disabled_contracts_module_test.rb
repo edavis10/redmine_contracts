@@ -15,22 +15,14 @@ class DisabledContractsModuleTest < ActionController::IntegrationTest
     end
     
     should "block access to list" do
-      visit '/'
-      assert_response :success
-
-      click_link 'Projects'
-      assert_response :success
-
-      click_link @project.name
-      assert_response :success
-
+      visit_project(@project)
+      
       assert_select "#main-menu" do
         assert_select 'a', :text => /contracts/i, :count => 0
       end
 
       visit "/projects/#{@project.identifier}/contracts"
-      assert_response :forbidden
-      assert_template 'common/403'
+      assert_forbidden
     end
   end
 

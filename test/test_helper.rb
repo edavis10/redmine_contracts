@@ -20,6 +20,22 @@ module IntegrationTestHelper
     assert User.current.logged?
   end
 
+  def visit_project(project)
+    visit '/'
+    assert_response :success
+
+    click_link 'Projects'
+    assert_response :success
+
+    click_link project.name
+    assert_response :success
+  end
+
+  def assert_forbidden
+    assert_response :forbidden
+    assert_template 'common/403'
+  end
+  
 end
 
 class ActionController::IntegrationTest
