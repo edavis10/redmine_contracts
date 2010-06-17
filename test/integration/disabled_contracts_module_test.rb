@@ -13,17 +13,35 @@ class DisabledContractsModuleTest < ActionController::IntegrationTest
       @project.reload
       assert !@project.module_enabled?(:contracts), "Contracts enabled on project"
     end
-    
-    should "block access to list" do
+
+    should "not show the menu item" do
       visit_project(@project)
       
       assert_select "#main-menu" do
         assert_select 'a', :text => /contracts/i, :count => 0
       end
-
+    end
+    
+    should "block access to list" do
       visit "/projects/#{@project.identifier}/contracts"
       assert_forbidden
     end
+
+    should "block access to new" do
+      visit "/projects/#{@project.identifier}/contracts/new"
+      assert_forbidden
+    end
+
+    should "block access to show" do
+      visit "/projects/#{@project.identifier}/contracts/1"
+      assert_forbidden
+    end
+
+    should "block access to edit" do
+      visit "/projects/#{@project.identifier}/contracts/1/edit"
+      assert_forbidden
+    end
+
   end
 
 end
