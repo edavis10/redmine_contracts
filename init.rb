@@ -7,5 +7,7 @@ Redmine::Plugin.register :redmine_contracts do
   url 'https://projects.littlestreamsoftware.com/projects/redmine-contracts'
   author_url 'http://www.littlestreamsoftware.com'
   version '0.1.0'
+
   requires_redmine :version_or_higher => '0.9.0'
+  requires_redmine_plugin :redmine_rate, :version_or_higher => '0.1.0'
 end

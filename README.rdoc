@@ -14,8 +14,10 @@ A copy of the plugin can be downloaded from {Little Stream Software}[https://pro
 == Installation and Setup
 
 1. Follow the Redmine plugin installation steps at: http://www.redmine.org/wiki/redmine/Plugins 
-2. Run the plugin migrations +rake db:migrate_plugins+
-3. Restart your Redmine web servers (e.g. mongrel, thin, mod_rails)
+2. Install the Redmine Rate plugin
+3. Configure the Redmine Rate plugin to be loaded before this plugin (config.plugins = [ :redmine_rate, :all ] )
+4. Run the plugin migrations +rake db:migrate_plugins+
+5. Restart your Redmine web servers (e.g. mongrel, thin, mod_rails)
 
 == Usage
 
