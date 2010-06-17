@@ -10,6 +10,10 @@ Redmine::Plugin.register :redmine_contracts do
 
   requires_redmine :version_or_higher => '0.9.0'
   requires_redmine_plugin :redmine_rate, :version_or_higher => '0.1.0'
+
+  project_module :contracts do
+    permission :manage_budget, {}, :require => :member
+  end
 end
 
 require 'dispatcher'
