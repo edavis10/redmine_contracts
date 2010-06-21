@@ -16,3 +16,7 @@ en:
   field_client_ap_contact_information: "AP Contact Info"
   field_po_number: "PO Number"
   field_details: "Details"
+  text_payment_terms_net_0: "Net 0"
+  text_payment_terms_net_15: "Net 15"
+  text_payment_terms_net_30: "Net 30"
+  text_payment_terms_net_45: "Net 45"

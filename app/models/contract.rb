@@ -29,6 +29,19 @@ class Contract < ActiveRecord::Base
   attr_accessible :po_number
   attr_accessible :details
 
+  PaymentTerms = {
+    :net_0 => :text_payment_terms_net_0,
+    :net_15 => :text_payment_terms_net_15,
+    :net_30 => :text_payment_terms_net_30,
+    :net_45 => :text_payment_terms_net_45
+  }
+
+  def payment_terms_for_select
+    PaymentTerms.collect {|value, label|
+      [l(label), value]
+    }
+  end
+  
   def after_initialize
     self.executed = false unless self.executed.present?
   end

@@ -13,7 +13,7 @@
   <%= form.input :billable_rate, :input_html => {:size => 20}, :hint => l(:field_billable_rate_hint) %>
   <%= form.input :discount, :input_html => {:size => 20}, :hint => l(:field_discount_hint) %>
   <%= form.input :discount_note, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
-  <%= form.input :payment_terms %> <%# TODO: select %>
+  <%= form.input :payment_terms, :as => :select, :collection => resource.payment_terms_for_select %>
   <%= form.input :client_ap_contact_information, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
   <%= form.input :po_number %>
   <%= form.input :details, :input_html => {:class => 'wiki-edit'} %>
