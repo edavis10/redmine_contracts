@@ -1,0 +1,17 @@
+/* Modification of Redmine's tabular forms to support formtastic */
+.tabular li{
+margin: 0;
+padding: 5px 0 8px 0;
+padding-left: 180px; /*width of left column containing the label elements*/
+height: 1%;
+clear:left;
+list-style: none;
+}
+
+html>body .tabular li {overflow:hidden;}
+
+.tabular .inline-hints { color:#666; margin:0.5em 0 0 0; padding: 0px; display: inline; }
+
+.tabular li.required label { color: #000000; }
+.tabular li.required label span.required {color: #bb0000;}
+

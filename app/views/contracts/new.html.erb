@@ -1,0 +1,34 @@
+<%= content_tag(:h2, l(:text_new_contract)) %>
+
+<% semantic_form_for resource, :html => {:class => 'tabular'} do |form| %>
+<% form.inputs do %>
+  <%= form.input :name, :required => true %>
+  <%= form.input :account_executive, :required => true %>
+  <li class="boolean optional">
+    <%= label('contract', 'executed') %>
+    <%= check_box 'contract', 'executed' %>
+  </li>
+  <%= form.input :start_date, :required => true, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('contract_start_date') %>
+  <%= form.input :end_date, :required => true, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('contract_end_date') %>
+  <%= form.input :billable_rate, :input_html => {:size => 20}, :hint => l(:field_billable_rate_hint) %>
+  <%= form.input :discount, :input_html => {:size => 20}, :hint => l(:field_discount_hint) %>
+  <%= form.input :discount_note, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
+  <%= form.input :payment_terms %> <%# TODO: select %>
+  <%= form.input :client_ap_contact_information, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
+  <%= form.input :po_number %>
+  <%= form.input :details, :input_html => {:class => 'wiki-edit'} %>
+<% end %>
+<% form.buttons do %>
+  <%= form.commit_button %>
+  <%= link_to(l(:button_cancel), contracts_path) %>
+<% end %>
+<% end %>
+
+<%= wikitoolbar_for 'contract_discount_note' %>
+<%= wikitoolbar_for 'contract_client_ap_contact_information' %>
+<%= wikitoolbar_for 'contract_details' %>
+
+
+<% content_for(:header_tags) do %>
+  <%= stylesheet_link_tag "redmine_contracts", :plugin => "redmine_contracts", :media => "screen" %>
+<% end %>

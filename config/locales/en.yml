@@ -6,4 +6,13 @@ en:
   field_account_executive: Account Executive
   field_account_executive_short: "Acct. Mgr."
   field_end_date: "End Date"
-
+  text_new_contract: "New Contract"
+  field_billable_rate: "Billable Rate"
+  field_billable_rate_hint: "$"
+  field_discount: "Discount"
+  field_discount_hint: "$, %"
+  field_discount_note: "Discounts Notes"
+  field_payment_terms: "Payment Terms"
+  field_client_ap_contact_information: "AP Contact Info"
+  field_po_number: "PO Number"
+  field_details: "Details"
