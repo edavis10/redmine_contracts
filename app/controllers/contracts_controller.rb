@@ -5,6 +5,7 @@ class ContractsController < InheritedResources::Base
 
   before_filter :find_project
   before_filter :authorize
+  before_filter :require_admin, :only => :destroy
 
   def create
     create! { contract_url(@project, resource) }

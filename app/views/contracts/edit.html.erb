@@ -1,3 +1,9 @@
+<% if User.current.admin? %>
+<div class="contextual">
+  <%= link_to(l(:button_delete), contract_path(@project, resource), :method => :delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del contract-delete') %>
+</div>
+<% end %>
+
 <%= content_tag(:h2, h(resource.name)) %>
 
 <% semantic_form_for resource, :url => contract_path(@project, resource), :html => {:class => 'tabular'} do |form| %>
