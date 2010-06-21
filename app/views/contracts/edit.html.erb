@@ -1,6 +1,6 @@
-<%= content_tag(:h2, l(:text_new_contract)) %>
+<%= content_tag(:h2, h(resource.name)) %>
 
-<% semantic_form_for resource, :html => {:class => 'tabular'} do |form| %>
+<% semantic_form_for resource, :url => contract_path(@project, resource), :html => {:class => 'tabular'} do |form| %>
 <%= render :partial => 'form', :object => form %>
 <% end %>
 

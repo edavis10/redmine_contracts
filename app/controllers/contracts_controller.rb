@@ -9,7 +9,11 @@ class ContractsController < InheritedResources::Base
   def create
     create! { contract_url(@project, resource) }
   end
-  
+
+  def update
+    update! { contract_url(@project, resource) }
+  end
+
   protected
 
   def begin_of_association_chain

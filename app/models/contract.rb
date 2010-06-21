@@ -38,7 +38,7 @@ class Contract < ActiveRecord::Base
 
   def payment_terms_for_select
     PaymentTerms.collect {|value, label|
-      [l(label), value]
+      [l(label), value.to_s]
     }
   end
   

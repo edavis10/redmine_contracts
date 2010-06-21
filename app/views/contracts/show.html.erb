@@ -13,3 +13,5 @@
   <%= content_tag(:p, h(resource.po_number)) %>
   <%= content_tag(:p, h(resource.details)) %>
 <% end %>
+
+<%= link_to(l(:button_update), edit_contract_path(@project, resource)) %>
