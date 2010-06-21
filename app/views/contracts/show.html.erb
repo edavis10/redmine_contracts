@@ -1,1 +1,15 @@
-
+<%# TODO: Need skinning %>
+<% div_for(resource) do %>
+  <%= content_tag(:h2, h(resource.name)) %>
+  <%= content_tag(:p, h(resource.account_executive)) %>
+  <%= content_tag(:p, h(resource.executed)) %>
+  <%= content_tag(:p, format_date(resource.start_date)) %>
+  <%= content_tag(:p, format_date(resource.end_date)) %>
+  <%= content_tag(:p, h(resource.billable_rate)) %>
+  <%= content_tag(:p, h(resource.discount)) %>
+  <%= content_tag(:p, h(resource.discount_note)) %>
+  <%= content_tag(:p, h(resource.payment_terms)) %>
+  <%= content_tag(:p, h(resource.client_ap_contact_information)) %>
+  <%= content_tag(:p, h(resource.po_number)) %>
+  <%= content_tag(:p, h(resource.details)) %>
+<% end %>
