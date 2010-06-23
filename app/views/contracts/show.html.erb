@@ -15,3 +15,5 @@
 <% end %>
 
 <%= link_to(l(:button_update), edit_contract_path(@project, resource)) %>
+
+<%= link_to(l(:button_add_new), new_contract_deliverable_path(@project, resource), :id => 'new-deliverable') %>

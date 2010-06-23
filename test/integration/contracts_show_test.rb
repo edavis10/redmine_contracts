@@ -20,5 +20,17 @@ class ContractsShowTest < ActionController::IntegrationTest
     end
   end
 
+  should "have a link to create a new deliverable" do
+    visit_contracts_for_project(@project)
+    click_link @contract.id
+    assert_response :success
+
+    assert_select "a#new-deliverable", :text => /Add New/
+    click_link "Add New"
+    assert_response :success
+    assert_template 'deliverables/new'
+    assert_equal "/projects/main/contracts/#{@contract.id}/deliverables/new", current_url
+  end
+
   should "show a list of deliverables for the contract"
 end
