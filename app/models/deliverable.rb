@@ -8,4 +8,8 @@ class Deliverable < ActiveRecord::Base
   # Validations
 
   # Accessors
+
+  def short_type
+    ''
+  end
 end

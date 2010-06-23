@@ -17,3 +17,35 @@
 <%= link_to(l(:button_update), edit_contract_path(@project, resource)) %>
 
 <%= link_to(l(:button_add_new), new_contract_deliverable_path(@project, resource), :id => 'new-deliverable') %>
+
+<% if resource.deliverables.empty? %>
+<p class="nodata"><%= l(:label_no_data) %></p>
+<% else %>
+<table class="list" cellspacing="0" border="0" cellpadding="0" id="deliverables">
+  <thead>
+    <th><%= l(:field_end_date) %></th>
+    <th>&nbsp;</th>
+    <th><%= l(:field_title) %></th>
+    <%# TODO: Status %>
+    <th><%= l(:field_manager) %></th>
+    <th><%= l(:field_labor) %></th>
+    <th><%= l(:field_overhead) %></th>
+    <th><%= l(:field_fixed) %></th>
+  </thead>
+  <tbody>
+    <% resource.deliverables.each do |deliverable| %>
+      <% content_tag_for(:tr, deliverable) do %>
+        <td class="end-date"><%= h format_date(deliverable.end_date) %></td>
+        <td class="type"><%= h deliverable.short_type %></td>
+        <td class="title"><%= h deliverable.title %></td>
+        <%# TODO: Status %>
+        <td class="manager"><%= h deliverable.manager.try(:name) %></td>
+        <%# TODO: deliverable calculations %>
+        <td class="labor">---</td>
+        <td class="overhead">---</td>
+        <td class="fixed">---</td>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

@@ -23,4 +23,7 @@ en:
   button_add_new: Add New
   text_new_deliverable: New Deliverable
   field_manager: Manager
+  field_labor: Labor
+  field_overhead: Overhead
+  field_fixed: Fixed
 

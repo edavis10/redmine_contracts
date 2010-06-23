@@ -6,4 +6,8 @@ class FixedDeliverable < Deliverable
   # Validations
 
   # Accessors
+
+  def short_type
+    'F'
+  end
 end

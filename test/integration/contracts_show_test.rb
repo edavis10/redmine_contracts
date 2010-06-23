@@ -32,5 +32,21 @@ class ContractsShowTest < ActionController::IntegrationTest
     assert_equal "/projects/main/contracts/#{@contract.id}/deliverables/new", current_url
   end
 
-  should "show a list of deliverables for the contract"
+  should "show a list of deliverables for the contract" do
+    @manager = User.generate!
+
+    @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
+    @deliverable2 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
+    visit_contract_page(@contract)
+
+    assert_select "table#deliverables" do
+      [@deliverable1, @deliverable2].each do |deliverable|
+        assert_select "td.end-date", :text => /#{format_date(deliverable.end_date)}/
+        assert_select "td.type", :text => "F"
+        assert_select "td.title", :text => /#{deliverable.title}/
+        assert_select "td.manager", :text => /#{deliverable.manager.name}/
+      end
+    end
+
+  end
 end
