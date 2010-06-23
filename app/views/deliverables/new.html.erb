@@ -1,1 +1,9 @@
+<%= content_tag(:h2, l(:text_new_deliverable)) %>
 
+<% semantic_form_for [@project, @contract, resource], :url => contract_deliverables_path(@project, @contract), :html => {:class => 'tabular'} do |form| %>
+<%= render :partial => 'form', :object => form, :locals => {:cancel_path => contract_path(@project, @contract)} %>
+<% end %>
+
+<% content_for(:header_tags) do %>
+  <%= stylesheet_link_tag "redmine_contracts", :plugin => "redmine_contracts", :media => "screen" %>
+<% end %>

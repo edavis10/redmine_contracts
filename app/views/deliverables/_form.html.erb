@@ -1,0 +1,14 @@
+<% form.inputs do %>
+  <%= form.input :title, :required => true %>
+  <%= form.input :type, :required => true, :as => :select, :collection => [["Fixed", "fixed"]] %>
+  <%= form.input :manager %>
+  <%= form.input :start_date, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('deliverable_start_date') %>
+  <%= form.input :end_date, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('deliverable_end_date') %>
+  <%= form.input :notes, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
+<% end %>
+<% form.buttons do %>
+  <%= form.commit_button %>
+  <%= link_to(l(:button_cancel), cancel_path) %>
+<% end %>
+
+<%= wikitoolbar_for 'deliverable_notes' %>

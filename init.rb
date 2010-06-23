@@ -14,7 +14,10 @@ Redmine::Plugin.register :redmine_contracts do
   requires_redmine_plugin :redmine_rate, :version_or_higher => '0.1.0'
 
   project_module :contracts do
-    permission :manage_budget, {:contracts => [:index, :new, :create, :show, :edit, :update, :destroy] }, :public => true
+    permission(:manage_budget, {
+                 :contracts => [:index, :new, :create, :show, :edit, :update, :destroy],
+                 :deliverables => [:new, :create]
+               }, :public => true)
   end
 
   menu(:project_menu,
