@@ -16,7 +16,7 @@ Redmine::Plugin.register :redmine_contracts do
   project_module :contracts do
     permission(:manage_budget, {
                  :contracts => [:index, :new, :create, :show, :edit, :update, :destroy],
-                 :deliverables => [:new, :create, :destroy]
+                 :deliverables => [:index, :new, :create, :show, :destroy]
                }, :public => true)
   end
 

@@ -6,10 +6,18 @@ class DeliverablesController < InheritedResources::Base
   before_filter :find_contract
   before_filter :authorize
 
+  def index
+    redirect_to contract_url(@project, @contract)
+  end
+
   def create
     @deliverable = begin_of_association_chain.deliverables.build(params[:deliverable])
     @deliverable.type = 'FixedDeliverable'
     create! { contract_url(@project, @contract) }
+  end
+
+  def show
+    redirect_to contract_url(@project, @contract)
   end
 
   def destroy
