@@ -7,7 +7,8 @@ class DeliverablesController < InheritedResources::Base
   before_filter :authorize
 
   def create
-    @deliverable = FixedDeliverable.new(params[:deliverable])
+    @deliverable = begin_of_association_chain.deliverables.build(params[:deliverable])
+    @deliverable.type = 'FixedDeliverable'
     create! { contract_url(@project, @contract) }
   end
 

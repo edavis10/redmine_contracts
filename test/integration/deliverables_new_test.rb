@@ -38,6 +38,7 @@ class DeliverablesNewTest < ActionController::IntegrationTest
 
     @deliverable = Deliverable.last
     assert_equal "A New Deliverable", @deliverable.title
+    assert_equal @contract, @deliverable.contract
     assert_equal "FixedDeliverable", @deliverable.type
     assert_equal '2010-01-01', @deliverable.start_date.to_s
     assert_equal '2010-12-31', @deliverable.end_date.to_s
