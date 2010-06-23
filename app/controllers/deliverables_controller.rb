@@ -12,6 +12,10 @@ class DeliverablesController < InheritedResources::Base
     create! { contract_url(@project, @contract) }
   end
 
+  def destroy
+    destroy! { contract_url(@project, @contract) }
+  end
+
   protected
 
   def begin_of_association_chain
