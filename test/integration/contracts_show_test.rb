@@ -19,4 +19,6 @@ class ContractsShowTest < ActionController::IntegrationTest
       assert_select 'h2', :text => @contract.name
     end
   end
+
+  should "show a list of deliverables for the contract"
 end
