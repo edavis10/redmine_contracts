@@ -5,7 +5,7 @@ class CreateDeliverables < ActiveRecord::Migration
       t.string :type
       t.date :start_date
       t.date :end_date
-      t.notes :text
+      t.text :notes
       t.boolean :feature_sign_off
       t.boolean :warranty_sign_off
       t.integer :manager_id # User
