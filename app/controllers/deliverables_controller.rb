@@ -16,6 +16,12 @@ class DeliverablesController < InheritedResources::Base
     create! { contract_url(@project, @contract) }
   end
 
+  def update
+    @deliverable = begin_of_association_chain.deliverables.find_by_id(params[:id])
+    @deliverable.attributes = params[:fixed_deliverable] # TODO: hardcoded
+    update! { contract_url(@project, @contract) }
+  end
+
   def show
     redirect_to contract_url(@project, @contract)
   end

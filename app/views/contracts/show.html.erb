@@ -31,7 +31,7 @@
     <th><%= l(:field_labor) %></th>
     <th><%= l(:field_overhead) %></th>
     <th><%= l(:field_fixed) %></th>
-    <th>&nbsp;</th>
+    <th><%= l(:button_edit) %></th>
     <th><%= l(:button_delete) %></th>
   </thead>
   <tbody>
@@ -46,7 +46,7 @@
         <td class="labor">---</td>
         <td class="overhead">---</td>
         <td class="fixed">---</td>
-        <td>&nbsp;</td>
+        <td><%= link_to(l(:button_edit), edit_contract_deliverable_path(@project, resource, deliverable), :class => 'icon icon-edit') %></td>
         <td><%= link_to(l(:button_delete), contract_deliverable_path(@project, resource, deliverable), :method => :delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del') %></td>
 
       <% end %>
