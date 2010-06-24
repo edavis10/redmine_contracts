@@ -31,7 +31,7 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     fill_in "End Date", :with => '2010-12-31'
     fill_in "Notes", :with => 'Some notes on the deliverable'
 
-    click_button "Create Deliverable"
+    click_button "Save"
 
     assert_response :success
     assert_template 'contracts/show'
