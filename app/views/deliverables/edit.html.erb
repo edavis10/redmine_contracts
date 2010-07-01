@@ -1,7 +1,7 @@
 <%= content_tag(:h2, h(resource.title)) %>
 
 <% semantic_form_for [@project, @contract, resource], :url => contract_deliverable_path(@project, @contract, resource), :html => {:class => 'tabular'} do |form| %>
-<%= render :partial => 'form', :object => form, :locals => {:cancel_path => contract_path(@project, resource)} %>
+<%= render :partial => 'form', :object => form, :locals => {:cancel_path => contract_path(@project, @contract)} %>
 <% end %>
 
 <% content_for(:header_tags) do %>
