@@ -37,12 +37,19 @@ class ContractsShowTest < ActionController::IntegrationTest
 
     @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
     @deliverable2 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
+    @deliverable3 = HourlyDeliverable.generate!(:contract => @contract, :manager => @manager)
     visit_contract_page(@contract)
 
     assert_select "table#deliverables" do
       [@deliverable1, @deliverable2].each do |deliverable|
         assert_select "td.end-date", :text => /#{format_date(deliverable.end_date)}/
         assert_select "td.type", :text => "F"
+        assert_select "td.title", :text => /#{deliverable.title}/
+        assert_select "td.manager", :text => /#{deliverable.manager.name}/
+      end
+      [@deliverable3].each do |deliverable|
+        assert_select "td.end-date", :text => /#{format_date(deliverable.end_date)}/
+        assert_select "td.type", :text => "H"
         assert_select "td.title", :text => /#{deliverable.title}/
         assert_select "td.manager", :text => /#{deliverable.manager.name}/
       end

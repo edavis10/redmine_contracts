@@ -12,13 +12,16 @@ class DeliverablesController < InheritedResources::Base
 
   def create
     @deliverable = begin_of_association_chain.deliverables.build(params[:deliverable])
-    @deliverable.type = 'FixedDeliverable'
+    if params[:deliverable] && params[:deliverable][:type] && ['FixedDeliverable','HourlyDeliverable'].include?(params[:deliverable][:type])
+      @deliverable.type = params[:deliverable][:type]
+    end
     create! { contract_url(@project, @contract) }
   end
 
   def update
     @deliverable = begin_of_association_chain.deliverables.find_by_id(params[:id])
-    @deliverable.attributes = params[:fixed_deliverable] # TODO: hardcoded
+    params[:deliverable] = params[:fixed_deliverable] || params[:hourly_deliverable]
+    @deliverable.attributes = params[:deliverable]
     update! { contract_url(@project, @contract) }
   end
 
