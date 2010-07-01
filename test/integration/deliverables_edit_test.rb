@@ -22,10 +22,9 @@ class DeliverablesEditTest < ActionController::IntegrationTest
 
     assert_select "form#edit_fixed_deliverable_#{@fixed_deliverable.id}" do
       assert_select "input#fixed_deliverable_title[value=?]", /#{@fixed_deliverable.title}/
-      assert_select "select#fixed_deliverable_type" do
-        assert_select "option[selected=selected][value=FixedDeliverable]"
-      end
     end
+
+    assert_select "select#fixed_deliverable_type", :count => 0 # Not editable
 
     fill_in "Title", :with => 'An updated title'
     check "Feature Sign Off"
@@ -50,10 +49,9 @@ class DeliverablesEditTest < ActionController::IntegrationTest
 
     assert_select "form#edit_hourly_deliverable_#{@hourly_deliverable.id}" do
       assert_select "input#hourly_deliverable_title[value=?]", /#{@hourly_deliverable.title}/
-      assert_select "select#hourly_deliverable_type" do
-        assert_select "option[selected=selected][value=HourlyDeliverable]"
-      end
     end
+
+    assert_select "select#hourly_deliverable_type", :count => 0 # Not editable
 
     fill_in "Title", :with => 'An updated title'
     check "Feature Sign Off"
