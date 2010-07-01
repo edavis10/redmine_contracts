@@ -56,6 +56,7 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     fill_in "Start", :with => '2010-01-01'
     fill_in "End Date", :with => '2010-12-31'
     fill_in "Notes", :with => 'Some notes on the deliverable'
+    fill_in "Total", :with => '1,000.00'
 
     click_button "Save"
 
@@ -69,5 +70,6 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     assert_equal '2010-01-01', @deliverable.start_date.to_s
     assert_equal '2010-12-31', @deliverable.end_date.to_s
     assert_equal @manager, @deliverable.manager
+    assert_equal 1000.0, @deliverable.total.to_f
   end
 end

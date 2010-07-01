@@ -5,6 +5,8 @@
   <%= form.input :start_date, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('deliverable_start_date') %>
   <%= form.input :end_date, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('deliverable_end_date') %>
   <%= form.input :notes, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
+
+  <%= form.input :total, :input_html => {:size => 10} %>
 <% end %>
 <% form.buttons do %>
   <%= form.commit_button :label => l(:button_save) %>

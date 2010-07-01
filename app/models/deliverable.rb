@@ -16,6 +16,14 @@ class Deliverable < ActiveRecord::Base
     ''
   end
 
+  def total=(v)
+    if v.is_a? String
+      write_attribute(:total, v.gsub(/[$ ,]/, ''))
+    else
+      write_attribute(:total, v)
+    end
+  end
+  
   if Rails.env.test?
     generator_for :title, :method => :next_title
 
