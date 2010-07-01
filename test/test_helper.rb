@@ -10,6 +10,10 @@ Webrat.configure do |config|
   config.mode = :rails
 end
 
+def User.add_to_project(user, project, role)
+  Member.generate!(:principal => user, :project => project, :roles => [role])
+end
+
 module IntegrationTestHelper
   def login_as(user="existing", password="existing")
     visit "/login"

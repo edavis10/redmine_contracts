@@ -17,8 +17,34 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     assert_select "form#new_deliverable"
   end
 
+  should "show all members on the project as available managers" do
+    @member1 = User.generate!.reload
+    @member2 = User.generate!.reload
+    @member3 = User.generate!.reload
+    @nonmember1 = User.generate!
+
+    @role = Role.generate!
+    User.add_to_project(@member1, @project, @role)
+    User.add_to_project(@member2, @project, @role)
+    User.add_to_project(@member3, @project, @role)
+
+    visit_contract_page(@contract)
+    click_link 'Add New'
+    assert_response :success
+
+    assert_select "select#deliverable_manager_id" do
+      assert_select "option", :text => @member1.to_s
+      assert_select "option", :text => @member2.to_s
+      assert_select "option", :text => @member3.to_s
+    end
+
+    assert_select "select#deliverable_manager_id option", :text => @nonmember1.to_s, :count => 0
+  end
+
   should "create a new Fixed deliverable" do
     @manager = User.generate!
+    @role = Role.generate!
+    User.add_to_project(@manager, @project, @role)
 
     visit_contract_page(@contract)
     click_link 'Add New'

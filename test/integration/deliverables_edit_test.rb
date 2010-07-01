@@ -7,6 +7,8 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     @project = Project.generate!(:identifier => 'main')
     @contract = Contract.generate!(:project => @project, :name => 'A Contract', :payment_terms => 'net_15')
     @manager = User.generate!
+    @role = Role.generate!
+    User.add_to_project(@manager, @project, @role)
     @deliverable = FixedDeliverable.generate!(:contract => @contract, :manager => @manager, :title => 'The Title')
   end
 
