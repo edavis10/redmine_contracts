@@ -26,12 +26,16 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     end
 
     fill_in "Title", :with => 'An updated title'
+    check "Feature Sign Off"
+    check "Warranty Sign Off"
     click_button "Save"
 
     assert_response :success
     assert_template 'contracts/show'
 
     assert_equal "An updated title", @deliverable.reload.title
+    assert @deliverable.reload.warranty_sign_off?
+    assert @deliverable.reload.feature_sign_off?
 
   end
 end

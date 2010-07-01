@@ -27,3 +27,5 @@ en:
   field_overhead: Overhead
   field_fixed: Fixed
   field_total: Total
+  field_feature_sign_off: Feature Sign Off
+  field_warranty_sign_off: Warranty Sign Off

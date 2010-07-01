@@ -6,6 +6,17 @@
   <%= form.input :end_date, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('deliverable_end_date') %>
   <%= form.input :notes, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
 
+  <% unless resource.new_record? %>
+  <li class="boolean optional">
+    <%= label('deliverable', 'feature_sign_off') %>
+    <%= check_box 'deliverable', 'feature_sign_off' %>
+  </li>
+  <li class="boolean optional">
+    <%= label('deliverable', 'warranty_sign_off') %>
+    <%= check_box 'deliverable', 'warranty_sign_off' %>
+  </li>
+  <% end %>
+
   <%= form.input :total, :input_html => {:size => 10} %>
 <% end %>
 <% form.buttons do %>
