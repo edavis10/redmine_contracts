@@ -55,3 +55,5 @@ Dispatcher.to_prepare :redmine_contracts do
   require_dependency 'project'
   Project.send(:include, RedmineContracts::Patches::ProjectPatch)
 end
+
+require 'redmine_contracts/hooks/view_layouts_base_html_head_hook'
