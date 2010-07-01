@@ -1,7 +1,7 @@
 <% form.inputs do %>
   <%= form.input :title, :required => true %>
   <%= form.input :type, :required => true, :as => :select, :collection => [["Fixed", "FixedDeliverable"]] %>
-  <%= form.input :manager %>
+  <%= form.input :manager, :required => true %>
   <%= form.input :start_date, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('deliverable_start_date') %>
   <%= form.input :end_date, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('deliverable_end_date') %>
   <%= form.input :notes, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
