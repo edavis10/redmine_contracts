@@ -9,6 +9,7 @@ module RedmineContracts
           return stylesheet_link_tag("redmine_contracts", :plugin => "redmine_contracts", :media => "screen") +
 
             javascript_include_tag('jquery-1.4.2.min.js', :plugin => 'redmine_contracts') +
+            javascript_tag('jQuery.noConflict();') +
             javascript_include_tag('contracts.js', :plugin => 'redmine_contracts')
 
         else
