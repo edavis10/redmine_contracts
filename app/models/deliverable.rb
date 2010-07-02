@@ -16,6 +16,10 @@ class Deliverable < ActiveRecord::Base
     ''
   end
 
+  def to_underscore
+    self.class.to_s.underscore
+  end
+
   def total=(v)
     if v.is_a? String
       write_attribute(:total, v.gsub(/[$ ,]/, ''))
