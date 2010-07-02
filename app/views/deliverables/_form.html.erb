@@ -28,4 +28,4 @@
   <%= link_to(l(:button_cancel), cancel_path) %>
 <% end %>
 
-<%= wikitoolbar_for 'deliverable_notes' %>
+<%= wikitoolbar_for resource.class.to_s.underscore + '_notes' %>
