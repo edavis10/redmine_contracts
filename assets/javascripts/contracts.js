@@ -3,9 +3,11 @@ jQuery(function($) {
     var deliverableType = $('select#deliverable_type option:selected').val();
 
     if (deliverableType == 'FixedDeliverable') {
-      $('#deliverable_total').show();
+      $('#deliverable_total_input').show();
     } else {
-      $('#deliverable_total').hide();
+      $('#deliverable_total_input').
+        children('#deliverable_total').val('').end().
+        hide();
     }
   },
 

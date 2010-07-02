@@ -91,9 +91,10 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     fill_in "End Date", :with => '2010-12-31'
     fill_in "Notes", :with => 'Some notes on the deliverable'
 
-    assert js("jQuery('#deliverable_total').is(':hidden')"),
+    # Hide and clear the total
+    assert js("jQuery('#deliverable_total_input').is(':hidden')"),
            "Total is visible when it should be hidden"
-
+    
     click_button "Save"
 
     assert_response :success
@@ -106,6 +107,8 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     assert_equal '2010-01-01', @deliverable.start_date.to_s
     assert_equal '2010-12-31', @deliverable.end_date.to_s
     assert_equal @manager, @deliverable.manager
+    assert_equal nil, @deliverable.total
+
   end
 
 end
