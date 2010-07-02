@@ -10,6 +10,26 @@ Webrat.configure do |config|
   config.mode = :rails
 end
 
+require 'holygrail'
+
+module HolyGrail
+  module Extensions
+    # Need to rewrite the javascript for the engine too
+    def rewrite_script_paths(body)
+      body.
+        gsub(%r%src=("|')/?plugin_assets/redmine_contracts/javascripts/(.*)("|')%) { %|src=#{$1}%s#{$1}"| % Rails.root.join("vendor/plugins/redmine_contracts/assets/javascripts/#{$2}") }.
+        gsub(%r%src=("|')/?javascripts/(.*)("|')%) { %|src=#{$1}%s#{$1}"| % Rails.root.join("public/javascripts/#{$2}") }
+    end
+  end
+end
+
+class ActionController::TestCase
+  include HolyGrail::Extensions
+end
+class ActionController::IntegrationTest
+  include HolyGrail::Extensions
+end
+
 def User.add_to_project(user, project, role)
   Member.generate!(:principal => user, :project => project, :roles => [role])
 end

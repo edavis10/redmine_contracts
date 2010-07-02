@@ -57,6 +57,8 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     fill_in "End Date", :with => '2010-12-31'
     fill_in "Notes", :with => 'Some notes on the deliverable'
     fill_in "Total", :with => '1,000.00'
+    # TODO: webrat can't trigger DOM events so it can't appear
+    # assert js("jQuery('#deliverable_total').is(':visible')"), "Total is hidden when it should be visible"
 
     click_button "Save"
 
@@ -88,6 +90,9 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     fill_in "Start", :with => '2010-01-01'
     fill_in "End Date", :with => '2010-12-31'
     fill_in "Notes", :with => 'Some notes on the deliverable'
+
+    assert js("jQuery('#deliverable_total').is(':hidden')"),
+           "Total is visible when it should be hidden"
 
     click_button "Save"
 

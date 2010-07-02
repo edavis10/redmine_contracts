@@ -1,5 +1,11 @@
 config.gem 'formtastic', :version => '0.9.10'
 
+if Rails.env.test?
+  config.gem "stackdeck"
+  config.gem "johnson", :version => '2.0.0.pre3'
+  config.gem "holygrail"
+end
+
 require 'redmine'
 
 Redmine::Plugin.register :redmine_contracts do
