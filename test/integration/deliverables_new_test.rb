@@ -90,6 +90,7 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     fill_in "Start", :with => '2010-01-01'
     fill_in "End Date", :with => '2010-12-31'
     fill_in "Notes", :with => 'Some notes on the deliverable'
+    fill_in "Total", :with => '1,000.00'
 
     # Hide and clear the total
     assert js("jQuery('#deliverable_total_input').is(':hidden')"),
