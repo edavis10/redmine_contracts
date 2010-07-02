@@ -4,7 +4,8 @@ class Deliverable < ActiveRecord::Base
   # Associations
   belongs_to :contract
   belongs_to :manager, :class_name => 'User', :foreign_key => 'manager_id'
-
+  has_many :labor_expenses
+  
   # Validations
   validates_presence_of :title
   validates_presence_of :type
