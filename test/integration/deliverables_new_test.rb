@@ -112,4 +112,35 @@ class DeliverablesNewTest < ActionController::IntegrationTest
 
   end
 
+  should "create new expenses for the deliverables" do
+    @manager = User.generate!
+    @role = Role.generate!
+    User.add_to_project(@manager, @project, @role)
+
+    visit_contract_page(@contract)
+    click_link 'Add New'
+    assert_response :success
+
+    fill_in "Title", :with => 'A New Deliverable'
+    select "Hourly", :from => "Type"
+    select @manager.name, :from => "Manager"
+    fill_in "Start", :with => '2010-01-01'
+    fill_in "End Date", :with => '2010-12-31'
+    fill_in "Notes", :with => 'Some notes on the deliverable'
+
+    fill_in "hrs", :with => '20'
+    fill_in "$", :with => '$2,000'
+    
+    click_button "Save"
+
+    assert_response :success
+    assert_template 'contracts/show'
+
+    @deliverable = Deliverable.last
+    assert_equal 1, @deliverable.labor_expenses.count
+    @labor_expense = @deliverable.labor_expenses.first
+    assert_equal 20, @labor_expense.hours
+    assert_equal 2000.0, @labor_expense.budget
+  end
+
 end

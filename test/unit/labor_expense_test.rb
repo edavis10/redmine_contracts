@@ -3,10 +3,6 @@ require File.dirname(__FILE__) + '/../test_helper'
 class LaborExpenseTest < ActiveSupport::TestCase
   should_belong_to :deliverable
 
-  should_validate_presence_of :hours
-  should_validate_presence_of :budget
-  should_validate_presence_of :deliverable
-
   context "#budget=" do
     should "strip dollar signs when writing" do
       e = LaborExpense.new

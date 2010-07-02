@@ -59,6 +59,10 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     fill_in "Title", :with => 'An updated title'
     check "Feature Sign Off"
     check "Warranty Sign Off"
+
+    fill_in "hrs", :with => '20'
+    fill_in "$", :with => '$2,000'
+
     click_button "Save"
 
     assert_response :success
@@ -68,6 +72,11 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_equal "HourlyDeliverable", @hourly_deliverable.reload.type
     assert @hourly_deliverable.reload.warranty_sign_off?
     assert @hourly_deliverable.reload.feature_sign_off?
+
+    assert_equal 1, @hourly_deliverable.labor_expenses.count
+    @labor_expense = @hourly_deliverable.labor_expenses.first
+    assert_equal 20, @labor_expense.hours
+    assert_equal 2000.0, @labor_expense.budget
 
   end
 end

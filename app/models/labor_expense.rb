@@ -5,9 +5,6 @@ class LaborExpense < ActiveRecord::Base
   belongs_to :deliverable
 
   # Validations
-  validates_presence_of :hours
-  validates_presence_of :budget
-  validates_presence_of :deliverable
 
   # Accessors
 

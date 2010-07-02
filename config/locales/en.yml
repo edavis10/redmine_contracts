@@ -29,3 +29,6 @@ en:
   field_total: Total
   field_feature_sign_off: Feature Sign Off
   field_warranty_sign_off: Warranty Sign Off
+  text_deliverable_finances: Deliverable Finances
+  text_short_hours: hrs
+  text_dollar_sign: '$'
