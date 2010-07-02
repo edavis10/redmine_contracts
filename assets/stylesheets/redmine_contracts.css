@@ -15,6 +15,7 @@ html>body .tabular li {overflow:hidden;}
 .tabular li.required label { color: #484848; }
 .tabular li.required label span.required {color: #bb0000;}
 
+.tabular li.hidden { height: 0; padding: 0; margin: 0; }
 /* End tabular */
 
 a.contract-delete {color: red; }

@@ -1,6 +1,10 @@
 <% form.inputs do %>
   <%= form.input :title, :required => true %>
-  <%= form.input(:type, :required => true, :as => :select, :collection => [["Fixed", "FixedDeliverable"],["Hourly", "HourlyDeliverable"]], :include_blank => false) if resource.new_record? %>
+  <% if resource.new_record? %>
+    <%= form.input(:type, :required => true, :as => :select, :collection => [["Fixed", "FixedDeliverable"],["Hourly", "HourlyDeliverable"]], :include_blank => false, :input_html => {:class => 'type'}) %>
+  <% else %>
+    <%= form.input :type, :as => :hidden, :class => 'type' %>
+  <% end %>
   <%= form.input :manager, :required => true, :collection => @project.users %>
   <%= form.input :start_date, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('deliverable_start_date') %>
   <%= form.input :end_date, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('deliverable_end_date') %>
@@ -17,7 +21,7 @@
   </li>
   <% end %>
 
-  <%= form.input :total, :input_html => {:size => 10} %>
+  <%= form.input :total, :input_html => {:size => 10}, :wrapper_html => {:class => 'deliverable_total_input'} %>
 <% end %>
 <% form.buttons do %>
   <%= form.commit_button :label => l(:button_save) %>

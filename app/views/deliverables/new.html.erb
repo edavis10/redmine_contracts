@@ -1,5 +1,5 @@
 <%= content_tag(:h2, l(:text_new_deliverable)) %>
 
-<% semantic_form_for [@project, @contract, resource], :url => contract_deliverables_path(@project, @contract), :html => {:class => 'tabular'} do |form| %>
+<% semantic_form_for [@project, @contract, resource], :url => contract_deliverables_path(@project, @contract), :html => {:class => 'deliverable tabular'} do |form| %>
 <%= render :partial => 'form', :object => form, :locals => {:cancel_path => contract_path(@project, @contract)} %>
 <% end %>

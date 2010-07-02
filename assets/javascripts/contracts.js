@@ -1,19 +1,19 @@
 jQuery(function($) {
-  toggleSpecificDeliverableFields = function() {
-    var deliverableType = $('select#deliverable_type option:selected').val();
+  toggleSpecificDeliverableFields = function(form) {
+    var deliverableType = form.find('.type').val();
 
     if (deliverableType == 'FixedDeliverable') {
-      $('#deliverable_total_input').show();
+      $('.deliverable_total_input').show();
     } else {
-      $('#deliverable_total_input').
-        children('#deliverable_total').val('').end().
+      $('.deliverable_total_input').
+        children('input').val('').end().
         hide();
     }
   },
 
-  toggleSpecificDeliverableFields();
+  toggleSpecificDeliverableFields($('form.deliverable'));
 
   $('select#deliverable_type').change(function() {
-    toggleSpecificDeliverableFields();
+    toggleSpecificDeliverableFields($('form.deliverable'));
   });
 });

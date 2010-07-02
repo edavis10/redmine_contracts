@@ -25,6 +25,8 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     end
 
     assert_select "select#fixed_deliverable_type", :count => 0 # Not editable
+    assert js("jQuery('#fixed_deliverable_total_input').is(':visible')"), "Total is hidden when it should be visible"
+
 
     fill_in "Title", :with => 'An updated title'
     check "Feature Sign Off"
@@ -52,7 +54,8 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     end
 
     assert_select "select#hourly_deliverable_type", :count => 0 # Not editable
-
+    assert js("jQuery('#hourly_deliverable_total_input').is(':hidden')"), "Total is visible when it should be hidden"
+    
     fill_in "Title", :with => 'An updated title'
     check "Feature Sign Off"
     check "Warranty Sign Off"
