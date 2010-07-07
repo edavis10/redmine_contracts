@@ -75,7 +75,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
 
     assert_equal 1, @hourly_deliverable.labor_budgets.count
     @labor_budget = @hourly_deliverable.labor_budgets.first
-    assert_equal 20, @labor_budet.hours
+    assert_equal 20, @labor_budget.hours
     assert_equal 2000.0, @labor_budget.budget
 
   end
