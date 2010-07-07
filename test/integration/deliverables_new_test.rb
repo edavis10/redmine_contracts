@@ -112,7 +112,7 @@ class DeliverablesNewTest < ActionController::IntegrationTest
 
   end
 
-  should "create new expenses for the deliverables" do
+  should "create new budget item for the deliverables" do
     @manager = User.generate!
     @role = Role.generate!
     User.add_to_project(@manager, @project, @role)
@@ -137,10 +137,10 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     assert_template 'contracts/show'
 
     @deliverable = Deliverable.last
-    assert_equal 1, @deliverable.labor_expenses.count
-    @labor_expense = @deliverable.labor_expenses.first
-    assert_equal 20, @labor_expense.hours
-    assert_equal 2000.0, @labor_expense.budget
+    assert_equal 1, @deliverable.labor_budgets.count
+    @labor_budget = @deliverable.labor_budgets.first
+    assert_equal 20, @labor_budget.hours
+    assert_equal 2000.0, @labor_budget.budget
   end
 
 end

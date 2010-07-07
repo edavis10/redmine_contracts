@@ -73,10 +73,10 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert @hourly_deliverable.reload.warranty_sign_off?
     assert @hourly_deliverable.reload.feature_sign_off?
 
-    assert_equal 1, @hourly_deliverable.labor_expenses.count
-    @labor_expense = @hourly_deliverable.labor_expenses.first
-    assert_equal 20, @labor_expense.hours
-    assert_equal 2000.0, @labor_expense.budget
+    assert_equal 1, @hourly_deliverable.labor_budgets.count
+    @labor_budget = @hourly_deliverable.labor_budgets.first
+    assert_equal 20, @labor_budet.hours
+    assert_equal 2000.0, @labor_budget.budget
 
   end
 end

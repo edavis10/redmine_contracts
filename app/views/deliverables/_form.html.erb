@@ -24,10 +24,10 @@
   <%= form.input :total, :input_html => {:size => 10}, :wrapper_html => {:class => 'deliverable_total_input'} %>
 
   <% form.inputs :name => l(:text_deliverable_finances), :id => 'deliverable-finances' do %>
-    <% form.semantic_fields_for :labor_expenses do |labor_expense| %>
-      <% labor_expense.inputs :name => l(:field_labor) do %>
-        <%= labor_expense.input :hours, :label => l(:text_short_hours), :input_html => {:size => 10} %>
-        <%= labor_expense.input :budget, :label => l(:text_dollar_sign), :input_html => {:size => 10} %>
+    <% form.semantic_fields_for :labor_budgets do |labor_budget| %>
+      <% labor_budget.inputs :name => l(:field_labor) do %>
+        <%= labor_budget.input :hours, :label => l(:text_short_hours), :input_html => {:size => 10} %>
+        <%= labor_budget.input :budget, :label => l(:text_dollar_sign), :input_html => {:size => 10} %>
       <% end %>
     <% end %>
   <% end %>

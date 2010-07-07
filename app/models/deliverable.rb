@@ -4,9 +4,9 @@ class Deliverable < ActiveRecord::Base
   # Associations
   belongs_to :contract
   belongs_to :manager, :class_name => 'User', :foreign_key => 'manager_id'
-  has_many :labor_expenses
+  has_many :labor_budgets
 
-  accepts_nested_attributes_for :labor_expenses
+  accepts_nested_attributes_for :labor_budgets
   
   # Validations
   validates_presence_of :title

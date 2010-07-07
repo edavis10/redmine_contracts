@@ -1,4 +1,4 @@
-class LaborExpense < ActiveRecord::Base
+class LaborBudget < ActiveRecord::Base
   unloadable
 
   # Associations
