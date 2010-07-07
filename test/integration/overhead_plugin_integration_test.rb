@@ -9,6 +9,8 @@ class OverheadPluginIntegrationTest < ActionController::IntegrationTest
     User.add_to_project(@manager, @project, @role)
     @fixed_deliverable = FixedDeliverable.generate!(:contract => @contract, :manager => @manager, :title => 'The Title')
     @hourly_deliverable = HourlyDeliverable.generate!(:contract => @contract, :manager => @manager, :title => 'An Hourly')
+
+    configure_overhead_plugin
   end
   
   context "Patches to Deliverable" do
@@ -26,28 +28,6 @@ class OverheadPluginIntegrationTest < ActionController::IntegrationTest
       end
       
       should "return the total cost for all of the time on the issues for billable activities" do
-        @custom_field = TimeEntryActivityCustomField.generate!
-        Setting['plugin_redmine_overhead'] = {
-          'custom_field' => @custom_field.id.to_s,
-          'billable_value' => "true",
-          'overhead_value' => "false"
-        }
-        
-        @billable_activity = TimeEntryActivity.generate!.reload
-        @billable_activity.custom_field_values = {
-          @custom_field.id => 'true'
-        }
-        assert @billable_activity.save
-
-        assert @billable_activity.billable?
-
-        @non_billable_activity = TimeEntryActivity.generate!.reload
-        @non_billable_activity.custom_field_values = {
-          @custom_field.id => 'false'
-        }
-        assert @non_billable_activity.save
-
-        assert !@non_billable_activity.billable?
 
         @issue1 = Issue.generate_for_project!(@project)
         @time_entry1 = TimeEntry.generate!(:issue => @issue1,
@@ -87,29 +67,6 @@ class OverheadPluginIntegrationTest < ActionController::IntegrationTest
       end
 
       should "return the total cost for all of the time on the issues for billable activities" do
-        @custom_field = TimeEntryActivityCustomField.generate!
-        Setting['plugin_redmine_overhead'] = {
-          'custom_field' => @custom_field.id.to_s,
-          'billable_value' => "true",
-          'overhead_value' => "false"
-        }
-        
-        @billable_activity = TimeEntryActivity.generate!.reload
-        @billable_activity.custom_field_values = {
-          @custom_field.id => 'true'
-        }
-        assert @billable_activity.save
-
-        assert @billable_activity.billable?
-
-        @non_billable_activity = TimeEntryActivity.generate!.reload
-        @non_billable_activity.custom_field_values = {
-          @custom_field.id => 'false'
-        }
-        assert @non_billable_activity.save
-
-        assert !@non_billable_activity.billable?
-
         @issue1 = Issue.generate_for_project!(@project)
         @time_entry1 = TimeEntry.generate!(:issue => @issue1,
                                            :project => @project,

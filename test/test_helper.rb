@@ -81,3 +81,31 @@ end
 class ActionController::IntegrationTest
   include IntegrationTestHelper
 end
+
+class ActiveSupport::TestCase
+  def configure_overhead_plugin
+    @custom_field = TimeEntryActivityCustomField.generate!
+    Setting['plugin_redmine_overhead'] = {
+      'custom_field' => @custom_field.id.to_s,
+      'billable_value' => "true",
+      'overhead_value' => "false"
+    }
+    
+    @billable_activity = TimeEntryActivity.generate!.reload
+    @billable_activity.custom_field_values = {
+      @custom_field.id => 'true'
+    }
+    assert @billable_activity.save
+
+    assert @billable_activity.billable?
+
+    @non_billable_activity = TimeEntryActivity.generate!.reload
+    @non_billable_activity.custom_field_values = {
+      @custom_field.id => 'false'
+    }
+    assert @non_billable_activity.save
+
+    assert !@non_billable_activity.billable?
+
+  end
+end
