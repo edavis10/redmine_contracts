@@ -56,4 +56,40 @@ class ContractsShowTest < ActionController::IntegrationTest
     end
 
   end
+
+  should "show the total labor budget for a Deliverable" do
+    @manager = User.generate!
+
+    @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
+    LaborBudget.generate!(:deliverable => @deliverable1,
+                          :hours => 100,
+                          :budget => 4000.5)
+    LaborBudget.generate!(:deliverable => @deliverable1,
+                          :hours => 100,
+                          :budget => 200.0)
+
+    visit_contract_page(@contract)
+    assert_select "table#deliverables" do
+      assert_select "td.labor", :text => /4,200.50/
+    end
+
+  end
+
+  should "show the total overhead budget for a Deliverable" do
+    @manager = User.generate!
+
+    @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
+    OverheadBudget.generate!(:deliverable => @deliverable1,
+                             :hours => 100,
+                             :budget => 4000.5)
+    OverheadBudget.generate!(:deliverable => @deliverable1,
+                             :hours => 100,
+                             :budget => 200.0)
+
+    visit_contract_page(@contract)
+    assert_select "table#deliverables" do
+      assert_select "td.overhead", :text => /4,200.50/
+    end
+
+  end
 end

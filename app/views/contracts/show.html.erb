@@ -42,9 +42,12 @@
         <td class="title"><%= h deliverable.title %></td>
         <%# TODO: Status %>
         <td class="manager"><%= h deliverable.manager.try(:name) %></td>
-        <%# TODO: deliverable calculations %>
-        <td class="labor">---</td>
-        <td class="overhead">---</td>
+        <td class="labor">
+          <%= format_budget_for_deliverable(deliverable, deliverable.labor_budget_total) %>
+        </td>
+        <td class="overhead">
+          <%= format_budget_for_deliverable(deliverable, deliverable.overhead_budget_total) %>
+        </td>
         <td class="fixed">---</td>
         <td><%= link_to(l(:button_edit), edit_contract_deliverable_path(@project, resource, deliverable), :class => 'icon icon-edit') %></td>
         <td><%= link_to(l(:button_delete), contract_deliverable_path(@project, resource, deliverable), :method => :delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del') %></td>
