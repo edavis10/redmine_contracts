@@ -112,7 +112,7 @@ class DeliverablesNewTest < ActionController::IntegrationTest
 
   end
 
-  should "create new budget item for the deliverables" do
+  should "create new budget items for the deliverables" do
     @manager = User.generate!
     @role = Role.generate!
     User.add_to_project(@manager, @project, @role)
@@ -128,19 +128,32 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     fill_in "End Date", :with => '2010-12-31'
     fill_in "Notes", :with => 'Some notes on the deliverable'
 
-    fill_in "hrs", :with => '20'
-    fill_in "$", :with => '$2,000'
-    
+    within("#deliverable-labor") do
+      fill_in "hrs", :with => '20'
+      fill_in "$", :with => '$2,000'
+    end
+
+    within("#deliverable-overhead") do
+      fill_in "hrs", :with => '10'
+      fill_in "$", :with => '$1,000'
+    end
+
     click_button "Save"
 
     assert_response :success
     assert_template 'contracts/show'
 
     @deliverable = Deliverable.last
+
     assert_equal 1, @deliverable.labor_budgets.count
     @labor_budget = @deliverable.labor_budgets.first
     assert_equal 20, @labor_budget.hours
     assert_equal 2000.0, @labor_budget.budget
+
+    assert_equal 1, @deliverable.overhead_budgets.count
+    @overhead_budget = @deliverable.overhead_budgets.first
+    assert_equal 10, @overhead_budget.hours
+    assert_equal 1000.0, @overhead_budget.budget
   end
 
 end

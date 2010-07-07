@@ -25,9 +25,16 @@
 
   <% form.inputs :name => l(:text_deliverable_finances), :id => 'deliverable-finances' do %>
     <% form.semantic_fields_for :labor_budgets do |labor_budget| %>
-      <% labor_budget.inputs :name => l(:field_labor) do %>
+      <% labor_budget.inputs :name => l(:field_labor), :id => 'deliverable-labor' do %>
         <%= labor_budget.input :hours, :label => l(:text_short_hours), :input_html => {:size => 10} %>
         <%= labor_budget.input :budget, :label => l(:text_dollar_sign), :input_html => {:size => 10} %>
+      <% end %>
+    <% end %>
+
+    <% form.semantic_fields_for :overhead_budgets do |overhead_budget| %>
+      <% overhead_budget.inputs :name => l(:field_overhead), :id => 'deliverable-overhead' do %>
+        <%= overhead_budget.input :hours, :label => l(:text_short_hours), :input_html => {:size => 10} %>
+        <%= overhead_budget.input :budget, :label => l(:text_dollar_sign), :input_html => {:size => 10} %>
       <% end %>
     <% end %>
   <% end %>

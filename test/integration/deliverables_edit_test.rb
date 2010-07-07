@@ -60,8 +60,15 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     check "Feature Sign Off"
     check "Warranty Sign Off"
 
-    fill_in "hrs", :with => '20'
-    fill_in "$", :with => '$2,000'
+    within("#deliverable-labor") do
+      fill_in "hrs", :with => '20'
+      fill_in "$", :with => '$2,000'
+    end
+
+    within("#deliverable-overhead") do
+      fill_in "hrs", :with => '10'
+      fill_in "$", :with => '$1,000'
+    end
 
     click_button "Save"
 
@@ -78,5 +85,9 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_equal 20, @labor_budget.hours
     assert_equal 2000.0, @labor_budget.budget
 
+    assert_equal 1, @hourly_deliverable.overhead_budgets.count
+    @overhead_budget = @hourly_deliverable.overhead_budgets.first
+    assert_equal 10, @overhead_budget.hours
+    assert_equal 1000.0, @overhead_budget.budget
   end
 end

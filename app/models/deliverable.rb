@@ -5,8 +5,10 @@ class Deliverable < ActiveRecord::Base
   belongs_to :contract
   belongs_to :manager, :class_name => 'User', :foreign_key => 'manager_id'
   has_many :labor_budgets
+  has_many :overhead_budgets
 
   accepts_nested_attributes_for :labor_budgets
+  accepts_nested_attributes_for :overhead_budgets
   
   # Validations
   validates_presence_of :title
