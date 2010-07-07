@@ -19,3 +19,7 @@ html>body .tabular li {overflow:hidden;}
 /* End tabular */
 
 a.contract-delete {color: red; }
+
+/* Positioning */
+#deliverable-finances ol li { display: inline; }
+#deliverable-finances ol li label { float: none; margin-left: 0; }

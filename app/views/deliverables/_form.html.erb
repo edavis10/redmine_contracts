@@ -23,7 +23,7 @@
 
   <%= form.input :total, :input_html => {:size => 10}, :wrapper_html => {:class => 'deliverable_total_input'} %>
 
-  <% form.inputs :name => l(:text_deliverable_finances) do %>
+  <% form.inputs :name => l(:text_deliverable_finances), :id => 'deliverable-finances' do %>
     <% form.semantic_fields_for :labor_expenses do |labor_expense| %>
       <% labor_expense.inputs :name => l(:field_labor) do %>
         <%= labor_expense.input :hours, :label => l(:text_short_hours), :input_html => {:size => 10} %>
