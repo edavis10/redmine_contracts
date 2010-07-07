@@ -25,7 +25,56 @@ class OverheadPluginIntegrationTest < ActionController::IntegrationTest
         assert_equal 0, @hourly_deliverable.labor_budget_spent
       end
       
-      should "return the total cost for all of the time on the issues for billable activities"
+      should "return the total cost for all of the time on the issues for billable activities" do
+        @custom_field = TimeEntryActivityCustomField.generate!
+        Setting['plugin_redmine_overhead'] = {
+          'custom_field' => @custom_field.id.to_s,
+          'billable_value' => "true",
+          'overhead_value' => "false"
+        }
+        
+        @billable_activity = TimeEntryActivity.generate!.reload
+        @billable_activity.custom_field_values = {
+          @custom_field.id => 'true'
+        }
+        assert @billable_activity.save
+
+        assert @billable_activity.billable?
+
+        @non_billable_activity = TimeEntryActivity.generate!.reload
+        @non_billable_activity.custom_field_values = {
+          @custom_field.id => 'false'
+        }
+        assert @non_billable_activity.save
+
+        assert !@non_billable_activity.billable?
+
+        @issue1 = Issue.generate_for_project!(@project)
+        @time_entry1 = TimeEntry.generate!(:issue => @issue1,
+                                           :project => @project,
+                                           :activity => @billable_activity,
+                                           :spent_on => Date.today,
+                                           :hours => 10,
+                                           :user => @manager)
+        @time_entry2 = TimeEntry.generate!(:issue => @issue1,
+                                           :project => @project,
+                                           :activity => @non_billable_activity,
+                                           :spent_on => Date.today,
+                                           :hours => 10,
+                                           :user => @manager)
+
+        @rate = Rate.generate!(:project => @project,
+                               :user => @manager,
+                               :date_in_effect => Date.yesterday,
+                               :amount => 100)
+
+        @hourly_deliverable.issues << @issue1
+
+        assert_equal 1, @hourly_deliverable.issues.count
+
+        assert_equal 10 * 100, @hourly_deliverable.labor_budget_spent
+        
+      end
     end
   end
 
