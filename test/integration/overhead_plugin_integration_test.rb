@@ -15,7 +15,33 @@ class OverheadPluginIntegrationTest < ActionController::IntegrationTest
   
   context "Patches to Deliverable" do
     context "#overhead_spent" do
-      should "return the total cost for all of the time on the issues for non-billable activities"
+      should "return the total cost for all of the time on the issues for non-billable activities" do
+        @issue1 = Issue.generate_for_project!(@project)
+        @time_entry1 = TimeEntry.generate!(:issue => @issue1,
+                                           :project => @project,
+                                           :activity => @billable_activity,
+                                           :spent_on => Date.today,
+                                           :hours => 10,
+                                           :user => @manager)
+        @time_entry2 = TimeEntry.generate!(:issue => @issue1,
+                                           :project => @project,
+                                           :activity => @non_billable_activity,
+                                           :spent_on => Date.today,
+                                           :hours => 20,
+                                           :user => @manager)
+
+        @rate = Rate.generate!(:project => @project,
+                               :user => @manager,
+                               :date_in_effect => Date.yesterday,
+                               :amount => 100)
+
+        @hourly_deliverable.issues << @issue1
+
+        assert_equal 1, @hourly_deliverable.issues.count
+
+        assert_equal 20 * 100, @hourly_deliverable.overhead_spent
+
+      end
     end
   end
   
@@ -40,7 +66,7 @@ class OverheadPluginIntegrationTest < ActionController::IntegrationTest
                                            :project => @project,
                                            :activity => @non_billable_activity,
                                            :spent_on => Date.today,
-                                           :hours => 10,
+                                           :hours => 20,
                                            :user => @manager)
 
         @rate = Rate.generate!(:project => @project,
@@ -78,7 +104,7 @@ class OverheadPluginIntegrationTest < ActionController::IntegrationTest
                                            :project => @project,
                                            :activity => @non_billable_activity,
                                            :spent_on => Date.today,
-                                           :hours => 10,
+                                           :hours => 20,
                                            :user => @manager)
 
         @rate = Rate.generate!(:project => @project,
