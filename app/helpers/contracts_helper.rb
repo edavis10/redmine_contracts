@@ -39,6 +39,21 @@ module ContractsHelper
                 html_options)
   end
 
+  def show_budget_field(object, spent_field, total_field, options={})
+    html_options = options[:html_options] || {}
+    label = content_tag(:span, l(("field_" + spent_field.to_s.gsub(/\_id$/, "")).to_sym) + ": ")
+
+    spent_content = number_to_currency(object.send(spent_field))
+    total_content = number_to_currency(object.send(total_field))
+
+    content_tag(:p,
+                label +
+                content_tag(:span, h(spent_content), :class => 'spent') +
+                content_tag(:span, h(total_content), :class => 'budget'),
+                html_options)
+    
+  end
+
   def format_hourly_rate(decimal)
     number_to_currency(decimal) + "/hr" if decimal
   end

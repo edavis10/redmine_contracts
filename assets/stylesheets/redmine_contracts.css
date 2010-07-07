@@ -26,3 +26,4 @@ a.contract-delete {color: red; }
 
 #deliverables td.labor, #deliverables td.overhead, #deliverables td.fixed { text-align: center; }
 #deliverables td.labor div, #deliverables td.overhead div, #deliverables td.fixed div { text-align: right; display: inline; padding: 0 5px; width: 50%; }
+.spent, .budget { text-align: right; padding: 0 5px; }

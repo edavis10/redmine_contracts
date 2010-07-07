@@ -8,12 +8,9 @@
   <%= show_field(resource, :start_date, :format => :format_date, :html_options => {:class => 'contract-start-date'}) %>
   <%= show_field(resource, :end_date, :format => :format_date, :html_options => {:class => 'contract-end-date'}) %>
 
-  <%= show_field(resource, :labor_spent, :html_options => {:class => 'contract-labor-spent'}) %>
-  <%= show_field(resource, :labor_budget, :html_options => {:class => 'contract-labor-budget'}) %>
-  <%= show_field(resource, :overhead_spent, :html_options => {:class => 'contract-overhead-spent'}) %>
-  <%= show_field(resource, :overhead_budget, :html_options => {:class => 'contract-overhead-budget'}) %>
-  <%= show_field(resource, :total_spent, :html_options => {:class => 'contract-total-spent'}) %>
-  <%= show_field(resource, :total_budget, :html_options => {:class => 'contract-total-budget'}) %>
+  <%= show_budget_field(resource, :labor_spent, :labor_budget, :html_options => {:class => 'contract-labor'}) %>
+  <%= show_budget_field(resource, :overhead_spent, :overhead_budget, :html_options => {:class => 'contract-overhead'}) %>
+  <%= show_budget_field(resource, :total_spent, :total_budget, :html_options => {:class => 'contract-total'}) %>
 
   <div id="contract-terms">
     <%= show_field(resource, :client_point_of_contact, :html_options => {:class => 'contract-client-point-of-contact'}) %>
@@ -24,24 +21,16 @@
     <%= show_field(resource, :po_number, :html_options => {:class => 'contract-po-number'}) %>
     <%= show_field(resource, :details, :html_options => {:class => 'contract-details'}) %>
 
-    <%= show_field(resource, :labor_spent, :html_options => {:class => 'contract-labor-spent'}) %>
-    <%= show_field(resource, :labor_budget, :html_options => {:class => 'contract-labor-budget'}) %>
-    <%= show_field(resource, :overhead_spent, :html_options => {:class => 'contract-overhead-spent'}) %>
-    <%= show_field(resource, :overhead_budget, :html_options => {:class => 'contract-overhead-budget'}) %>
-    <%= show_field(resource, :fixed_spent, :html_options => {:class => 'contract-fixed-spent'}) %>
-    <%= show_field(resource, :fixed_budget, :html_options => {:class => 'contract-fixed-budget'}) %>
-    <%= show_field(resource, :markup_spent, :html_options => {:class => 'contract-markup-spent'}) %>
-    <%= show_field(resource, :markup_budget, :html_options => {:class => 'contract-markup-budget'}) %>
-    <%= show_field(resource, :profit_spent, :html_options => {:class => 'contract-profit-spent'}) %>
-    <%= show_field(resource, :profit_budget, :html_options => {:class => 'contract-profit-budget'}) %>
-    <%= show_field(resource, :discount_spent, :html_options => {:class => 'contract-discount-spent'}) %>
-    <%= show_field(resource, :discount_budget, :html_options => {:class => 'contract-discount-budget'}) %>
-    <%= show_field(resource, :total_spent, :html_options => {:class => 'contract-total-spent'}) %>
-    <%= show_field(resource, :total_budget, :html_options => {:class => 'contract-total-budget'}) %>
+    <%= show_budget_field(resource, :labor_spent, :labor_budget, :html_options => {:class => 'contract-labor'}) %>
+    <%= show_budget_field(resource, :overhead_spent, :overhead_budget, :html_options => {:class => 'contract-overhead'}) %>
+    <%= show_budget_field(resource, :fixed_spent, :fixed_budget, :html_options => {:class => 'contract-fixed'}) %>
+    <%= show_budget_field(resource, :markup_spent, :markup_budget, :html_options => {:class => 'contract-markup'}) %>
+    <%= show_budget_field(resource, :profit_spent, :profit_budget, :html_options => {:class => 'contract-profit'}) %>
+    <%= show_budget_field(resource, :discount_spent, :discount_budget, :html_options => {:class => 'contract-discount'}) %>
+    <%= show_budget_field(resource, :total_spent, :total_budget, :html_options => {:class => 'contract-total'}) %>
 
     <%= show_field(resource, :billable_rate, :format => :format_hourly_rate, :html_options => {:class => 'contract-billable-rate'}) %>
-    <%= show_field(resource, :estimated_hour_spent, :html_options => {:class => 'contract-estimated-hour-spent'}) %>
-    <%= show_field(resource, :estimated_hour_budget, :html_options => {:class => 'contract-estimated-hour-budget'}) %>
+    <%= show_budget_field(resource, :estimated_hour_spent, :estimated_hour_budget, :html_options => {:class => 'contract-estimated-hour'}) %>
 
   </div>
 <% end %>
