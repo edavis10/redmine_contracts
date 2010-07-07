@@ -42,6 +42,12 @@ class Deliverable < ActiveRecord::Base
     overhead_budgets.sum(:budget)
   end
 
+  # Total number of hours estimated in the Deliverable's budgets
+  def estimated_hour_budget_total
+    (labor_budgets.sum(:hours) || 0.0) +
+      (overhead_budgets.sum(:hours) || 0.0)
+  end
+
   if Rails.env.test?
     generator_for :title, :method => :next_title
 

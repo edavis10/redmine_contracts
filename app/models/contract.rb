@@ -33,7 +33,7 @@ class Contract < ActiveRecord::Base
    :fixed_spent, :fixed_budget, :total_spent, :total_budget,
    :markup_spent, :markup_budget, :profit_spent, :profit_budget,
    :discount_spent, :discount_budget, :client_point_of_contact,
-   :estimated_hour_spent, :estimated_hour_budget
+   :estimated_hour_spent
   ].each do |mthd|
     define_method(mthd) { "TODO" }
   end
@@ -46,6 +46,10 @@ class Contract < ActiveRecord::Base
   # OPTIMIZE: N+1
   def overhead_budget
     deliverables.inject(0) {|total, deliverable| total += deliverable.overhead_budget_total }
+  end
+
+  def estimated_hour_budget
+    deliverables.inject(0) {|total, deliverable| total += deliverable.estimated_hour_budget_total }
   end
 
   PaymentTerms = {
