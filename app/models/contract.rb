@@ -29,13 +29,18 @@ class Contract < ActiveRecord::Base
   attr_accessible :po_number
   attr_accessible :details
 
-  [:status, :contract_type, :labor_spent, :labor_budget, :overhead_spent,
+  [:status, :contract_type, :labor_spent, :overhead_spent,
    :overhead_budget, :fixed_spent, :fixed_budget, :total_spent, :total_budget,
    :markup_spent, :markup_budget, :profit_spent, :profit_budget,
    :discount_spent, :discount_budget, :client_point_of_contact,
    :estimated_hour_spent, :estimated_hour_budget
   ].each do |mthd|
     define_method(mthd) { "TODO" }
+  end
+
+  # OPTIMIZE: N+1
+  def labor_budget
+    deliverables.inject(0) {|total, deliverable| total += deliverable.labor_budget_total }
   end
   
   PaymentTerms = {

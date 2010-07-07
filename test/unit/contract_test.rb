@@ -32,5 +32,16 @@ class ContractTest < ActiveSupport::TestCase
     
     assert_equal false, @contract.executed
   end
-  
+
+  context "#labor_budget" do
+    should "sum all of the labor budgets of the Deliverables" do
+      contract = Contract.generate!
+      contract.deliverables << @deliverable_1 = FixedDeliverable.generate!
+      LaborBudget.generate!(:deliverable => @deliverable_1, :budget => 100)
+      contract.deliverables << @deliverable_2 = FixedDeliverable.generate!
+      LaborBudget.generate!(:deliverable => @deliverable_2, :budget => 100)
+
+      assert_equal 200, contract.labor_budget
+    end
+  end
 end
