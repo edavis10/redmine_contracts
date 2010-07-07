@@ -11,6 +11,10 @@ class FixedDeliverable < Deliverable
     'F'
   end
 
+  def total
+    read_attribute(:total) || 0.0
+  end
+
   # Hardcoded value used as a wrapper for the old Budget plugin API.
   #
   # The Overhead plugin uses this in it's calcuations.

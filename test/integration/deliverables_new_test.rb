@@ -108,7 +108,6 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     assert_equal '2010-01-01', @deliverable.start_date.to_s
     assert_equal '2010-12-31', @deliverable.end_date.to_s
     assert_equal @manager, @deliverable.manager
-    assert_equal nil, @deliverable.total
 
   end
 
