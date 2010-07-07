@@ -8,9 +8,8 @@ module ContractsHelper
 
   def format_budget_for_deliverable(deliverable, spent, total)
     if total > 0 || spent > 0
-      content_tag(:span, h(number_to_currency(spent, :unit => '')), :class => 'spent-amount') +
-        " " +
-        content_tag(:span, h(number_to_currency(total, :unit => '')), :class => 'total-amount')
+      content_tag(:div, h(number_to_currency(spent, :unit => '')), :class => 'spent-amount') +
+        content_tag(:div, h(number_to_currency(total, :unit => '')), :class => 'total-amount')
     else
       '---'
     end
