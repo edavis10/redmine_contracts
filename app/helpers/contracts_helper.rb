@@ -6,10 +6,9 @@ module ContractsHelper
     end
   end
 
-  def format_budget_for_deliverable(deliverable, total)
-    # TODO LATER: calculate amount used
-    if total > 0
-      content_tag(:span, "0", :class => 'spent-amount') +
+  def format_budget_for_deliverable(deliverable, spent, total)
+    if total > 0 || spent > 0
+      content_tag(:span, h(number_to_currency(spent, :unit => '')), :class => 'spent-amount') +
         " " +
         content_tag(:span, h(number_to_currency(total, :unit => '')), :class => 'total-amount')
     else

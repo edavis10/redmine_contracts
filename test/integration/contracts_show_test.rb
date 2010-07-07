@@ -4,7 +4,7 @@ class ContractsShowTest < ActionController::IntegrationTest
   include Redmine::I18n
   
   def setup
-    @project = Project.generate!(:identifier => 'main')
+    @project = Project.generate!(:identifier => 'main').reload
     @contract = Contract.generate!(:project => @project)
   end
 
@@ -89,6 +89,74 @@ class ContractsShowTest < ActionController::IntegrationTest
     visit_contract_page(@contract)
     assert_select "table#deliverables" do
       assert_select "td.overhead", :text => /4,200.50/
+    end
+
+  end
+
+  should "show the total labor budget spent for a Deliverable" do
+    configure_overhead_plugin
+
+    @manager = User.generate!
+
+    @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
+    OverheadBudget.generate!(:deliverable => @deliverable1,
+                             :hours => 100,
+                             :budget => 4000.5)
+
+    @issue1 = Issue.generate_for_project!(@project)
+    @time_entry1 = TimeEntry.generate!(:issue => @issue1,
+                                       :project => @project,
+                                       :activity => @billable_activity,
+                                       :spent_on => Date.today,
+                                       :hours => 10,
+                                       :user => @manager)
+
+    @rate = Rate.generate!(:project => @project,
+                           :user => @manager,
+                           :date_in_effect => Date.yesterday,
+                           :amount => 100)
+
+    @deliverable1.issues << @issue1
+
+    assert_equal 1, @deliverable1.issues.count
+
+    visit_contract_page(@contract)
+    assert_select "table#deliverables" do
+      assert_select "td.labor", :text => /1,000.00/
+    end
+
+  end
+
+  should "show the total overhead budget spent for a Deliverable" do
+    configure_overhead_plugin
+
+    @manager = User.generate!
+
+    @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
+    OverheadBudget.generate!(:deliverable => @deliverable1,
+                             :hours => 100,
+                             :budget => 4000.5)
+
+    @issue1 = Issue.generate_for_project!(@project)
+    @time_entry1 = TimeEntry.generate!(:issue => @issue1,
+                                       :project => @project,
+                                       :activity => @non_billable_activity,
+                                       :spent_on => Date.today,
+                                       :hours => 20,
+                                       :user => @manager)
+
+    @rate = Rate.generate!(:project => @project,
+                           :user => @manager,
+                           :date_in_effect => Date.yesterday,
+                           :amount => 100)
+
+    @deliverable1.issues << @issue1
+
+    assert_equal 1, @deliverable1.issues.count
+
+    visit_contract_page(@contract)
+    assert_select "table#deliverables" do
+      assert_select "td.overhead", :text => /2,000.00/
     end
 
   end

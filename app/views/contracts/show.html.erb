@@ -43,10 +43,10 @@
         <%# TODO: Status %>
         <td class="manager"><%= h deliverable.manager.try(:name) %></td>
         <td class="labor">
-          <%= format_budget_for_deliverable(deliverable, deliverable.labor_budget_total) %>
+          <%= format_budget_for_deliverable(deliverable, deliverable.labor_budget_spent, deliverable.labor_budget_total) %>
         </td>
         <td class="overhead">
-          <%= format_budget_for_deliverable(deliverable, deliverable.overhead_budget_total) %>
+          <%= format_budget_for_deliverable(deliverable, deliverable.overhead_spent, deliverable.overhead_budget_total) %>
         </td>
         <td class="fixed">---</td>
         <td><%= link_to(l(:button_edit), edit_contract_deliverable_path(@project, resource, deliverable), :class => 'icon icon-edit') %></td>
