@@ -20,6 +20,55 @@ class ContractsShowTest < ActionController::IntegrationTest
     end
   end
 
+  should "show contract metadata" do
+    visit_contract_page(@contract)
+
+    assert_select "div#contract_#{@contract.id}.contract" do
+      assert_select '.contract-status'
+      assert_select '.contract-account-manager'
+      assert_select '.contract-type'
+      assert_select '.contract-start-date'
+      assert_select '.contract-end-date'
+      
+      assert_select '.contract-labor-spent'
+      assert_select '.contract-labor-budget'
+      assert_select '.contract-overhead-spent'
+      assert_select '.contract-overhead-budget'
+      assert_select '.contract-total-spent'
+      assert_select '.contract-total-budget'
+
+      assert_select '#contract-terms' do
+        assert_select '.contract-client-point-of-contact'
+        assert_select '.contract-executed'
+        assert_select '.contract-discount-note'
+        assert_select '.contract-payment-terms'
+        assert_select '.contract-client-ap-contact-information'
+        assert_select '.contract-po-number'
+        assert_select '.contract-details'
+
+        assert_select '.contract-labor-spent'
+        assert_select '.contract-labor-budget'
+        assert_select '.contract-overhead-spent'
+        assert_select '.contract-overhead-budget'
+        assert_select '.contract-fixed-spent'
+        assert_select '.contract-fixed-budget'
+        assert_select '.contract-markup-spent'
+        assert_select '.contract-markup-budget'
+        assert_select '.contract-profit-spent'
+        assert_select '.contract-profit-budget'
+        assert_select '.contract-discount-spent'
+        assert_select '.contract-discount-budget'
+        assert_select '.contract-total-spent'
+        assert_select '.contract-total-budget'
+
+        assert_select '.contract-billable-rate'
+
+        assert_select '.contract-estimated-hour-spent'
+        assert_select '.contract-estimated-hour-budget'
+      end
+    end
+  end
+
   should "have a link to create a new deliverable" do
     visit_contracts_for_project(@project)
     click_link @contract.id

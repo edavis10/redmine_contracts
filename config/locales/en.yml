@@ -32,3 +32,21 @@ en:
   text_deliverable_finances: Deliverable Finances
   text_short_hours: hrs
   text_dollar_sign: '$'
+  field_client_point_of_contact: "Point of Contact"
+  field_discount_budget: "Discount"
+  field_discount_spent: "Discount"
+  field_estimated_hour_budget: "Est. Hours"
+  field_estimated_hour_spent: "Est. Hours"
+  field_fixed_budget: "Fixed"
+  field_fixed_spent: "Fixed"
+  field_labor_budget: "Labor"
+  field_labor_spent: "Labor"
+  field_markup_budget: "Markup"
+  field_markup_spent: "Markup"
+  field_overhead_budget: "Overhead"
+  field_overhead_spent: "Overhead"
+  field_profit_budget: "Profit"
+  field_profit_spent: "Profit"
+  field_total_budget: "Contract Total"
+  field_total_spent: "Contract Total"
+  field_contract_type: "Type"

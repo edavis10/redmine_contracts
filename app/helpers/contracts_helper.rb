@@ -14,4 +14,32 @@ module ContractsHelper
       '---'
     end
   end
+
+  # Simple helper to show the values of a field on an object in a standard format
+  #
+  # <p>
+  #  <span>Label: </span>
+  #  Field value
+  # </p>
+  def show_field(object, field, options={})
+    html_options = options[:html_options] || {}
+    label = content_tag(:span, l(("field_" + field.to_s.gsub(/\_id$/, "")).to_sym) + ": ")
+
+    formatter = options[:format]
+
+    content = if formatter
+                send(formatter, object.send(field))
+              else
+                object.send(field)
+              end
+    
+    content_tag(:p,
+                label +
+                h(content),
+                html_options)
+  end
+
+  def format_hourly_rate(decimal)
+    number_to_currency(decimal) + "/hr" if decimal
+  end
 end

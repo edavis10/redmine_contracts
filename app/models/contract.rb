@@ -29,6 +29,15 @@ class Contract < ActiveRecord::Base
   attr_accessible :po_number
   attr_accessible :details
 
+  [:status, :contract_type, :labor_spent, :labor_budget, :overhead_spent,
+   :overhead_budget, :fixed_spent, :fixed_budget, :total_spent, :total_budget,
+   :markup_spent, :markup_budget, :profit_spent, :profit_budget,
+   :discount_spent, :discount_budget, :client_point_of_contact,
+   :estimated_hour_spent, :estimated_hour_budget
+  ].each do |mthd|
+    define_method(mthd) { "TODO" }
+  end
+  
   PaymentTerms = {
     :net_0 => :text_payment_terms_net_0,
     :net_15 => :text_payment_terms_net_15,
