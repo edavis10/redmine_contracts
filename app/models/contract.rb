@@ -30,7 +30,7 @@ class Contract < ActiveRecord::Base
   attr_accessible :details
 
   [:status, :contract_type, :labor_spent, :overhead_spent,
-   :overhead_budget, :fixed_spent, :fixed_budget, :total_spent, :total_budget,
+   :fixed_spent, :fixed_budget, :total_spent, :total_budget,
    :markup_spent, :markup_budget, :profit_spent, :profit_budget,
    :discount_spent, :discount_budget, :client_point_of_contact,
    :estimated_hour_spent, :estimated_hour_budget
@@ -42,7 +42,12 @@ class Contract < ActiveRecord::Base
   def labor_budget
     deliverables.inject(0) {|total, deliverable| total += deliverable.labor_budget_total }
   end
-  
+
+  # OPTIMIZE: N+1
+  def overhead_budget
+    deliverables.inject(0) {|total, deliverable| total += deliverable.overhead_budget_total }
+  end
+
   PaymentTerms = {
     :net_0 => :text_payment_terms_net_0,
     :net_15 => :text_payment_terms_net_15,

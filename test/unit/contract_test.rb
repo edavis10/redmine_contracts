@@ -44,4 +44,16 @@ class ContractTest < ActiveSupport::TestCase
       assert_equal 200, contract.labor_budget
     end
   end
+
+  context "#overhead_budget" do
+    should "sum all of the overhead budgets of the Deliverables" do
+      contract = Contract.generate!
+      contract.deliverables << @deliverable_1 = FixedDeliverable.generate!
+      OverheadBudget.generate!(:deliverable => @deliverable_1, :budget => 100)
+      contract.deliverables << @deliverable_2 = FixedDeliverable.generate!
+      OverheadBudget.generate!(:deliverable => @deliverable_2, :budget => 100)
+
+      assert_equal 200, contract.overhead_budget
+    end
+  end
 end
