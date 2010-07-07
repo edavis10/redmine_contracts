@@ -68,4 +68,16 @@ class ContractTest < ActiveSupport::TestCase
       assert_equal 110, contract.estimated_hour_budget
     end
   end
+
+  context "#total_budget" do
+    should "sum all of the totals of the Deliverables" do
+      contract = Contract.generate!(:billable_rate => 100.0)
+      contract.deliverables << @deliverable_1 = FixedDeliverable.generate!(:total => 10_000)
+      contract.deliverables << @deliverable_2 = HourlyDeliverable.generate!
+      LaborBudget.generate!(:deliverable => @deliverable_2, :hours => 10)
+      OverheadBudget.generate!(:deliverable => @deliverable_2, :hours => 20)
+
+      assert_equal 10_000 + (30 * 100), contract.total_budget
+    end
+  end
 end
