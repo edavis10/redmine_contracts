@@ -48,9 +48,11 @@ module ContractsHelper
 
   def show_budget_field(object, spent_field, total_field, options={})
 
+    formatter = options[:format] || :number_to_currency
+    spent_content = send(formatter, object.send(spent_field))
+    total_content = send(formatter, object.send(total_field))
+
     show_field(object, spent_field, options.merge(:raw => true)) do
-      spent_content = number_to_currency(object.send(spent_field))
-      total_content = number_to_currency(object.send(total_field))
 
       content_tag(:span, h(spent_content), :class => 'spent') +
         content_tag(:span, h(total_content), :class => 'budget')
