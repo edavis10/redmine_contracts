@@ -29,10 +29,19 @@ class Contract < ActiveRecord::Base
   attr_accessible :po_number
   attr_accessible :details
 
-  [:status, :contract_type, :labor_spent, :overhead_spent,
-   :fixed_spent, :fixed_budget, :total_spent,
-   :markup_spent, :markup_budget, :profit_spent,
-   :discount_spent, :discount_budget, :client_point_of_contact,
+  [:status, :contract_type,
+   :fixed_spent, :fixed_budget,
+   :markup_spent, :markup_budget,
+   :discount_spent, :discount_budget
+  ].each do |mthd|
+    define_method(mthd) { "TODO in later release" }
+  end
+
+  [:labor_spent,
+   :overhead_spent,
+   :total_spent,
+   :profit_spent,
+   :client_point_of_contact,
    :estimated_hour_spent
   ].each do |mthd|
     define_method(mthd) { "TODO" }
