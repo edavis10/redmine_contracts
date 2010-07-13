@@ -39,7 +39,6 @@ class Contract < ActiveRecord::Base
   end
 
   [:labor_spent,
-   :overhead_spent,
    :total_spent,
    :profit_spent
   ].each do |mthd|
@@ -54,6 +53,12 @@ class Contract < ActiveRecord::Base
   # OPTIMIZE: N+1
   def overhead_budget
     deliverables.inject(0) {|total, deliverable| total += deliverable.overhead_budget_total }
+  end
+
+  # OPTIMIZE: N+1
+  # OPTIMIZE: also hits redmine_overhead which is known to be slow
+  def overhead_spent
+    deliverables.inject(0) {|total, deliverable| total += deliverable.overhead_spent }
   end
 
   # OPTIMIZE: N+1
