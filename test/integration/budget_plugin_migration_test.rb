@@ -10,14 +10,18 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
   end
 
   context "migrate" do
-    should "load a YAML dump of the old budget data" do
+    setup do
       @data = load_test_fixture
+    end
+
+    should "load a YAML dump of the old budget data" do
       RedmineContracts::BudgetPluginMigration.migrate(@data)
 
-      assert RedmineContracts::BudgetPluginMigration.data
+      assert_equal @data, RedmineContracts::BudgetPluginMigration.data
     end
     
     should "create a new Deliverable for each old Deliverable"
+    
     should "create a new Contract for each project that had an old deliverable"
   end
 end
