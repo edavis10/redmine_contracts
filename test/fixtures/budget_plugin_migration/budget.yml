@@ -1,0 +1,55 @@
+--- 
+- total_hours: 100.0
+  overhead: 200.0
+  profit_percent: 
+  project_id: 1
+  fixed_cost: 
+  cost_per_hour: 50.0
+  subject: Deliverable One
+  materials: 200.0
+  id: 1
+  type: HourlyDeliverable
+  project_manager_signoff: false
+  profit: 200.0
+  overhead_percent: 
+  description: ""
+  materials_percent: 
+  due: 2008-06-30
+  budget: 5600.0
+  client_signoff: false
+- total_hours: 12.0
+  overhead: 
+  profit_percent: 50
+  project_id: 2
+  fixed_cost: 
+  cost_per_hour: 25.0
+  subject: Deliverable 2
+  materials: 0.0
+  id: 2
+  type: HourlyDeliverable
+  project_manager_signoff: false
+  profit: 
+  overhead_percent: 150
+  description: ""
+  materials_percent: 
+  due: 2008-06-18
+  budget: 900.0
+  client_signoff: false
+- total_hours: 80.0
+  overhead: 
+  profit_percent: 150
+  project_id: 2
+  fixed_cost: 30000.0
+  cost_per_hour: 85.0
+  subject: Version 1.0
+  materials: 0.0
+  id: 3
+  type: FixedDeliverable
+  project_manager_signoff: true
+  profit: 
+  overhead_percent: 60
+  description: Some description here
+  materials_percent: 
+  due: 2008-05-01
+  budget: 93000.0
+  client_signoff: true
