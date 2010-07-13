@@ -31,7 +31,7 @@ class Contract < ActiveRecord::Base
 
   [:status, :contract_type, :labor_spent, :overhead_spent,
    :fixed_spent, :fixed_budget, :total_spent,
-   :markup_spent, :markup_budget, :profit_spent, :profit_budget,
+   :markup_spent, :markup_budget, :profit_spent,
    :discount_spent, :discount_budget, :client_point_of_contact,
    :estimated_hour_spent
   ].each do |mthd|
@@ -56,6 +56,11 @@ class Contract < ActiveRecord::Base
   # OPTIMIZE: N+1
   def total_budget
     deliverables.inject(0) {|total, deliverable| total += deliverable.total }
+  end
+
+  # OPTIMIZE: N+1
+  def profit_budget
+    deliverables.inject(0) {|total, deliverable| total += deliverable.profit_budget }
   end
 
   PaymentTerms = {

@@ -49,4 +49,26 @@ class HourlyDeliverableTest < ActiveSupport::TestCase
       
     end
   end
+
+  context "#profit_budget" do
+    setup do
+      @contract = Contract.generate!(:billable_rate => 100.0)
+      @deliverable = HourlyDeliverable.generate!(:contract => @contract)
+    end
+    
+    context "with no labor budget, no overhead budget" do
+      should "be 0 (no hours available to bill)" do
+        assert_equal 0, @deliverable.profit_budget
+      end
+    end
+
+    should "be the total minus the sum of all of the budgets' amounts" do
+      LaborBudget.generate!(:deliverable => @deliverable, :hours => 10, :budget => 2000)
+      LaborBudget.generate!(:deliverable => @deliverable, :hours => 5, :budget => 1000)
+      OverheadBudget.generate!(:deliverable => @deliverable, :hours => 15, :budget => 2000)
+
+      assert_equal 30 * 100, @deliverable.total
+      assert_equal 3000 - (2000 + 1000 + 2000), @deliverable.profit_budget
+    end
+  end
 end

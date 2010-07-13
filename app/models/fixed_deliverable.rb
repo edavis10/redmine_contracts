@@ -15,6 +15,13 @@ class FixedDeliverable < Deliverable
     read_attribute(:total) || 0.0
   end
 
+  # The amount of profit that is budgeted for this deliverable.
+  # Profit = Total - ( Labor + Overhead + Fixed + Markup )
+  def profit_budget
+    budgets = labor_budget_total + overhead_budget_total
+    (total || 0.0) - budgets
+  end
+  
   # Hardcoded value used as a wrapper for the old Budget plugin API.
   #
   # The Overhead plugin uses this in it's calcuations.
