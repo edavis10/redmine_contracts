@@ -21,18 +21,24 @@ module ContractsHelper
   #  <span>Label: </span>
   #  Field value
   # </p>
-  def show_field(object, field, options={})
+  def show_field(object, field, options={}, &block)
     html_options = options[:html_options] || {}
     label = content_tag(:span, l(("field_" + field.to_s.gsub(/\_id$/, "")).to_sym) + ": ", :class => 'contract-details-label')
 
     formatter = options[:format]
     raw_content = options[:raw] || false
 
-    content = if formatter
-                send(formatter, object.send(field))
-              else
-                object.send(field)
-              end
+    content = ''
+    
+    if block_given?
+      content = yield
+    else
+      content = if formatter
+                  send(formatter, object.send(field))
+                else
+                  object.send(field)
+                end
+    end
     
     content_tag(:p,
                 label +
@@ -41,18 +47,14 @@ module ContractsHelper
   end
 
   def show_budget_field(object, spent_field, total_field, options={})
-    html_options = options[:html_options] || {}
-    label = content_tag(:span, l(("field_" + spent_field.to_s.gsub(/\_id$/, "")).to_sym) + ": ")
 
-    spent_content = number_to_currency(object.send(spent_field))
-    total_content = number_to_currency(object.send(total_field))
+    show_field(object, spent_field, options.merge(:raw => true)) do
+      spent_content = number_to_currency(object.send(spent_field))
+      total_content = number_to_currency(object.send(total_field))
 
-    content_tag(:p,
-                label +
-                content_tag(:span, h(spent_content), :class => 'spent') +
-                content_tag(:span, h(total_content), :class => 'budget'),
-                html_options)
-    
+      content_tag(:span, h(spent_content), :class => 'spent') +
+        content_tag(:span, h(total_content), :class => 'budget')
+    end
   end
 
   def format_hourly_rate(decimal)
