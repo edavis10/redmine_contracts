@@ -47,6 +47,6 @@ en:
   field_overhead_spent: "Overhead"
   field_profit_budget: "Profit"
   field_profit_spent: "Profit"
-  field_total_budget: "Contract Total"
+  field_total_budget: "Total Budget"
   field_total_spent: "Contract Total"
   field_contract_type: "Type"

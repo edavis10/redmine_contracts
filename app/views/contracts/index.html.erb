@@ -8,7 +8,7 @@
     <%# TODO: Status %>
     <%# TODO: Type %>
     <th><%= l(:field_account_executive_short) %></th>
-    <%# TODO: Total Budget %>
+    <th><%= l(:field_total_budget) %></th>
     <th><%= l(:field_end_date) %></th>
   </thead>
   <tbody>
@@ -17,6 +17,7 @@
         <td class="id"><%= link_to(h(contract.id), contract_path(@project, contract)) %></td>
         <td class="name"><%= link_to(h(contract.name), contract_path(@project, contract)) %></td>
         <td class="account-executive"><%= h contract.account_executive.name %></td>
+        <td class="total-budget"><%= h(number_to_currency(contract.total_budget)) %></td>
         <td class="end-date"><%= h format_date(contract.end_date) %></td>
       <% end %>
     <% end %>

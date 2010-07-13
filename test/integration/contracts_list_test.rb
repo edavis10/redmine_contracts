@@ -31,6 +31,7 @@ class ContractsListTest < ActionController::IntegrationTest
         assert_select "td.name", :text => /#{contract.name}/
         assert_select "td.account-executive", :text => /#{contract.account_executive.name}/
         assert_select "td.end-date", :text => /#{format_date(contract.end_date)}/
+        assert_select "td.total-budget"
       end
     end
     
