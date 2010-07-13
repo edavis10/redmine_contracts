@@ -27,6 +27,7 @@ class Contract < ActiveRecord::Base
   attr_accessible :payment_terms
   attr_accessible :client_ap_contact_information
   attr_accessible :po_number
+  attr_accessible :client_point_of_contact
   attr_accessible :details
 
   [:status, :contract_type,
@@ -41,7 +42,6 @@ class Contract < ActiveRecord::Base
    :overhead_spent,
    :total_spent,
    :profit_spent,
-   :client_point_of_contact,
    :estimated_hour_spent
   ].each do |mthd|
     define_method(mthd) { "TODO" }

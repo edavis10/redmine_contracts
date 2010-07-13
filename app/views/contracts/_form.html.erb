@@ -13,6 +13,7 @@
   <%= form.input :payment_terms, :as => :select, :collection => resource.payment_terms_for_select %>
   <%= form.input :client_ap_contact_information, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
   <%= form.input :po_number %>
+  <%= form.input :client_point_of_contact, :input_html => {:class => 'wiki-edit', :rows => '3'} %>
   <%= form.input :details, :input_html => {:class => 'wiki-edit'} %>
 <% end %>
 <% form.buttons do %>
@@ -22,5 +23,6 @@
 
 <%= wikitoolbar_for 'contract_discount_note' %>
 <%= wikitoolbar_for 'contract_client_ap_contact_information' %>
+<%= wikitoolbar_for 'contract_client_point_of_contact' %>
 <%= wikitoolbar_for 'contract_details' %>
 
