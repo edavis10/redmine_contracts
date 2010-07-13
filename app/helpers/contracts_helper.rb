@@ -58,4 +58,9 @@ module ContractsHelper
   def format_hourly_rate(decimal)
     number_to_currency(decimal) + "/hr" if decimal
   end
+
+  def format_payment_terms(value)
+    return '' if value.blank?
+    return l(Contract::PaymentTerms[value.to_sym])
+  end
 end
