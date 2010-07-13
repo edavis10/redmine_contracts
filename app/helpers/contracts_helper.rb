@@ -23,7 +23,7 @@ module ContractsHelper
   # </p>
   def show_field(object, field, options={})
     html_options = options[:html_options] || {}
-    label = content_tag(:span, l(("field_" + field.to_s.gsub(/\_id$/, "")).to_sym) + ": ")
+    label = content_tag(:span, l(("field_" + field.to_s.gsub(/\_id$/, "")).to_sym) + ": ", :class => 'contract-details-label')
 
     formatter = options[:format]
     raw_content = options[:raw] || false
