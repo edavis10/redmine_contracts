@@ -26,6 +26,7 @@ module ContractsHelper
     label = content_tag(:span, l(("field_" + field.to_s.gsub(/\_id$/, "")).to_sym) + ": ")
 
     formatter = options[:format]
+    raw_content = options[:raw] || false
 
     content = if formatter
                 send(formatter, object.send(field))
@@ -35,7 +36,7 @@ module ContractsHelper
     
     content_tag(:p,
                 label +
-                h(content),
+                (raw_content ? content : h(content)),
                 html_options)
   end
 
