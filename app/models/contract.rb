@@ -38,8 +38,7 @@ class Contract < ActiveRecord::Base
     define_method(mthd) { "TODO in later release" }
   end
 
-  [:labor_spent,
-   :total_spent,
+  [:total_spent,
    :profit_spent
   ].each do |mthd|
     define_method(mthd) { "TODO" }
@@ -48,6 +47,12 @@ class Contract < ActiveRecord::Base
   # OPTIMIZE: N+1
   def labor_budget
     deliverables.inject(0) {|total, deliverable| total += deliverable.labor_budget_total }
+  end
+
+  # OPTIMIZE: N+1
+  # OPTIMIZE: also hits redmine_overhead which is known to be slow
+  def labor_spent
+    deliverables.inject(0) {|total, deliverable| total += deliverable.labor_budget_spent }
   end
 
   # OPTIMIZE: N+1
