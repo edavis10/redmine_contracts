@@ -48,6 +48,11 @@ class Deliverable < ActiveRecord::Base
       (overhead_budgets.sum(:hours) || 0.0)
   end
 
+  # OPTIMIZE: N+1
+  def hours_spent_total
+    issues.inject(0) {|total, issue| total += issue.spent_hours }
+  end
+
   if Rails.env.test?
     generator_for :title, :method => :next_title
 

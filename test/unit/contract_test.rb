@@ -69,6 +69,26 @@ class ContractTest < ActiveSupport::TestCase
     end
   end
 
+  context "#estimated_hour_spent" do
+    should "sum all of the hours spent on the Deliverables" do
+      @project = Project.generate!
+      contract = Contract.generate!
+      contract.deliverables << @deliverable_1 = FixedDeliverable.generate!
+      @deliverable_1.issues << @issue1 = Issue.generate_for_project!(@project)
+      @deliverable_1.issues << @issue2 = Issue.generate_for_project!(@project)
+      TimeEntry.generate!(:hours => 10, :issue => @issue1, :project => @project)
+      TimeEntry.generate!(:hours => 10, :issue => @issue2, :project => @project)
+
+      contract.deliverables << @deliverable_2 = HourlyDeliverable.generate!
+      @deliverable_2.issues << @issue3 = Issue.generate_for_project!(@project)
+      @deliverable_2.issues << @issue4 = Issue.generate_for_project!(@project)
+      TimeEntry.generate!(:hours => 10, :issue => @issue3, :project => @project)
+      TimeEntry.generate!(:hours => 10, :issue => @issue4, :project => @project)
+
+      assert_equal 40, contract.estimated_hour_spent
+    end
+  end
+
   context "#total_budget" do
     should "sum all of the totals of the Deliverables" do
       contract = Contract.generate!(:billable_rate => 100.0)

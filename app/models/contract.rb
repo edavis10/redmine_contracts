@@ -41,8 +41,7 @@ class Contract < ActiveRecord::Base
   [:labor_spent,
    :overhead_spent,
    :total_spent,
-   :profit_spent,
-   :estimated_hour_spent
+   :profit_spent
   ].each do |mthd|
     define_method(mthd) { "TODO" }
   end
@@ -60,6 +59,11 @@ class Contract < ActiveRecord::Base
   # OPTIMIZE: N+1
   def estimated_hour_budget
     deliverables.inject(0) {|total, deliverable| total += deliverable.estimated_hour_budget_total }
+  end
+
+  # OPTIMIZE: N+1
+  def estimated_hour_spent
+    deliverables.inject(0) {|total, deliverable| total += deliverable.hours_spent_total }
   end
 
   # OPTIMIZE: N+1
