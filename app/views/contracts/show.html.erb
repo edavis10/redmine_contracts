@@ -31,7 +31,7 @@
       <%= show_budget_field(resource, :total_spent, :total_budget, :html_options => {:class => 'contract-total'}) %>
 
       <%= show_field(resource, :billable_rate, :format => :format_hourly_rate, :html_options => {:class => 'contract-billable-rate'}) %>
-      <%= show_budget_field(resource, :estimated_hour_spent, :estimated_hour_budget, :html_options => {:class => 'contract-estimated-hour'}) %>
+      <%= show_budget_field(resource, :estimated_hour_spent, :estimated_hour_budget, :format => :l_hours, :html_options => {:class => 'contract-estimated-hour'}) %>
     </div>
 
   </div>
