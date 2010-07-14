@@ -52,7 +52,7 @@ class HourlyDeliverableTest < ActiveSupport::TestCase
 
   context "#profit_budget" do
     setup do
-      @contract = Contract.generate!(:billable_rate => 100.0)
+      @contract = Contract.generate!(:billable_rate => 150.0)
       @deliverable = HourlyDeliverable.generate!(:contract => @contract)
     end
     
@@ -63,12 +63,12 @@ class HourlyDeliverableTest < ActiveSupport::TestCase
     end
 
     should "be the total minus the sum of all of the budgets' amounts" do
-      LaborBudget.generate!(:deliverable => @deliverable, :hours => 10, :budget => 2000)
-      LaborBudget.generate!(:deliverable => @deliverable, :hours => 5, :budget => 1000)
-      OverheadBudget.generate!(:deliverable => @deliverable, :hours => 15, :budget => 2000)
+      LaborBudget.generate!(:deliverable => @deliverable, :hours => 5, :budget => 250)
+      LaborBudget.generate!(:deliverable => @deliverable, :hours => 5, :budget => 250)
+      OverheadBudget.generate!(:deliverable => @deliverable, :hours => 3, :budget => 225)
 
-      assert_equal 30 * 100, @deliverable.total
-      assert_equal 3000 - (2000 + 1000 + 2000), @deliverable.profit_budget
+      assert_equal 1500, @deliverable.total
+      assert_equal 1500 - (225 + 250 + 250), @deliverable.profit_budget
     end
   end
 end
