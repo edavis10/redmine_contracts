@@ -58,6 +58,15 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
 
       assert_equal [@manager, @manager, @manager], Deliverable.all.collect(&:manager)
     end
+
+    context "converting Fixed Deliverables" do
+      should "convert fixed_cost to total" do
+        RedmineContracts::BudgetPluginMigration.migrate(@data)
+
+        d = FixedDeliverable.find_by_title("Version 1.0")
+        assert_equal 30_000, d.total
+      end
+    end
   end
 end
 

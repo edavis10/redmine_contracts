@@ -36,6 +36,13 @@ module RedmineContracts
           deliverable.contract = contract
           deliverable.manager = project.users.first          
 
+          case old_deliverable['type']
+          when 'FixedDeliverable'
+            deliverable.total = old_deliverable['fixed_cost']
+          else
+            # no-op
+          end
+          
           deliverable.save!
         end
       end
