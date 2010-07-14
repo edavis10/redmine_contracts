@@ -163,7 +163,7 @@ class ContractTest < ActiveSupport::TestCase
       LaborBudget.generate!(:deliverable => @deliverable_2, :hours => 10)
       OverheadBudget.generate!(:deliverable => @deliverable_2, :hours => 20)
 
-      assert_equal 10_000 + (30 * 100), contract.total_budget
+      assert_equal 10_000 + (10 * 100), contract.total_budget
     end
   end
 
@@ -180,8 +180,8 @@ class ContractTest < ActiveSupport::TestCase
       OverheadBudget.generate!(:deliverable => @deliverable_2, :hours => 20)
 
       assert_equal 10_000 - 4000, @deliverable_1.profit_budget
-      assert_equal (30 * 100.0) - 0, @deliverable_2.profit_budget
-      assert_equal 9000, contract.profit_budget
+      assert_equal (10 * 100.0) - 0, @deliverable_2.profit_budget
+      assert_equal 7000, contract.profit_budget
       
     end
   end
