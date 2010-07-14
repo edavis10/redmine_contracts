@@ -1,3 +1,5 @@
+require 'pp'
+
 module RedmineContracts
 
   # TODO: decide how this is activated.
@@ -63,7 +65,7 @@ module RedmineContracts
 
           end
 
-          
+          deliverable.notes += "Converted data:\n<pre>" + old_deliverable.pretty_inspect + "</pre>"
           
           deliverable.save!
         end

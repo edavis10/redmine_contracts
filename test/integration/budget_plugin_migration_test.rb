@@ -90,6 +90,14 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
 
     end
 
+    should "append the YAML dump of the old object to the notes" do
+      RedmineContracts::BudgetPluginMigration.migrate(@data)
+      d = Deliverable.find_by_title("Deliverable One")
+
+      assert_match /Converted data/, d.notes
+      assert_match /"profit"=>200.0/, d.notes
+    end
+
     context "converting Fixed Deliverables" do
       should "convert fixed_cost to total" do
         RedmineContracts::BudgetPluginMigration.migrate(@data)
@@ -125,6 +133,7 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
         
       end
     end
+
   end
 end
 
