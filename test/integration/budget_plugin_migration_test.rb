@@ -59,6 +59,21 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
       assert_equal [@manager, @manager, @manager], Deliverable.all.collect(&:manager)
     end
 
+    should "create a new Overhead Budget record for any overhead" do
+      assert_difference("OverheadBudget.count", 1) do
+        RedmineContracts::BudgetPluginMigration.migrate(@data)
+      end
+
+      d = Deliverable.find_by_title("Deliverable One")
+      assert_equal 1, d.overhead_budgets.count
+      assert_equal 200, d.overhead_budget_total
+
+      overhead = d.overhead_budgets.first
+      assert overhead
+      assert_equal 200, overhead.budget
+      assert_equal 0, overhead.hours
+    end
+
     context "converting Fixed Deliverables" do
       should "convert fixed_cost to total" do
         RedmineContracts::BudgetPluginMigration.migrate(@data)

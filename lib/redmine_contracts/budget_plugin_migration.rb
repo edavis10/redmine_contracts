@@ -36,6 +36,12 @@ module RedmineContracts
           deliverable.contract = contract
           deliverable.manager = project.users.first          
 
+          if old_deliverable['overhead'].present?
+            deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
+                                                               :budget => old_deliverable['overhead'],
+                                                               :hours => 0)
+          end
+          
           case old_deliverable['type']
           when 'FixedDeliverable'
             deliverable.total = old_deliverable['fixed_cost']
