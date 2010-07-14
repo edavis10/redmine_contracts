@@ -15,11 +15,22 @@ class FixedDeliverable < Deliverable
     read_attribute(:total) || 0.0
   end
 
+  # Fixed deliverables are always 100% spent
+  def total_spent
+    total
+  end
+
   # The amount of profit that is budgeted for this deliverable.
   # Profit = Total - ( Labor + Overhead + Fixed + Markup )
   def profit_budget
     budgets = labor_budget_total + overhead_budget_total
     (total || 0.0) - budgets
+  end
+
+  # The amount of money remaining after expenses have been taken out
+  # Profit left = Total - Labor spent - Overhead spent
+  def profit_left
+    total_spent - labor_budget_spent - overhead_spent
   end
   
   # Hardcoded value used as a wrapper for the old Budget plugin API.

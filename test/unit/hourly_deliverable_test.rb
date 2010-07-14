@@ -20,13 +20,33 @@ class HourlyDeliverableTest < ActiveSupport::TestCase
       assert_equal 0, d.total
     end
     
-    should "multiply the total number of budgeted hours by the contract billable rate" do
+    should "multiply the total number of labor budget hours by the contract billable rate" do
       contract = Contract.generate!(:billable_rate => 100.0)
       d = HourlyDeliverable.generate!(:contract => contract)
       d.labor_budgets << LaborBudget.generate!(:hours => 10)
       d.overhead_budgets << OverheadBudget.generate!(:hours => 20)
 
-      assert_equal 100.0 * 30, d.total
+      assert_equal 100.0 * 10, d.total
+    end
+  end
+
+  context "#total_spent" do
+    should "be equal to the number of hours used multipled by the contract rate" do
+      configure_overhead_plugin
+
+      contract = Contract.generate!(:billable_rate => 150.0)
+      @project = Project.generate!
+      @developer = User.generate!
+      @role = Role.generate!
+      User.add_to_project(@developer, @project, @role)
+
+      d = HourlyDeliverable.generate!(:contract => contract)
+      d.issues << @issue1 = Issue.generate_for_project!(@project)
+      TimeEntry.generate!(:hours => 15, :issue => @issue1, :project => @project,
+                          :activity => @billable_activity,
+                          :user => @developer)
+
+      assert_equal 2250, d.total_spent
     end
   end
   
@@ -52,7 +72,7 @@ class HourlyDeliverableTest < ActiveSupport::TestCase
 
   context "#profit_budget" do
     setup do
-      @contract = Contract.generate!(:billable_rate => 100.0)
+      @contract = Contract.generate!(:billable_rate => 150.0)
       @deliverable = HourlyDeliverable.generate!(:contract => @contract)
     end
     
@@ -63,12 +83,50 @@ class HourlyDeliverableTest < ActiveSupport::TestCase
     end
 
     should "be the total minus the sum of all of the budgets' amounts" do
-      LaborBudget.generate!(:deliverable => @deliverable, :hours => 10, :budget => 2000)
-      LaborBudget.generate!(:deliverable => @deliverable, :hours => 5, :budget => 1000)
-      OverheadBudget.generate!(:deliverable => @deliverable, :hours => 15, :budget => 2000)
+      LaborBudget.generate!(:deliverable => @deliverable, :hours => 5, :budget => 250)
+      LaborBudget.generate!(:deliverable => @deliverable, :hours => 5, :budget => 250)
+      OverheadBudget.generate!(:deliverable => @deliverable, :hours => 3, :budget => 225)
 
-      assert_equal 30 * 100, @deliverable.total
-      assert_equal 3000 - (2000 + 1000 + 2000), @deliverable.profit_budget
+      assert_equal 1500, @deliverable.total
+      assert_equal 1500 - (225 + 250 + 250), @deliverable.profit_budget
     end
   end
+
+  context "#profit_left" do
+    should "be equal to the total to bill (total_spent) minus the labor budget spent minus the overhead spent" do
+      configure_overhead_plugin
+
+      contract = Contract.generate!(:billable_rate => 150.0)
+      @project = Project.generate!
+      @developer = User.generate!
+      @manager = User.generate!
+      @role = Role.generate!
+      User.add_to_project(@developer, @project, @role)
+      User.add_to_project(@manager, @project, @role)
+      @rate = Rate.generate!(:project => @project,
+                             :user => @developer,
+                             :date_in_effect => Date.yesterday,
+                             :amount => 55)
+      @rate = Rate.generate!(:project => @project,
+                             :user => @manager,
+                             :date_in_effect => Date.yesterday,
+                             :amount => 75)
+
+      @deliverable_1 = HourlyDeliverable.generate!(:contract => contract)
+      @deliverable_1.issues << @issue1 = Issue.generate_for_project!(@project)
+      TimeEntry.generate!(:hours => 15, :issue => @issue1, :project => @project,
+                          :activity => @billable_activity,
+                          :user => @developer)
+      TimeEntry.generate!(:hours => 4, :issue => @issue1, :project => @project,
+                          :activity => @non_billable_activity,
+                          :user => @manager)
+
+      # Check intermediate values
+      assert_equal 825, @deliverable_1.labor_budget_spent
+      assert_equal 300, @deliverable_1.overhead_spent
+      
+      assert_equal 1125, @deliverable_1.profit_left
+    end
+  end
+
 end

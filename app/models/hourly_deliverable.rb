@@ -19,8 +19,23 @@ class HourlyDeliverable < Deliverable
     return 0 if contract.billable_rate.blank?
     return 0 if labor_budgets.count == 0 && overhead_budgets.count == 0
 
-    hours = labor_budgets.sum(:hours) + overhead_budgets.sum(:hours)
-    return contract.billable_rate * hours
+    return contract.billable_rate * labor_budgets.sum(:hours)
+  end
+
+  # Total amount to be billed on the deliverable, using the total time logged
+  # and the contract rate
+  def total_spent
+    return 0 if contract.nil?
+    return 0 if contract.billable_rate.blank?
+    return 0 unless self.issues.count > 0
+
+    time_logs = self.issues.collect(&:time_entries).flatten
+    hours = time_logs.inject(0) {|total, time_entry|
+      total += time_entry.hours if time_entry.billable?
+      total
+    }
+
+    return hours * contract.billable_rate
   end
   
   # Block setting the total on HourlyDeliverables
@@ -37,5 +52,11 @@ class HourlyDeliverable < Deliverable
   def profit_budget
     budgets = labor_budget_total + overhead_budget_total
     (total || 0.0) - budgets
+  end
+
+  # The amount of money remaining after expenses have been taken out
+  # Profit left = Total - Labor spent - Overhead spent
+  def profit_left
+    total_spent - labor_budget_spent - overhead_spent
   end
 end

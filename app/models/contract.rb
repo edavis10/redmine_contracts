@@ -38,12 +38,6 @@ class Contract < ActiveRecord::Base
     define_method(mthd) { "TODO in later release" }
   end
 
-  [:total_spent,
-   :profit_spent
-  ].each do |mthd|
-    define_method(mthd) { "TODO" }
-  end
-
   # OPTIMIZE: N+1
   def labor_budget
     deliverables.inject(0) {|total, deliverable| total += deliverable.labor_budget_total }
@@ -82,9 +76,20 @@ class Contract < ActiveRecord::Base
   end
 
   # OPTIMIZE: N+1
+  def total_spent
+    deliverables.inject(0) {|total, deliverable| total += deliverable.total_spent }
+  end
+
+  # OPTIMIZE: N+1
   def profit_budget
     deliverables.inject(0) {|total, deliverable| total += deliverable.profit_budget }
   end
+
+  # OPTIMIZE: N+1
+  def profit_left
+    deliverables.inject(0) {|total, deliverable| total += deliverable.profit_left }
+  end
+  alias_method :profit_spent, :profit_left
 
   PaymentTerms = {
     :net_0 => :text_payment_terms_net_0,
