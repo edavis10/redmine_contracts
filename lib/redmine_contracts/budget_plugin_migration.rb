@@ -1,7 +1,8 @@
 require 'pp'
 
 module RedmineContracts
-
+  class BudgetPluginInstalledError < StandardError; end
+  
   # TODO: decide how this is activated.
   # Have the user dump yaml themselves?  Or rename the tables and
   # SQL select the data out into yaml?
@@ -9,6 +10,20 @@ module RedmineContracts
   class BudgetPluginMigration
     @@data = nil
 
+    def self.check_for_installed_budget_plugin
+      if Redmine::Plugin.registered_plugins.keys.include?(:budget_plugin)
+        raise BudgetPluginInstalledError, "The budget plugin is still installed. Please remove it and retry the conversion"
+      end
+    end
+
+    def self.rename_old_tables
+
+    end
+
+    def self.migrate_contracts
+
+    end
+    
     def self.migrate(old_data)
       @@data = old_data
 
