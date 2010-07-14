@@ -208,5 +208,51 @@ class ContractTest < ActiveSupport::TestCase
       assert_equal 2250, @deliverable_2.total_spent
       assert_equal 12_250, contract.total_spent
     end
-  end    
+  end
+
+  context "#profit_left" do
+    should "sum all of the profit left on all of the Deliverables" do
+      configure_overhead_plugin
+
+      contract = Contract.generate!(:billable_rate => 150.0)
+
+      @project = Project.generate!
+      @developer = User.generate!
+      @manager = User.generate!
+      @role = Role.generate!
+      User.add_to_project(@developer, @project, @role)
+      User.add_to_project(@manager, @project, @role)
+      @rate = Rate.generate!(:project => @project,
+                             :user => @developer,
+                             :date_in_effect => Date.yesterday,
+                             :amount => 55)
+      @rate = Rate.generate!(:project => @project,
+                             :user => @manager,
+                             :date_in_effect => Date.yesterday,
+                             :amount => 75)
+
+      contract.deliverables << @deliverable_1 = FixedDeliverable.generate!(:total => 2000)
+      @deliverable_1.issues << @issue1 = Issue.generate_for_project!(@project)
+      TimeEntry.generate!(:hours => 15, :issue => @issue1, :project => @project,
+                          :activity => @billable_activity,
+                          :user => @developer)
+      TimeEntry.generate!(:hours => 4, :issue => @issue1, :project => @project,
+                          :activity => @non_billable_activity,
+                          :user => @manager)
+
+      contract.deliverables << @deliverable_2 = HourlyDeliverable.generate!(:contract => contract)
+      @deliverable_2.issues << @issue2 = Issue.generate_for_project!(@project)
+      TimeEntry.generate!(:hours => 15, :issue => @issue2, :project => @project,
+                          :activity => @billable_activity,
+                          :user => @developer)
+      TimeEntry.generate!(:hours => 4, :issue => @issue2, :project => @project,
+                          :activity => @non_billable_activity,
+                          :user => @manager)
+
+      assert_equal 875, @deliverable_1.profit_left
+      assert_equal 1125, @deliverable_2.profit_left
+      assert_equal 2000, contract.profit_left
+    end
+
+  end
 end
