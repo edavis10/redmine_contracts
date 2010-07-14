@@ -21,7 +21,7 @@ module RedmineContracts
     end
 
     def self.migrate_contracts
-
+      ::Engines.plugins['redmine_contracts'].migrate
     end
     
     def self.migrate(old_data)
