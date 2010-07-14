@@ -21,6 +21,22 @@ class HourlyDeliverable < Deliverable
 
     return contract.billable_rate * labor_budgets.sum(:hours)
   end
+
+  # Total amount to be billed on the deliverable, using the total time logged
+  # and the contract rate
+  def total_spent
+    return 0 if contract.nil?
+    return 0 if contract.billable_rate.blank?
+    return 0 unless self.issues.count > 0
+
+    time_logs = self.issues.collect(&:time_entries).flatten
+    hours = time_logs.inject(0) {|total, time_entry|
+      total += time_entry.hours if time_entry.billable?
+      total
+    }
+
+    return hours * contract.billable_rate
+  end
   
   # Block setting the total on HourlyDeliverables
   def total=(v)

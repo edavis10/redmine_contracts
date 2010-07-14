@@ -29,6 +29,26 @@ class HourlyDeliverableTest < ActiveSupport::TestCase
       assert_equal 100.0 * 10, d.total
     end
   end
+
+  context "#total_spent" do
+    should "be equal to the number of hours used multipled by the contract rate" do
+      configure_overhead_plugin
+
+      contract = Contract.generate!(:billable_rate => 150.0)
+      @project = Project.generate!
+      @developer = User.generate!
+      @role = Role.generate!
+      User.add_to_project(@developer, @project, @role)
+
+      d = HourlyDeliverable.generate!(:contract => contract)
+      d.issues << @issue1 = Issue.generate_for_project!(@project)
+      TimeEntry.generate!(:hours => 15, :issue => @issue1, :project => @project,
+                          :activity => @billable_activity,
+                          :user => @developer)
+
+      assert_equal 2250, d.total_spent
+    end
+  end
   
   context "#total=" do
     should "not write any attributes" do
