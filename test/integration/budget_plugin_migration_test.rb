@@ -98,6 +98,33 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
         assert_equal 30_000, d.total
       end
     end
+
+    context "converting Hourly Deliverables" do
+      should "create a new Labor Budget" do
+        assert_difference("LaborBudget.count", 2) do
+          RedmineContracts::BudgetPluginMigration.migrate(@data)
+        end
+
+        d1 = Deliverable.find_by_title("Deliverable One")
+        assert_equal 1, d1.labor_budgets.count
+        assert_equal 100.0 * 50.0, d1.labor_budget_total
+
+        labor1 = d1.labor_budgets.first
+        assert labor1
+        assert_equal 5000, labor1.budget
+        assert_equal 100, labor1.hours
+
+        d2 = Deliverable.find_by_title("Deliverable 2")
+        assert_equal 1, d2.labor_budgets.count
+        assert_equal 12 * 25, d2.labor_budget_total
+
+        labor1 = d2.labor_budgets.first
+        assert labor1
+        assert_equal 300, labor1.budget
+        assert_equal 12, labor1.hours
+        
+      end
+    end
   end
 end
 

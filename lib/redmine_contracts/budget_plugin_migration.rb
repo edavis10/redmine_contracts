@@ -41,6 +41,12 @@ module RedmineContracts
             @total = deliverable.total = old_deliverable['fixed_cost']
           when 'HourlyDeliverable'
             @total = old_deliverable['total_hours'].to_f * old_deliverable['cost_per_hour'].to_f
+
+            if old_deliverable['total_hours'].present? || old_deliverable['cost_per_hour'].present?
+              deliverable.labor_budgets << LaborBudget.new(:deliverable => deliverable,
+                                                           :budget => @total,
+                                                           :hours => old_deliverable['total_hours'])
+            end
           else
             @total = 0
           end
