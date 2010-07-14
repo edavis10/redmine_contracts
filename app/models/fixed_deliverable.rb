@@ -15,6 +15,11 @@ class FixedDeliverable < Deliverable
     read_attribute(:total) || 0.0
   end
 
+  # Fixed deliverables are always 100% spent
+  def total_spent
+    total
+  end
+
   # The amount of profit that is budgeted for this deliverable.
   # Profit = Total - ( Labor + Overhead + Fixed + Markup )
   def profit_budget

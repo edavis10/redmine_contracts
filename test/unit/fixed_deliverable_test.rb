@@ -21,4 +21,10 @@ class FixedDeliverableTest < ActiveSupport::TestCase
       assert_equal 0, FixedDeliverable.generate(:total => nil).profit_budget
     end
   end
+
+  context "#total_spent" do
+    should "equal the budgeted total" do
+      assert_equal 1000, FixedDeliverable.generate(:total => 1_000).total_spent
+    end
+  end
 end
