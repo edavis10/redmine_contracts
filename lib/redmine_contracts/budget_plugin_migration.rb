@@ -36,35 +36,28 @@ module RedmineContracts
           deliverable.contract = contract
           deliverable.manager = project.users.first          
 
+          case old_deliverable['type']
+          when 'FixedDeliverable'
+            @total = deliverable.total = old_deliverable['fixed_cost']
+          when 'HourlyDeliverable'
+            @total = old_deliverable['total_hours'].to_f * old_deliverable['cost_per_hour'].to_f
+          else
+            @total = 0
+          end
+
           if old_deliverable['overhead'].present?
             deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
                                                                :budget => old_deliverable['overhead'],
                                                                :hours => 0)
-          end
-          
-          case old_deliverable['type']
-          when 'FixedDeliverable'
-            deliverable.total = old_deliverable['fixed_cost']
-            if old_deliverable['overhead_percent'].present?
-              budget = old_deliverable['fixed_cost'] * (old_deliverable['overhead_percent'].to_f / 100)
-              
-              deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
-                                                                 :budget => budget,
-                                                                 :hours => 0)
-            end
-          when 'HourlyDeliverable'
-            if old_deliverable['overhead_percent'].present?
-              budget = old_deliverable['total_hours'].to_f * old_deliverable['cost_per_hour'].to_f *
-                (old_deliverable['overhead_percent'].to_f / 100)
-              
-              deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
-                                                                 :budget => budget,
-                                                                 :hours => 0)
-            end
+          elsif old_deliverable['overhead_percent'].present?
+            overhead = @total * (old_deliverable['overhead_percent'].to_f / 100)
+            deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
+                                                               :budget => overhead,
+                                                               :hours => 0)
 
-          else
-            # no-op
           end
+
+          
           
           deliverable.save!
         end
