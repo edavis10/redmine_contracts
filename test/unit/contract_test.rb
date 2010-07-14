@@ -185,4 +185,28 @@ class ContractTest < ActiveSupport::TestCase
       
     end
   end
+
+  context "#total_spent" do
+    should "sum all of the total spents on the Deliverables" do
+      configure_overhead_plugin
+
+      contract = Contract.generate!(:billable_rate => 150.0)
+
+      @project = Project.generate!
+      @developer = User.generate!
+      @role = Role.generate!
+      User.add_to_project(@developer, @project, @role)
+
+      contract.deliverables << @deliverable_1 = FixedDeliverable.generate!(:total => 10_000)
+      contract.deliverables << @deliverable_2 = HourlyDeliverable.generate!(:contract => contract)
+      @deliverable_2.issues << @issue1 = Issue.generate_for_project!(@project)
+      TimeEntry.generate!(:hours => 15, :issue => @issue1, :project => @project,
+                          :activity => @billable_activity,
+                          :user => @developer)
+
+      assert_equal 10_000, @deliverable_1.total_spent
+      assert_equal 2250, @deliverable_2.total_spent
+      assert_equal 12_250, contract.total_spent
+    end
+  end    
 end
