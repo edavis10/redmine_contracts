@@ -20,13 +20,13 @@ class HourlyDeliverableTest < ActiveSupport::TestCase
       assert_equal 0, d.total
     end
     
-    should "multiply the total number of budgeted hours by the contract billable rate" do
+    should "multiply the total number of labor budget hours by the contract billable rate" do
       contract = Contract.generate!(:billable_rate => 100.0)
       d = HourlyDeliverable.generate!(:contract => contract)
       d.labor_budgets << LaborBudget.generate!(:hours => 10)
       d.overhead_budgets << OverheadBudget.generate!(:hours => 20)
 
-      assert_equal 100.0 * 30, d.total
+      assert_equal 100.0 * 10, d.total
     end
   end
   
