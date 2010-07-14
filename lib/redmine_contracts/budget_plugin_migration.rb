@@ -45,6 +45,23 @@ module RedmineContracts
           case old_deliverable['type']
           when 'FixedDeliverable'
             deliverable.total = old_deliverable['fixed_cost']
+            if old_deliverable['overhead_percent'].present?
+              budget = old_deliverable['fixed_cost'] * (old_deliverable['overhead_percent'].to_f / 100)
+              
+              deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
+                                                                 :budget => budget,
+                                                                 :hours => 0)
+            end
+          when 'HourlyDeliverable'
+            if old_deliverable['overhead_percent'].present?
+              budget = old_deliverable['total_hours'].to_f * old_deliverable['cost_per_hour'].to_f *
+                (old_deliverable['overhead_percent'].to_f / 100)
+              
+              deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
+                                                                 :budget => budget,
+                                                                 :hours => 0)
+            end
+
           else
             # no-op
           end
