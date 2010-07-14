@@ -17,6 +17,10 @@ module RedmineContracts
     end
 
     def self.rename_old_tables
+      ActiveRecord::Migration.rename_table(:deliverables, :budget_plugin_deliverables)
+    end
+
+    def self.export_data
 
     end
 
