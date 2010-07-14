@@ -91,4 +91,42 @@ class HourlyDeliverableTest < ActiveSupport::TestCase
       assert_equal 1500 - (225 + 250 + 250), @deliverable.profit_budget
     end
   end
+
+  context "#profit_left" do
+    should "be equal to the total to bill (total_spent) minus the labor budget spent minus the overhead spent" do
+      configure_overhead_plugin
+
+      contract = Contract.generate!(:billable_rate => 150.0)
+      @project = Project.generate!
+      @developer = User.generate!
+      @manager = User.generate!
+      @role = Role.generate!
+      User.add_to_project(@developer, @project, @role)
+      User.add_to_project(@manager, @project, @role)
+      @rate = Rate.generate!(:project => @project,
+                             :user => @developer,
+                             :date_in_effect => Date.yesterday,
+                             :amount => 55)
+      @rate = Rate.generate!(:project => @project,
+                             :user => @manager,
+                             :date_in_effect => Date.yesterday,
+                             :amount => 75)
+
+      @deliverable_1 = HourlyDeliverable.generate!(:contract => contract)
+      @deliverable_1.issues << @issue1 = Issue.generate_for_project!(@project)
+      TimeEntry.generate!(:hours => 15, :issue => @issue1, :project => @project,
+                          :activity => @billable_activity,
+                          :user => @developer)
+      TimeEntry.generate!(:hours => 4, :issue => @issue1, :project => @project,
+                          :activity => @non_billable_activity,
+                          :user => @manager)
+
+      # Check intermediate values
+      assert_equal 825, @deliverable_1.labor_budget_spent
+      assert_equal 300, @deliverable_1.overhead_spent
+      
+      assert_equal 1125, @deliverable_1.profit_left
+    end
+  end
+
 end
