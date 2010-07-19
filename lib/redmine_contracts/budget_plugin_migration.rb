@@ -104,10 +104,11 @@ module RedmineContracts
 
       contract = Contract.new(:name => 'Converted Contract',
                               :start_date => old_deliverable['due'],
-                              :end_date => old_deliverable['due'])
+                              :end_date => old_deliverable['due']) do |c|
+        c.project = project
+        c.account_executive = project.users.first
+      end
 
-      contract.project = project
-      contract.account_executive = project.users.first
       contract.save!
       contract
     end
