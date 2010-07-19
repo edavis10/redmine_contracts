@@ -97,6 +97,9 @@ module RedmineContracts
       end
 
       contract.save!
+      unless project.module_enabled?(:contracts)
+        EnabledModule.create!(:project => project, :name => 'contracts')
+      end
       contract
     end
 

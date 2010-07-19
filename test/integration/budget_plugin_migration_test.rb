@@ -53,6 +53,15 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
       assert_equal 2, @project_two.reload.contracts.first.deliverables.count
     end
 
+    should "enable the contracts plugin for each project with a contract" do
+      @no_deliverables = Project.generate!(:enabled_modules => [])
+      RedmineContracts::BudgetPluginMigration.migrate(@data)
+
+      assert @project_one.reload.module_enabled?(:contracts)
+      assert @project_two.reload.module_enabled?(:contracts)
+      assert !@no_deliverables.reload.module_enabled?(:contracts)
+    end
+
     should "pick the first project member for the deliverable manager" do
       RedmineContracts::BudgetPluginMigration.migrate(@data)
 
