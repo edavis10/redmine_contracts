@@ -172,6 +172,28 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
       end
     end
 
+    context "converting issue ids" do
+      setup do
+        @issue1 = Issue.generate_for_project!(@project_two, :deliverable_id => 2)
+        @issue2 = Issue.generate_for_project!(@project_two, :deliverable_id => 4)
+        
+      end
+      
+      should "keep the same Deliverable assigned" do
+        RedmineContracts::BudgetPluginMigration.migrate(@data)
+
+        assert_equal "Deliverable 2", @issue1.reload.deliverable.title
+        assert_equal "Version 1.0", @issue2.reload.deliverable.title
+      end
+      
+      should "handle primary key differences between the old and new Deliverables" do
+        RedmineContracts::BudgetPluginMigration.migrate(@data)
+
+        # The "third" deliverable has an id of 4
+        assert_equal "Version 1.0", @issue2.reload.deliverable.title
+      end
+    end
+
   end
 end
 

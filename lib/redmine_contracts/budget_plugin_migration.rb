@@ -38,6 +38,9 @@ module RedmineContracts
     def self.migrate(old_data)
       @@data = YAML.load(old_data)
 
+      # Map old deliverable ids to the new ones
+      @deliverable_mapper = {}
+      
       ActiveRecord::Base.transaction do
         @@data.each do |old_deliverable|
 
@@ -74,7 +77,13 @@ module RedmineContracts
           append_old_deliverable_to_notes(old_deliverable, deliverable)
           
           deliverable.save!
+          
+          @deliverable_mapper[old_deliverable['id']] = deliverable.id
         end
+      end
+
+      @deliverable_mapper.each do |old, new|
+        Issue.update_all(["deliverable_id = ?", new], ["deliverable_id = ?", old])
       end
     end
 
