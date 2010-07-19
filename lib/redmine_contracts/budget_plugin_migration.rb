@@ -62,18 +62,7 @@ module RedmineContracts
             @total = 0
           end
 
-          if old_deliverable['overhead'].present?
-            deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
-                                                               :budget => old_deliverable['overhead'],
-                                                               :hours => 0)
-          elsif old_deliverable['overhead_percent'].present?
-            overhead = @total * (old_deliverable['overhead_percent'].to_f / 100)
-            deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
-                                                               :budget => overhead,
-                                                               :hours => 0)
-
-          end
-
+          convert_overhead(deliverable, old_deliverable, @total)
           convert_materials(deliverable, old_deliverable, @total)
           append_old_deliverable_to_notes(old_deliverable, deliverable)
           
@@ -102,6 +91,20 @@ module RedmineContracts
       contract
     end
 
+    def self.convert_overhead(deliverable, old_deliverable, total)
+      if old_deliverable['overhead'].present?
+        deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
+                                                           :budget => old_deliverable['overhead'],
+                                                           :hours => 0)
+      elsif old_deliverable['overhead_percent'].present?
+        overhead = total * (old_deliverable['overhead_percent'].to_f / 100)
+        deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
+                                                           :budget => overhead,
+                                                           :hours => 0)
+
+      end
+    end
+    
     def self.convert_materials(deliverable, old_deliverable, total)
       if old_deliverable['materials'].present? && old_deliverable['materials'] > 0.0
         deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
