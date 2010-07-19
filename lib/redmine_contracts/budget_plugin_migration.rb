@@ -86,7 +86,7 @@ module RedmineContracts
 
           end
 
-          deliverable.notes += "Converted data:\n<pre>" + old_deliverable.pretty_inspect + "</pre>"
+          append_old_deliverable_to_notes(old_deliverable, deliverable)
           
           deliverable.save!
         end
@@ -111,6 +111,10 @@ module RedmineContracts
 
       contract.save!
       contract
+    end
+
+    def self.append_old_deliverable_to_notes(old_deliverable, new_deliverable)
+      new_deliverable.notes += "Converted data:\n<pre>" + old_deliverable.pretty_inspect + "</pre>"
     end
   end
 end
