@@ -92,6 +92,8 @@ module RedmineContracts
                               :end_date => old_deliverable['due']) do |c|
         c.project = project
         c.account_executive = project.users.first
+        c.start_date ||= Date.today
+        c.end_date ||= Date.today
       end
 
       contract.save!
@@ -99,6 +101,8 @@ module RedmineContracts
     end
 
     def self.convert_overhead(deliverable, old_deliverable, total)
+      total ||= 0
+      
       if old_deliverable['overhead'].present?
         deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
                                                            :budget => old_deliverable['overhead'],
@@ -113,6 +117,8 @@ module RedmineContracts
     end
     
     def self.convert_materials(deliverable, old_deliverable, total)
+      total ||= 0
+      
       if old_deliverable['materials'].present? && old_deliverable['materials'] > 0.0
         deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
                                                            :budget => old_deliverable['materials'],
