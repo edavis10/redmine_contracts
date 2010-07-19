@@ -29,7 +29,7 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
     should "load a YAML dump of the old budget data" do
       RedmineContracts::BudgetPluginMigration.migrate(@data)
 
-      assert_equal @data, RedmineContracts::BudgetPluginMigration.data
+      assert_equal YAML.load(@data), RedmineContracts::BudgetPluginMigration.data
     end
     
     should "create a new Deliverable for each old Deliverable" do
