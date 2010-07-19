@@ -40,19 +40,9 @@ module RedmineContracts
                                         :notes => old_deliverable['description']
                                         )
           deliverable.type = old_deliverable['type']
-
           project = Project.find(old_deliverable['project_id'])
           contract = Contract.find_by_project_id(project.id)
-          if contract.nil?
-            contract = Contract.new(:name => 'Converted Contract',
-                                    :start_date => old_deliverable['due'],
-                                    :end_date => old_deliverable['due'])
-
-            
-            contract.project = project
-            contract.account_executive = project.users.first
-            contract.save!
-          end
+          contract ||= create_new_contract(old_deliverable)
 
           deliverable.contract = contract
           deliverable.manager = project.users.first          
@@ -105,6 +95,21 @@ module RedmineContracts
 
     def self.data
       @@data
+    end
+
+    private
+
+    def self.create_new_contract(old_deliverable)
+      project = Project.find(old_deliverable['project_id'])
+
+      contract = Contract.new(:name => 'Converted Contract',
+                              :start_date => old_deliverable['due'],
+                              :end_date => old_deliverable['due'])
+
+      contract.project = project
+      contract.account_executive = project.users.first
+      contract.save!
+      contract
     end
   end
 end
