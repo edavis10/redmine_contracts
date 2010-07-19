@@ -89,12 +89,11 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
       end
 
       d = Deliverable.find_by_title("Deliverable 2")
-      assert_equal 1, d.overhead_budgets.count
-      assert_equal 12 * 25 * 1.5, d.overhead_budget_total # hourly
+      assert_equal 2, d.overhead_budgets.count
 
       overhead = d.overhead_budgets.first
       assert overhead
-      assert_equal 450, overhead.budget
+      assert_equal 12 * 25 * 1.5, overhead.budget
       assert_equal 0, overhead.hours
 
     end
@@ -114,7 +113,7 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
       assert_equal 0, materials.hours
     end
 
-    should "create a new Overhead Budget record for any overhead percent" do
+    should "create a new Overhead Budget record for any materials percent" do
       assert_difference("OverheadBudget.count", 5) do
         RedmineContracts::BudgetPluginMigration.migrate(@data)
       end
