@@ -2,6 +2,10 @@ require 'pp'
 
 module RedmineContracts
   class BudgetPluginInstalledError < StandardError; end
+
+  class BudgetPluginDeliverable < ActiveRecord::Base
+    set_table_name 'deliverables'
+  end
   
   # TODO: decide how this is activated.
   # Have the user dump yaml themselves?  Or rename the tables and
@@ -18,10 +22,12 @@ module RedmineContracts
 
     def self.rename_old_tables
       ActiveRecord::Migration.rename_table(:deliverables, :budget_plugin_deliverables)
+      Deliverable.reset_column_information
+      RedmineContracts::BudgetPluginDeliverable.reset_column_information      
     end
 
     def self.export_data
-
+      RedmineContracts::BudgetPluginDeliverable.all.collect {|d| d.attributes}.to_yaml
     end
 
     def self.migrate_contracts
