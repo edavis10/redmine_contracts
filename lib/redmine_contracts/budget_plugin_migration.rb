@@ -33,9 +33,10 @@ module RedmineContracts
     def self.migrate_contracts
       ::Engines.plugins['redmine_contracts'].migrate
     end
-    
+
+    # * old_data - YAML string of deliverables to migrate
     def self.migrate(old_data)
-      @@data = old_data
+      @@data = YAML.load(old_data)
 
       ActiveRecord::Base.transaction do
         @@data.each do |old_deliverable|

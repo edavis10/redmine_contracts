@@ -6,7 +6,7 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
   end
 
   def load_test_fixture
-    YAML.load(File.read(File.expand_path(File.dirname(__FILE__)) + "/../fixtures/budget_plugin_migration/budget.yml"))
+    File.read(File.expand_path(File.dirname(__FILE__)) + "/../fixtures/budget_plugin_migration/budget.yml")
   end
 
   context "migrate" do
