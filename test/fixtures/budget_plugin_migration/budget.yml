@@ -31,7 +31,7 @@
   profit: 
   overhead_percent: 150
   description: ""
-  materials_percent: 
+  materials_percent: 10
   due: 2008-06-18
   budget: 900.0
   client_signoff: false

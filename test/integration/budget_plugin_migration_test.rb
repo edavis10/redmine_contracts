@@ -60,13 +60,13 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
     end
 
     should "create a new Overhead Budget record for any overhead" do
-      assert_difference("OverheadBudget.count", 3) do
+      assert_difference("OverheadBudget.count", 5) do
         RedmineContracts::BudgetPluginMigration.migrate(@data)
       end
 
       d = Deliverable.find_by_title("Deliverable One")
-      assert_equal 1, d.overhead_budgets.count
-      assert_equal 200, d.overhead_budget_total
+      assert_equal 2, d.overhead_budgets.count
+      assert_equal 400, d.overhead_budget_total
 
       overhead = d.overhead_budgets.first
       assert overhead
@@ -75,7 +75,7 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
     end
 
     should "create a new Overhead Budget record for any overhead percent" do
-      assert_difference("OverheadBudget.count", 3) do
+      assert_difference("OverheadBudget.count", 5) do
         RedmineContracts::BudgetPluginMigration.migrate(@data)
       end
 
@@ -87,6 +87,35 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
       assert overhead
       assert_equal 450, overhead.budget
       assert_equal 0, overhead.hours
+
+    end
+
+    should "create a new Overhead Budget record for any materials" do
+      assert_difference("OverheadBudget.count", 5) do
+        RedmineContracts::BudgetPluginMigration.migrate(@data)
+      end
+
+      d = Deliverable.find_by_title("Deliverable One")
+      assert_equal 2, d.overhead_budgets.count
+      assert_equal 400, d.overhead_budget_total
+
+      materials = d.overhead_budgets.last
+      assert materials
+      assert_equal 200, materials.budget
+      assert_equal 0, materials.hours
+    end
+
+    should "create a new Overhead Budget record for any overhead percent" do
+      assert_difference("OverheadBudget.count", 5) do
+        RedmineContracts::BudgetPluginMigration.migrate(@data)
+      end
+
+      d = Deliverable.find_by_title("Deliverable 2")
+      assert_equal 2, d.overhead_budgets.count
+      materials = d.overhead_budgets.last
+      assert materials
+      assert_equal 12 * 25 * 0.1, materials.budget
+      assert_equal 0, materials.hours
 
     end
 

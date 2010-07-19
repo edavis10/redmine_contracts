@@ -84,6 +84,18 @@ module RedmineContracts
 
           end
 
+          if old_deliverable['materials'].present? && old_deliverable['materials'] > 0.0
+            deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
+                                                               :budget => old_deliverable['materials'],
+                                                               :hours => 0)
+          elsif old_deliverable['materials_percent'].present? && old_deliverable['materials_percent'] > 0.0
+            materials = @total * (old_deliverable['materials_percent'].to_f / 100)
+            deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
+                                                               :budget => materials,
+                                                               :hours => 0)
+
+          end
+
           deliverable.notes += "Converted data:\n<pre>" + old_deliverable.pretty_inspect + "</pre>"
           
           deliverable.save!
