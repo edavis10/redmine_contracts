@@ -7,6 +7,7 @@ en:
   field_account_executive_short: "Acct. Mgr."
   field_end_date: "End Date"
   text_new_contract: "New Contract"
+  text_edit_contract_name: "Edit {{name}}"
   field_billable_rate: "Billable Rate"
   field_billable_rate_hint: "$"
   field_discount: "Discount"
