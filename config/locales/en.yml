@@ -22,6 +22,7 @@ en:
   text_payment_terms_net_45: "Net 45"
   button_add_new: Add New
   text_new_deliverable: New Deliverable
+  text_edit_deliverable_title: "Edit {{title}}"
   field_manager: Manager
   field_labor: Labor
   field_overhead: Overhead
