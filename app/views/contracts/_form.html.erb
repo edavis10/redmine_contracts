@@ -1,6 +1,6 @@
 <% form.inputs do %>
   <%= form.input :name, :required => true %>
-  <%= form.input :account_executive, :required => true %>
+  <%= form.input :account_executive, :required => true, :collection => @project.users.sort %>
   <li class="boolean optional">
     <%= label('contract', 'executed') %>
     <%= check_box 'contract', 'executed' %>

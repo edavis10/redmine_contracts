@@ -17,6 +17,8 @@ class ContractsNewTest < ActionController::IntegrationTest
 
   should "create a new contract" do
     @account_executive = User.generate!
+    @role = Role.generate!
+    User.add_to_project(@account_executive, @project, @role)
 
     visit_contracts_for_project(@project)
     click_link 'New Contract'

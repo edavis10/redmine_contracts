@@ -5,7 +5,10 @@ class ContractsEditTest < ActionController::IntegrationTest
   
   def setup
     @project = Project.generate!(:identifier => 'main')
-    @contract = Contract.generate!(:project => @project, :name => 'A Contract', :payment_terms => 'net_15')
+    @account_executive = User.generate!
+    @role = Role.generate!
+    User.add_to_project(@account_executive, @project, @role)
+    @contract = Contract.generate!(:project => @project, :name => 'A Contract', :payment_terms => 'net_15', :account_executive => @account_executive)
   end
 
   should "allow any user to edit the contract" do
