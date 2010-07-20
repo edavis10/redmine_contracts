@@ -5,7 +5,7 @@
   <% else %>
     <%= form.input :type, :as => :hidden, :class => 'type' %>
   <% end %>
-  <%= form.input :manager, :required => true, :collection => @project.users %>
+  <%= form.input :manager, :required => true, :collection => @project.users.sort %>
   <%= form.input :start_date, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('deliverable_start_date') %>
   <%= form.input :end_date, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('deliverable_end_date') %>
   <%= form.input :notes, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
