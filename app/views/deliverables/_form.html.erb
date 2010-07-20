@@ -21,8 +21,6 @@
   </li>
   <% end %>
 
-  <%= form.input :total, :input_html => {:size => 10}, :wrapper_html => {:class => 'deliverable_total_input'} %>
-
   <% form.inputs :name => l(:text_deliverable_finances), :id => 'deliverable-finances' do %>
     <% form.semantic_fields_for :labor_budgets do |labor_budget| %>
       <% labor_budget.inputs :name => l(:field_labor), :id => 'deliverable-labor' do %>
@@ -38,6 +36,8 @@
       <% end %>
     <% end %>
   <% end %>
+
+  <%= form.input :total, :input_html => {:size => 10}, :wrapper_html => {:class => 'deliverable_total_input'} %>
 
 <% end %>
 
