@@ -66,3 +66,5 @@ Dispatcher.to_prepare :redmine_contracts do
 end
 
 require 'redmine_contracts/hooks/view_layouts_base_html_head_hook'
+require 'redmine_contracts/hooks/view_issues_show_details_bottom_hook'
+require 'redmine_contracts/hooks/view_issues_form_details_bottom_hook'

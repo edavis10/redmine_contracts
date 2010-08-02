@@ -1,0 +1,7 @@
+<% if project.module_enabled?(:contracts) %>
+  <tr>
+    <th class="deliverable"><%= l(:field_deliverable) %>:</th>
+    <td class="deliverable"><%= h(issue.deliverable.title) if issue.deliverable.present? %></td>"
+  </tr>
+<% end %>
+

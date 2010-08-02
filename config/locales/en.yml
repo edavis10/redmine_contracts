@@ -52,3 +52,5 @@ en:
   field_total_budget: "Total Budget"
   field_total_spent: "Contract Total"
   field_contract_type: "Type"
+  field_deliverable: "Deliverable"
+
