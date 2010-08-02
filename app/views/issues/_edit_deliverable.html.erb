@@ -1,0 +1,9 @@
+<% if project.module_enabled?(:contracts) %>
+  <p>
+    <% options = project.contracts.inject([]) {|data, contract|
+         data << [contract.name, contract.deliverables.collect {|d| [d.title, d.id]} ]
+       } %>
+    <%= form.select(:deliverable_id, grouped_options_for_select(options, issue.deliverable_id), {:include_blank => true}) %>
+  </p>
+<% end %>
+

@@ -71,6 +71,10 @@ module IntegrationTestHelper
     assert_template 'contracts/show'
   end
 
+  def visit_issue_page(issue)
+    visit '/issues/' + issue.id.to_s
+  end
+
   def assert_forbidden
     assert_response :forbidden
     assert_template 'common/403'
