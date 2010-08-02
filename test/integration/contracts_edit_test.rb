@@ -20,7 +20,7 @@ class ContractsEditTest < ActionController::IntegrationTest
     assert_response :success
     assert_template 'contracts/edit'
 
-    assert_select "h2", :text => @contract.name
+    assert_select "h2", :text => /#{@contract.name}/
     assert_select "form#edit_contract_#{@contract.id}.contract" do
       assert_select "input[value=?]", /#{@contract.name}/
       assert_select "select#contract_payment_terms" do
