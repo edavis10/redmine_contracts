@@ -175,6 +175,7 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
       setup do
         @issue1 = Issue.generate_for_project!(@project_two, :deliverable_id => 2)
         @issue2 = Issue.generate_for_project!(@project_two, :deliverable_id => 4)
+        @issue3 = Issue.generate_for_project!(@project_one, :deliverable_id => 1)
         
       end
       
@@ -189,7 +190,9 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
         RedmineContracts::BudgetPluginMigration.migrate(@data)
 
         # The "third" deliverable has an id of 4
+        assert_equal "Deliverable 2", @issue1.reload.deliverable.title
         assert_equal "Version 1.0", @issue2.reload.deliverable.title
+        assert_equal "Deliverable One", @issue3.reload.deliverable.title
       end
     end
 

@@ -1,5 +1,3 @@
-require 'pp'
-
 module RedmineContracts
   class BudgetPluginInstalledError < StandardError; end
 
@@ -82,8 +80,17 @@ module RedmineContracts
         end
       end
 
-      @deliverable_mapper.each do |old, new|
-        Issue.update_all(["deliverable_id = ?", new], ["deliverable_id = ?", old])
+      # Slower than update_all but update_all could potentially hit an issue
+      # multiple times depending on the migration order. Example:
+      #
+      # - Issue 1 has Deliverable 1
+      # - Deliverable 1 updates Issue 1 to have the new deliverable id of 3
+      # - Deliverable 3 runs and updates Issue 1 again to have the new deliverable id of 5
+      #
+      Issue.all.each do |issue|
+        next if issue.deliverable_id.blank?
+
+        issue.update_attribute(:deliverable_id, @deliverable_mapper[issue.deliverable_id])
       end
     end
 
