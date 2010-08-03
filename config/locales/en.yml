@@ -55,3 +55,6 @@ en:
   field_deliverable: "Deliverable"
   field_deliverable_plural: "Deliverables"
   text_terms_and_financial_overview: "Contract Terms and Financial Overview"
+  text_general_legend: "General"
+  text_budget_legend: "Budget"
+  text_account_legend: "Account Management"

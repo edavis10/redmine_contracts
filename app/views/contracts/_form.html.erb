@@ -1,4 +1,4 @@
-<% form.inputs do %>
+<% form.inputs :name => l(:text_general_legend) do %>
   <%= form.input :name, :required => true %>
   <%= form.input :account_executive, :required => true, :collection => @project.users.sort %>
   <li class="boolean optional">
@@ -7,17 +7,24 @@
   </li>
   <%= form.input :start_date, :required => true, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('contract_start_date') %>
   <%= form.input :end_date, :required => true, :as => :string, :input_html => {:size => 10}, :hint => calendar_for('contract_end_date') %>
+  <%= form.input :details, :input_html => {:class => 'wiki-edit'} %>
+<% end %>
+
+<% form.inputs :name => l(:text_budget_legend) do %>
   <%= form.input :billable_rate, :input_html => {:size => 20}, :hint => l(:field_billable_rate_hint) %>
   <%= form.input :discount, :input_html => {:size => 20}, :hint => l(:field_discount_hint) %>
   <%= form.input :discount_note, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
+<% end %>
+
+<% form.inputs :name => l(:text_account_legend) do %>
   <%= form.input :payment_terms, :as => :select, :collection => resource.payment_terms_for_select %>
-  <%= form.input :client_ap_contact_information, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
   <%= form.input :po_number %>
+  <%= form.input :client_ap_contact_information, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
   <%= form.input :client_point_of_contact, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
-  <%= form.input :details, :input_html => {:class => 'wiki-edit'} %>
 <% end %>
 <% form.buttons do %>
   <%= form.commit_button %>
+  <%# TODO: needs to be on one line. %>
   <%= link_to(l(:button_cancel), cancel_path) %>
 <% end %>
 
