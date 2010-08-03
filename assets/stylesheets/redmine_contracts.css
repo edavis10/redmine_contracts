@@ -12,6 +12,14 @@ html>body .tabular li {overflow:hidden;}
 
 .tabular .inline-hints { color:#666; margin:0.5em 0 0 0; padding: 0px; display: inline; }
 
+.deliverable_finance_table .inline-hints { 
+	padding-top:4px;
+}
+
+.no-value {
+	text-align:center;
+	color:#999;
+}
 .tabular li.required label { color: #484848; }
 .tabular li.required label span.required {color: #bb0000;}
 
@@ -29,3 +37,465 @@ a.contract-delete {color: red; }
 .spent, .budget { text-align: right; padding: 0 5px; }
 
 span.contract-details-label { font-weight: bold; }
+
+/* Design */
+.tabular li{
+padding-left: 120px; /*width of left column containing the label elements*/
+}
+
+#content .error_msg{
+	background: #ffd5d5;
+	color: #a40000;
+	border: 1px solid #a40000;
+	margin: 5px 0 10px 0;
+}
+
+	#content .error_msg p{
+		padding: 6px;
+	}
+	
+	#content .error_msg p span{
+		font-weight: bold;
+		text-decoration: underline;
+	}
+
+.contract .gravatar{
+	float: left;
+	border: 1px solid #b4d1d9;
+	padding: 0;
+	margin-top: 10px;
+	margin-left: 6px;
+	margin-right: 25px;
+	
+}
+
+#content .contract .fixed-item,
+#content .contract .fixed-item-form {
+	border-top: 1px dotted #999;
+	padding-top: 15px;
+}
+
+#content .contract .fixed-items {
+	padding-bottom: 15px;
+	border-bottom: 1px dotted #999;
+}
+
+.add_fixed a{
+	display: block;
+	margin: 15px 0 15px 0;
+	color: #2A5685;
+	text-decoration:none;
+}
+
+.select_dropdown{
+	width: 190px;
+}
+
+#content .contract table td,
+#content .contract table th{
+	padding: 2px 5px 2px 5px;
+}
+
+#deliverable-overhead ol li,
+#deliverable-labor ol li{
+	padding-left: 155px
+}
+
+#content table.deliverable_finance_table{
+	width: 400px;
+}
+
+	#content table.deliverable_finance_table select{
+		width: 145px;
+	}
+
+	#content table.deliverable_finance_table input{
+		text-align: right;
+		width: 65px;
+	}
+
+#content table.deliverable_finance_table,
+#content table.deliverable_finance_table tr,
+#content table.deliverable_finance_table tr td{
+	border: 0;
+}
+
+#expand_terms{
+	margin: 10px 0 10px 0;
+	display: block;
+}
+
+#content #contract_list table{
+	margin-bottom: 20px;
+}
+
+#content #contract_list table tbody tr td.name a{
+	color: #2f8fa5;
+	text-decoration: none;
+}
+
+#content #contract_list table tbody tr td.name a:hover{
+	text-decoration: underline;
+}
+
+#content #contract_list table tbody tr td.priority_1{
+	background: #ffaaaa;
+}
+
+#content .c_overview{
+	background: #edf6fa;
+	border: 1px solid #dcebf0;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	padding: 6px;
+	margin-bottom: 20px;
+}
+
+	#content .c_overview table{
+		width: 230px;
+		float: left;
+		border: 0;
+	}
+		#content .c_overview table.left{
+			float:left;
+			width:30%;
+		}
+		
+		#content .c_overview table.middle{
+			margin-right:3%;
+			margin-left:3%;
+			width:auto;
+		}
+		
+		#content .c_overview table.right{
+			width:30%;
+			max-width:300px;
+			float:right;
+		}
+		
+		
+	
+		#content .c_overview table td{
+			border: 0;
+			text-align: left;
+		}
+		
+		#content .c_overview table tr:hover td,
+		#content .c_overview table tr:hover,
+		#content .c_overview table td:hover{
+			background: transparent;
+		}
+		
+		#content .c_overview a.expand{
+			background: url(../../../images/arrow_collapsed.png) no-repeat;
+			padding-left: 15px;
+		}
+		
+			#content .c_overview a.expand.alt{
+				background: url(../../../images/arrow_expanded.png) no-repeat;
+			}
+			
+		#deliverables .arrow{
+			background: url(../../../images/arrow_collapsed.png) no-repeat;
+			background-position: 0 6px;
+			
+		}
+			#deliverables .arrow.alt{
+				background: url(../../../images/arrow_expanded.png) no-repeat;
+				background-position: 0 6px;
+			}
+		
+			#deliverables .arrow span{
+				padding-left: 15px;
+			}
+		
+#contract-terms,
+.deliverable_overview{
+	background: #f6fbfd;
+	border: 1px solid #d5dde1;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	display: none;
+}
+
+	#contract-terms table .hr{
+		border-top: 1px solid #dee0e1;
+	}
+	
+	#content #contract-terms table tr.padd td{
+		padding-top: 10px;
+	}
+
+	#contract-terms table.info{
+		min-width: 60%;
+		background: #f6fbfd;
+	}
+	
+	#contract-terms table.finance{
+		width: 30%;
+		max-width:300px;
+		border-left: 1px solid #bed3dd;
+		float: right;
+		margin: 0;
+		background: #fafdfe;
+	}
+	
+	#contract-terms table.info td,
+	#contract-terms table.finance td{
+		padding: 5px;
+	}
+	
+	#contract-terms table tr.grey td,
+	#content .contract .grey{
+		color: #808080;
+	}
+	
+	#contract-terms span.red,
+	#deliverables span.red,
+	#milestones span.red{
+		color: #990000;
+	}
+
+#deliverables h3,
+#milestones h3,
+#content #history h3{
+	float: left;
+	font-size: 22px;
+	border: 0;
+	padding-left: 0;
+}
+
+#content #deliverables .actions,
+#content #milestones .actions{
+	float: right;
+	margin-top: 20px;
+}
+
+	#content #deliverables .actions a,
+	#content #milestones .actions a{
+		font-size: 13px;
+		color: #3e3e3e;
+		margin-left: 20px;
+	}
+
+#deliverables table{
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+#content #deliverables table thead tr th{
+	border-right: 1px solid #e6e6e6;
+	text-align: center;
+	font-weight: bold;
+}
+
+#content #deliverables table thead tr{
+	border-bottom: 1px solid #e6e6e6;
+}
+
+#content #deliverables table th,
+#content #deliverables table td{
+	padding: 6px;
+}
+
+
+#content #deliverables table td, #content #deliverables table th,
+#content #milestones table td, #content #milestones table th,
+#content #contract_list table td, #content #contract_list table th {
+	border:1px solid #e6e6e6;
+	border-style: solid;
+	text-align:left;
+	position: static;
+	vertical-align:top;
+	z-index: 99;
+}
+
+#content #deliverables table tr.noborder td{
+	border-bottom: 0;
+}
+
+#content #deliverables table tr.ign td{
+	border-top: 0;
+	padding: 0;
+}
+
+#content #deliverables table tr.ign td table td{
+	padding: 2px 5px 2px 5px;
+}
+
+#content #deliverables table tr{
+	background-color: #edf6fa;
+}
+
+#content #deliverables table tr td.white{
+	background-color: #f6fafd;	
+}
+
+#content #deliverables table tr.even,
+#content #deliverables table tr.even:hover {
+	background-color:#dff3fc;
+}
+
+#content #deliverables table tr.ign tr{
+	background: transparent;
+}
+
+
+	#content #deliverables .title{
+		background: #FFF;
+		padding: 6px;
+		border-bottom: 1px solid #e4eff4;
+	}
+	#content #deliverables .title a {
+		margin-right: 6px;
+	}
+		#content #deliverables .title img{
+			vertical-align: middle;
+
+		}
+		
+	#content #deliverables .click td{
+		cursor: pointer;
+	}
+		
+	#content #deliverables .expanded{
+		border: 1px solid #c8d0d4;
+		margin: 5px;
+		margin-top: 0;
+		background: #f6fbfd;
+	}
+
+	#content #deliverables .expanded fieldset{
+		border: none;
+	}
+
+	#content #deliverables .info{
+		width: 45%;
+		float: left;
+	}
+	
+		#content #deliverables .info p{
+			margin: 10px 0 10px 10px;
+		}
+		#content #deliverables .info form fieldset{
+			margin-left: 10px;
+			margin-bottom: 10px;
+		}
+	
+		#content #deliverables .info table{
+			width: auto;
+			margin: 0 0 0 10px;
+		}
+		#content #deliverables .info table td{
+			border: 0;
+			padding: 2px 5px 2px 5px;
+		}
+		
+		#content #deliverables .finance table{
+			border-left: 1px solid #e4eff4;
+		}
+		
+		#content #deliverables .finance table td,
+		#content #deliverables .issue_status table td{
+			border: 0px;
+			border-right: 1px solid #e4eff4;
+			text-align: right;
+			padding: 2px 5px 2px 5px;
+		}
+		
+		#content #deliverables .finance table td.l,
+		#content #deliverables .issue_status table td.l{
+			text-align: left;
+		}
+		
+	#content #deliverables .finance{
+		float: left;
+		width: 39%;
+	}
+		#content #deliverables .finance table{
+			margin: 0;
+			padding: 0;
+		}
+		
+		#content #deliverables .finance table thead th,
+		#content #deliverables .issue_status table thead th{
+			background: #FFF;
+			border: 0;
+			font-weight: bold;
+			border-bottom: 1px solid #e4eff4;
+			text-align: center;
+			padding: 6px;
+		}
+		
+		#content #deliverables .finance table thead th{
+			border-right: 1px solid #e4eff4;
+		}
+		
+		#content #deliverables .finance table tbody tr.total td,
+		#contract-terms table tbody tr.total td{
+			border-top: 1px solid #bed3dd;
+		}
+		
+	#content #deliverables .issue_status{
+		float: left;
+		width: 16%;
+	}
+	
+		#content #deliverables .issue_status table tbody tr td{
+			border-right: 0;
+			color: #277d94;
+			text-align: left;
+		}
+		#content #deliverables .issue_status table tbody tr td.number { 
+			text-align: right; 
+		}
+
+		
+	#content #deliverables a,
+	#content .c_overview a{
+		color: #277d94;
+	}
+	
+	#content #milestones .options{
+		float: left;
+		width: 300px;
+		margin-top: 20px;
+		margin-left: 10px;
+	}
+	
+#content #milestones table{
+	margin: 0;padding: 0;
+}	
+		
+	#content #milestones table thead th{
+		font-weight: bold;
+		text-align: center;
+	}
+	
+	#content #milestones table tr.odd{
+		background: #dff3fc;
+	}
+
+	#content #milestones table tr.even{
+		background: #edf6fa;
+	}
+	
+	#content #milestones table tr.highlight td{
+		border-top: 2px solid #5fccf9;
+	}
+	
+	#content #milestones .c{
+		text-align: center;
+	}
+
+	
+#edit_contract_1 input#contract_start_date,
+#edit_contract_1 input#contract_end_date{
+	width: 85px;
+}
+
+	#edit_contract_1 li#contract_billable_rate_input div{
+		margin-bottom: 10px;
+	}
