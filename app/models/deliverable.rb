@@ -53,6 +53,11 @@ class Deliverable < ActiveRecord::Base
     issues.inject(0) {|total, issue| total += issue.spent_hours }
   end
 
+  # Wrapper for the old Budget plugins' API
+  def due
+    end_date
+  end
+
   if Rails.env.test?
     generator_for :title, :method => :next_title
 
