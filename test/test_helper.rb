@@ -75,6 +75,10 @@ module IntegrationTestHelper
     visit '/issues/' + issue.id.to_s
   end
 
+  def visit_issue_bulk_edit_page(issues)
+    visit url_for(:controller => 'issues', :action => 'bulk_edit', :ids => issues.collect(&:id))
+  end
+
   def assert_forbidden
     assert_response :forbidden
     assert_template 'common/403'
