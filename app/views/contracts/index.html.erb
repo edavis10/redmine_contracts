@@ -1,26 +1,49 @@
-<% if collection.empty? %>
-<p class="nodata"><%= l(:label_no_data) %></p>
-<% else %>
-<table class="list" cellspacing="0" border="0" cellpadding="0" id="contracts">
-  <thead>
-    <th><%= l(:field_id) %></th>
-    <th><%= l(:field_name) %></th>
-    <%# TODO: Status %>
-    <%# TODO: Type %>
-    <th><%= l(:field_account_executive_short) %></th>
-    <th><%= l(:field_total_budget) %></th>
-    <th><%= l(:field_end_date) %></th>
-  </thead>
-  <tbody>
-    <% collection.each do |contract| %>
-      <% content_tag_for(:tr, contract) do %>
-        <td class="id"><%= link_to(h(contract.id), contract_path(@project, contract)) %></td>
-        <td class="name"><%= link_to(h(contract.name), contract_path(@project, contract)) %></td>
-        <td class="account-executive"><%= h contract.account_executive.name %></td>
-        <td class="total-budget"><%= h(number_to_currency(contract.total_budget)) %></td>
-        <td class="end-date"><%= h format_date(contract.end_date) %></td>
-      <% end %>
-    <% end %>
-  </tbody>
-</table>
-<% end %>
+<div id="contract_list">
+
+  <div class="title-bar">
+
+    <div class="contextual">
+      <div class="new-issue button-large">
+        <%= link_to(l(:text_new_contract), new_contract_path) %>
+      </div>
+    </div>
+
+    <h2>Active Contacts</h2>
+
+  </div>
+
+  <% if collection.empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <table class="list" cellspacing="0" border="0" cellpadding="0" id="contracts">
+      <thead>
+        <th><%= l(:field_id) %></th>
+        <th><%= l(:field_name) %></th>
+        <%# TODO: Status %>
+        <%# TODO: Type %>
+        <th><%= l(:field_account_executive_short) %></th>
+        <th><%= l(:field_total_budget) %></th>
+        <th><%= l(:field_end_date) %></th>
+      </thead>
+      <tbody>
+        <% collection.each do |contract| %>
+          <% content_tag_for(:tr, contract) do %>
+            <td class="id"><%= link_to(h(contract.id), contract_path(@project, contract)) %></td>
+            <td class="name"><%= link_to(h(contract.name), contract_path(@project, contract)) %></td>
+            <td class="account-executive"><%= h contract.account_executive.name %></td>
+            <td class="total-budget"><%= h(number_to_currency(contract.total_budget)) %></td>
+            <td class="end-date"><%= h format_date(contract.end_date) %></td>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+
+  <div class="title-bar">
+    <h2>Inactive Contracts</h2>
+  </div>
+
+  <%# TODO: split contracts by active and inactive %>
+  <p class="nodata"><%= l(:label_no_data) %></p>
+
+</div>
