@@ -1,82 +1,317 @@
-<%# TODO: Need skinning %>
-<% div_for(resource) do %>
+<div class="title-bar" id="upper-title-bar">
   <%= content_tag(:h2, h(resource.name)) %>
+  
+  <div class="title-bar-actions">
+    <span><a href="#TODO" class="">Log time</a></span>
 
-  <%= show_field(resource, :status, :html_options => {:class => 'contract-status'}) %>
-  <%= show_field(resource, :account_executive, :html_options => {:class => 'contract-account-manager'}) %>
-  <%= show_field(resource, :contract_type, :html_options => {:class => 'contract-type'}) %>
-  <%= show_field(resource, :start_date, :format => :format_date, :html_options => {:class => 'contract-start-date'}) %>
-  <%= show_field(resource, :end_date, :format => :format_date, :html_options => {:class => 'contract-end-date'}) %>
+    <span class="meta-sep"> | </span>
+    
+    <span id="watcher"><a class="icon icon-fav-off" href="#TODO" onclick="">Watch</a></span>
 
-  <%= show_budget_field(resource, :labor_spent, :labor_budget, :html_options => {:class => 'contract-labor'}) %>
-  <%= show_budget_field(resource, :overhead_spent, :overhead_budget, :html_options => {:class => 'contract-overhead'}) %>
-  <%= show_budget_field(resource, :total_spent, :total_budget, :html_options => {:class => 'contract-total'}) %>
+    <span class="meta-sep"> | </span>
+    
+    <span><a href="#TODO">Copy</a></span>
+    <span class="meta-sep"> | </span>
+    
+    <div class="update button-large">
+      <%= link_to(l(:button_update), edit_contract_path(@project, resource)) %>
+    </div>
+  </div>
+</div>
+<%# TODO: contract messages
+    <div class="error_msg">
+             <p>There is $243 worth of time clocked to issues that are not assigned to any deliverables.  <span>Please update the orphaned issues.</span> </p>
+             </div>
+%>
+<% div_for(resource) do %>
 
-  <div id="contract-terms" style="border: 1px solid #000">
-    <%= show_field(resource, :client_point_of_contact, :format => :textilizable, :raw => true, :html_options => {:class => 'contract-client-point-of-contact'}) %>
-    <%= show_field(resource, :executed, :html_options => {:class => 'contract-executed'}) %>
-    <%= show_field(resource, :discount_note, :format => :textilizable, :raw => true, :html_options => {:class => 'contract-discount-note'}) %>
-    <%= show_field(resource, :payment_terms, :format => :format_payment_terms, :html_options => {:class => 'contract-payment-terms'}) %>
-    <%= show_field(resource, :client_ap_contact_information, :format => :textilizable, :raw => true, :html_options => {:class => 'contract-client-ap-contact-information'}) %>
-    <%= show_field(resource, :po_number, :html_options => {:class => 'contract-po-number'}) %>
-    <%= show_field(resource, :details, :format => :textilizable, :raw => true, :html_options => {:class => 'contract-details'}) %>
+  <%= avatar(resource.account_executive, :size => 40) %>
 
-    <div id="contract-finances" style="border: 1px solid #000">
-      <%= show_budget_field(resource, :labor_spent, :labor_budget, :html_options => {:class => 'contract-labor'}) %>
+  <div class="c_overview">
+    <table class="left">
+      <%= show_field(resource, :status, :html_options => {:class => 'contract-status'}) %>
+      <%= show_field(resource, :account_executive, :html_options => {:class => 'contract-account-manager'}) %>
+      <%= show_field(resource, :contract_type, :html_options => {:class => 'contract-type'}) %>
+    </table>
+    
+    <table class="middle">
+      <%= show_field(resource, :start_date, :format => :format_date, :html_options => {:class => 'contract-start-date'}) %>
+      <%= show_field(resource, :end_date, :format => :format_date, :html_options => {:class => 'contract-end-date'}) %>
+    </table>
+    
+    <table class="right">
+      <%= show_budget_field(resource, :labor_spent, :labor_budget, :html_options => {:class => 'contract-labor'}, :label_html_options => {:width => '49%'}) %>
       <%= show_budget_field(resource, :overhead_spent, :overhead_budget, :html_options => {:class => 'contract-overhead'}) %>
-      <%= show_budget_field(resource, :fixed_spent, :fixed_budget, :html_options => {:class => 'contract-fixed'}) %>
-      <%= show_budget_field(resource, :markup_spent, :markup_budget, :html_options => {:class => 'contract-markup'}) %>
-      <%= show_budget_field(resource, :profit_spent, :profit_budget, :html_options => {:class => 'contract-profit'}) %>
-      <%= show_budget_field(resource, :discount_spent, :discount_budget, :html_options => {:class => 'contract-discount'}) %>
       <%= show_budget_field(resource, :total_spent, :total_budget, :html_options => {:class => 'contract-total'}) %>
+    </table>
+    
+    <div class="clear"></div>
+    
+    <a href="#" id="expand_terms" class="expand"><%= l(:text_terms_and_financial_overview) %></a>
+    
+    <div id="contract-terms">
+      
+      <div class="left">
+        <table class="info">
+          <%= show_field(resource, :client_point_of_contact, :format => :textilizable, :raw => true, :html_options => {:class => 'contract-client-point-of-contact padd'}, :label_html_options => {:width => '25%'}) %>
+          <%= show_field(resource, :executed, :html_options => {:class => 'contract-executed'}) %>
+          <%= show_field(resource, :discount_note, :format => :textilizable, :raw => true, :html_options => {:class => 'contract-discount-note'}) %>
+          <%= show_field(resource, :payment_terms, :format => :format_payment_terms, :html_options => {:class => 'contract-payment-terms'}) %>
+          <%= show_field(resource, :client_ap_contact_information, :format => :textilizable, :raw => true, :html_options => {:class => 'contract-client-ap-contact-information'}) %>
+          <%= show_field(resource, :po_number, :html_options => {:class => 'contract-po-number'}) %>
+          <%= show_field(resource, :details, :format => :textilizable, :raw => true, :html_options => {:class => 'contract-details'}) %>
+        </table>
+      </div>
 
-      <%= show_field(resource, :billable_rate, :format => :format_hourly_rate, :html_options => {:class => 'contract-billable-rate'}) %>
-      <%= show_budget_field(resource, :estimated_hour_spent, :estimated_hour_budget, :format => :l_hours, :html_options => {:class => 'contract-estimated-hour'}) %>
+      <table class="finance">
+        <%= show_budget_field(resource, :labor_spent, :labor_budget, :html_options => {:class => 'contract-labor'}, :label_html_options => {:width => '46%'}) %>
+        <%= show_budget_field(resource, :overhead_spent, :overhead_budget, :html_options => {:class => 'contract-overhead'}) %>
+        <%= show_budget_field(resource, :fixed_spent, :fixed_budget, :html_options => {:class => 'contract-fixed'}) %>
+        <%= show_budget_field(resource, :markup_spent, :markup_budget, :html_options => {:class => 'contract-markup'}) %>
+        <%= show_budget_field(resource, :profit_spent, :profit_budget, :html_options => {:class => 'contract-profit'}) %>
+        <%= show_budget_field(resource, :discount_spent, :discount_budget, :html_options => {:class => 'contract-discount'}) %>
+
+        <tr>
+          <td colspan="3">
+            <div class="hr"></div>
+          </td>
+        </tr>
+
+        <%= show_budget_field(resource, :total_spent, :total_budget, :html_options => {:class => 'contract-total'}) %>
+        <%= show_field(resource, :billable_rate, :format => :format_hourly_rate, :html_options => {:class => 'contract-billable-rate total'}) %>
+
+        <%= show_budget_field(resource, :estimated_hour_spent, :estimated_hour_budget, :format => :l_hours, :html_options => {:class => 'contract-estimated-hour total'}) %>
+
+      </table>
+      <div class="clear"></div>
+    </div>
+  </div>
+  <div class="clear"></div>
+
+  <div id="deliverables">
+
+    <%= content_tag(:h3, l(:field_deliverable_plural)) %>
+
+    <div class="actions">
+      <a href="#">CSV</a>
+      <a href="#">View All (9)</a>
+      <%= link_to(l(:button_add_new), new_contract_deliverable_path(@project, resource), :id => 'new-deliverable') %>
     </div>
 
-  </div>
-<% end %>
+    <div class="clear"></div>
 
-<%= link_to(l(:button_update), edit_contract_path(@project, resource)) %>
+    <% if resource.deliverables.empty? %>
+      <p class="nodata"><%= l(:label_no_data) %></p>
+    <% else %>
+      <table width="100%" id="texpand">
+        <thead>
+          <tr>
+            <th><%= l(:field_end_date) %></th>
+            <th>&nbsp;</th>
+            <th><%= l(:field_title) %></th>
+            <th><%= l(:field_status) %></th>
+            <th><%= l(:field_manager) %></th>
+            <th colspan="2"><%= l(:field_labor) %></th>
+            <th colspan="2"><%= l(:field_overhead) %></th>
+            <th colspan="2"><%= l(:field_fixed) %></th>
+          </tr>
+        </thead>
 
-<%= link_to(l(:button_add_new), new_contract_deliverable_path(@project, resource), :id => 'new-deliverable') %>
+        <tbody>
+          <% resource.deliverables.each do |deliverable| %>
+            <%#= TODO: even/'' class %>
+            <% content_tag_for(:tr, deliverable, :class => 'click') do %>
+              <td width="10%" class="arrow end-date"><span><%= h format_date(deliverable.end_date) %></span></td>
+              <td width="2%" class="type"><%= h deliverable.short_type %></td>
+              <td width="25%" class="title"><%= h deliverable.title %></td>
+              <td width="15%">TODO</td>
+              <td width="15%" class="manager"><%= h deliverable.manager.try(:name) %></td>
+              <%= format_budget_for_deliverable(deliverable, deliverable.labor_budget_spent, deliverable.labor_budget_total) %>
+              <%= format_budget_for_deliverable(deliverable, deliverable.overhead_spent, deliverable.overhead_budget_total) %>
+              <%= format_budget_for_deliverable(deliverable, 0, 0) %><%# TODO: Fixed %>
+            <% end %>
 
-<% if resource.deliverables.empty? %>
-<p class="nodata"><%= l(:label_no_data) %></p>
-<% else %>
-<table class="list" cellspacing="0" border="0" cellpadding="0" id="deliverables">
-  <thead>
-    <th><%= l(:field_end_date) %></th>
-    <th>&nbsp;</th>
-    <th><%= l(:field_title) %></th>
-    <%# TODO: Status %>
-    <th><%= l(:field_manager) %></th>
-    <th><%= l(:field_labor) %></th>
-    <th><%= l(:field_overhead) %></th>
-    <th><%= l(:field_fixed) %></th>
-    <th><%= l(:button_edit) %></th>
-    <th><%= l(:button_delete) %></th>
-  </thead>
-  <tbody>
-    <% resource.deliverables.each do |deliverable| %>
-      <% content_tag_for(:tr, deliverable) do %>
-        <td class="end-date"><%= h format_date(deliverable.end_date) %></td>
-        <td class="type"><%= h deliverable.short_type %></td>
-        <td class="title"><%= h deliverable.title %></td>
-        <%# TODO: Status %>
-        <td class="manager"><%= h deliverable.manager.try(:name) %></td>
-        <td class="labor">
-          <%= format_budget_for_deliverable(deliverable, deliverable.labor_budget_spent, deliverable.labor_budget_total) %>
-        </td>
-        <td class="overhead">
-          <%= format_budget_for_deliverable(deliverable, deliverable.overhead_spent, deliverable.overhead_budget_total) %>
-        </td>
-        <td class="fixed">---</td>
-        <td><%= link_to(l(:button_edit), edit_contract_deliverable_path(@project, resource, deliverable), :class => 'icon icon-edit') %></td>
-        <td><%= link_to(l(:button_delete), contract_deliverable_path(@project, resource, deliverable), :method => :delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del') %></td>
+            <tr class="ign">
+              <td colspan="11">
+                
+                <div class="expanded">
+                  <div class="info">
+                    <div class="title">
+                      <%= link_to(l(:button_edit), edit_contract_deliverable_path(@project, resource, deliverable), :class => 'icon icon-edit') %>
+                      <%= link_to(l(:button_delete), contract_deliverable_path(@project, resource, deliverable), :method => :delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del') %>
+                    </div>
+                    
+                    <%= textilizable(deliverable, :notes) %>
+                    
+                    <table>
+                      <%= show_field(deliverable, :start_date, :format => :format_date, :html_options => {:class => 'deliverable-start-date'}) %>
+                      <%= show_field(deliverable, :end_date, :format => :format_date, :html_options => {:class => 'deliverable-end-date'}) %>
+                    </table>
 
-      <% end %>
+                  </div>
+
+                  <%# TODO: skinning port %>
+                  <div class="finance">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th> </th>
+                          <th>Spent</th>
+                          <th>Budget</th>
+                          <th>Hours</th>
+                        </tr>
+                      </thead>
+                      <tfoot>
+                        <tr class="fill">
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                          <td></td>
+                        </tr>
+                      </tfoot>
+                      <tbody>
+                        <tr>
+                          <td class="l"><a href="#"><strong>Labor</strong></a></td>
+                          <td><%= h(deliverable.labor_budget_spent) %></td>
+                          <td><%= h(deliverable.labor_budget_total) %></td>
+                          <td> TODO / TODO hrs </td>
+                        </tr>
+                        <tr>
+                          <td class="l"><a href="#"><strong>Overhead</strong></a></td>
+                          <td><%= h(deliverable.overhead_spent) %></td>
+                          <td><%= h(deliverable.overhead_budget_total) %></td>
+                          <td> TODO / TODO hrs </td>
+                        </tr>
+                        <%# TODO: Fixed %>
+                        <%# TODO: Markup %>
+                        <tr>
+                          <td class="l">Profit</td>
+                          <td><%= h(deliverable.profit_left) %></td>
+                          <td><%= h(deliverable.profit_budget) %></td>
+                          <td></td>
+                        </tr>
+                        <tr class="total">
+                          <td class="l"><strong>Total:</strong></td>
+                          <td><strong><%= h(deliverable.total_spent) %></strong></td>
+                          <td><strong><%= h(deliverable.total) %></strong></td>
+                          <td><strong>TODO</strong></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                  <div class="issue_status">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th colspan="2"><%= l(:label_issue_status_plural) %></th>
+                        </tr>
+                      </thead>
+                      <%# TODO: Issue status counters
+                          <tr>
+                            <td>Proposed</td>
+                      <td class="number">1</td>
+                            </tr>
+                    <tr>
+                      <td>On Hold</td>
+                            <td class="number">1</td>
+                    </tr>
+                                    <tr>
+                                    <td>Complete</td>
+                      <td class="number">14</td>
+                                    </tr>
+                    <tr>
+                      <td><strong>All</strong></td>
+                      <td class="number">16</td>
+                                    </tr>
+                %>
+                    </table>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     <% end %>
-  </tbody>
-</table>
-<% end %>
+    
+    <div class="clear"></div>
+  </div>
+  
+<% end %> <%# div_for(resource) %>
+<!-- TODO
+     <div id="milestones">
+       
+       <h3>Milestones</h3>
+       <div class="options">
+         <input type="checkbox" checked="checked" /> Event
+         <input type="checkbox" checked="checked" /> Financial
+         <input type="checkbox" checked="checked" /> Dependency
+       </div>
+       <div class="actions">
+         <a href="#">iCal</a>
+         <a href="#">View All (37)</a>
+         <a href="#" id="new-deliverable">Add New</a>
+       </div>
+       <div class="clear"></div>
+       
+       <table>
+         <thead>
+           <tr>
+             <th class="c">Done</th>
+             <th>Date</th>
+             <th>Title</th>
+             <th>Status</th>
+             <th>Type</th>
+             <th>Alert</th>
+           </tr>
+         </thead>
+         <tbody>
+           <tr class="odd">
+             <td class="c"><input type="checkbox" value="1" /></td>
+             <td>11/19/2009</td>
+             <td>ACME delivers branding guide</td>
+             <td><span class="red"><strong>Overdue</strong></span></td>
+             <td>Dependency</td>
+             <td>1 day</td>
+           </tr>
+           <tr class="even">
+             <td class="c"><input type="checkbox" value="1" /></td>
+             <td>12/01/2009</td>
+             <td>Send Invoice #2</td>
+             <td><span class="red"><strong>Overdue</strong></span></td>
+             <td>Financial</td>
+             <td>EoD</td>
+           </tr>
+           <tr class="odd highlight">
+             <td class="c"><input type="checkbox" value="1" /></td>
+             <td>12/11/2009</td>
+             <td>QA Signoff on 1.2</td>
+             <td>Pending</td>
+             <td>Event</td>
+             <td>3 days</td>
+           </tr>
+           <tr class="even">
+             <td class="c"><input type="checkbox" value="1" /></td>
+             <td>12/15/2009</td>
+             <td>Release 1.2</td>
+             <td>Pending</td>
+             <td>Event</td>
+             <td></td>
+           </tr>
+           <tr class="odd">
+             <td class="c"><input type="checkbox" value="1" /></td>
+             <td>12/15/2009</td>
+             <td>Deliverable: Load and Release Software</td>
+             <td>Pending</td>
+             <td>Event</td>
+             <td>BoD</td>
+           </tr>
+         </tbody>
+       </table>
+       
+     </div>
+     -->
+
+<%# TODO: history %>

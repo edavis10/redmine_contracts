@@ -53,4 +53,5 @@ en:
   field_total_spent: "Contract Total"
   field_contract_type: "Type"
   field_deliverable: "Deliverable"
-
+  field_deliverable_plural: "Deliverables"
+  text_terms_and_financial_overview: "Contract Terms and Financial Overview"

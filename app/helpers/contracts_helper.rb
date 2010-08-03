@@ -8,10 +8,10 @@ module ContractsHelper
 
   def format_budget_for_deliverable(deliverable, spent, total)
     if total > 0 || spent > 0
-      content_tag(:div, h(number_to_currency(spent, :unit => '')), :class => 'spent-amount') +
-        content_tag(:div, h(number_to_currency(total, :unit => '')), :class => 'total-amount')
+      content_tag(:td, h(number_to_currency(spent, :unit => '')), :class => 'spent-amount') +
+        content_tag(:td, h(number_to_currency(total, :unit => '')), :class => 'total-amount white')
     else
-      '---'
+      content_tag(:td, '----', :colspan => '2', :class => 'no-value')
     end
   end
 
@@ -23,10 +23,12 @@ module ContractsHelper
   # </p>
   def show_field(object, field, options={}, &block)
     html_options = options[:html_options] || {}
-    label = content_tag(:span, l(("field_" + field.to_s.gsub(/\_id$/, "")).to_sym) + ": ", :class => 'contract-details-label')
+    label_html_options = options[:label_html_options] || {}
+    label = content_tag(:strong, l(("field_" + field.to_s.gsub(/\_id$/, "")).to_sym) + ": ", :class => 'contract-details-label')
 
     formatter = options[:format]
     raw_content = options[:raw] || false
+    wrap_in_td = options[:wrap_in_td] || true
 
     content = ''
     
@@ -39,10 +41,16 @@ module ContractsHelper
                   object.send(field)
                 end
     end
+
+    if raw_content
+      field_content = content
+    else
+      field_content = h(content)
+    end
     
-    content_tag(:p,
-                label +
-                (raw_content ? content : h(content)),
+    content_tag(:tr,
+                content_tag(:td, label, label_html_options) +
+                (wrap_in_td ? content_tag(:td, field_content) : field_content),
                 html_options)
   end
 
@@ -52,10 +60,10 @@ module ContractsHelper
     spent_content = send(formatter, object.send(spent_field))
     total_content = send(formatter, object.send(total_field))
 
-    show_field(object, spent_field, options.merge(:raw => true)) do
+    show_field(object, spent_field, options.merge(:raw => true, :wrap_in_td => false)) do
 
-      content_tag(:span, h(spent_content), :class => 'spent') +
-        content_tag(:span, h(total_content), :class => 'budget')
+      content_tag(:td, h(spent_content), :class => 'spent') +
+        content_tag(:td, h(total_content), :class => 'budget')
     end
   end
 
