@@ -30,20 +30,20 @@
     <table class="deliverable_finance_table">
 
       <% form.fields_for :labor_budgets do |labor_budget| %>
-		  <tr>
+      <tr>
         <%# TODO: Select field for the Time Entry Activity in a td %>
-			  <td>
-				  <p class="inline-hints"><%= l(:text_short_hours) %></p>
+        <td>
+          <p class="inline-hints"><%= l(:text_short_hours) %></p>
           <%= labor_budget.text_field(:hours, :size => 10) %>
-			  </td>
-			  <td>
-				  <p class="inline-hints"><%= l(:text_dollar_sign) %></p>
+        </td>
+        <td>
+          <p class="inline-hints"><%= l(:text_dollar_sign) %></p>
           <%= labor_budget.text_field(:budget, :size => 10) %>
-			  </td>
+        </td>
         <%# TODO: Green Add button for multiple records %>
-		  </tr>
+      </tr>
       <% end %>
-	  </table>
+    </table>
   </li>
 
   <li class="numeric optional">
@@ -51,20 +51,20 @@
     <table class="deliverable_finance_table">
       
       <% form.fields_for :overhead_budgets do |overhead_budget| %>
-		  <tr>
+      <tr>
         <%# TODO: Select field for the Time Entry Activity in a td %>
-			  <td>
-				  <p class="inline-hints"><%= l(:text_short_hours) %></p>
+        <td>
+          <p class="inline-hints"><%= l(:text_short_hours) %></p>
           <%= overhead_budget.text_field(:hours, :size => 10) %>
-			  </td>
-			  <td>
-				  <p class="inline-hints"><%= l(:text_dollar_sign) %></p>
+        </td>
+        <td>
+          <p class="inline-hints"><%= l(:text_dollar_sign) %></p>
           <%= overhead_budget.text_field(:budget, :size => 10) %>
-			  </td>
+        </td>
         <%# TODO: Green Add button for multiple records %>
-		  </tr>
+      </tr>
       <% end %>
-	  </table>
+    </table>
   </li>
 
   <%= form.input :total, :input_html => {:size => 10}, :wrapper_html => {:class => 'deliverable_total_input'}, :hint => l(:text_dollar_sign) %>
