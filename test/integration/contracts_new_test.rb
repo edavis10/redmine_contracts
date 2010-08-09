@@ -30,7 +30,7 @@ class ContractsNewTest < ActionController::IntegrationTest
     fill_in "End Date", :with => '2010-12-31'
     select "Net 30", :from => "Payment Terms"
 
-    click_button "Create Contract"
+    click_button "Save Contract"
 
     assert_response :success
     assert_template 'contracts/show'

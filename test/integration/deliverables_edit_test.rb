@@ -16,7 +16,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
 
   should "allow any user to edit the Fixed deliverable" do
     visit_contract_page(@contract)
-    click_link_within "#fixed_deliverable_#{@fixed_deliverable.id}", 'Edit'
+    click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
     assert_response :success
     assert_template 'deliverables/edit'
 

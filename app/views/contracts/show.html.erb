@@ -80,7 +80,7 @@
     <% if resource.deliverables.empty? %>
       <p class="nodata"><%= l(:label_no_data) %></p>
     <% else %>
-      <table width="100%" id="texpand">
+      <table width="100%" class="texpand" id="deliverables">
         <thead>
           <tr>
             <th><%= l(:field_end_date) %></th>
@@ -107,7 +107,7 @@
               <%= format_budget_for_deliverable(deliverable, 0, 0) %><%# TODO: Release 2, Fixed Budgets %>
             <% end %>
 
-            <tr class="ign">
+            <tr id="deliverable_details_<%= h(deliverable.id) %>" class="ign">
               <td colspan="11">
                 
                 <div class="expanded">

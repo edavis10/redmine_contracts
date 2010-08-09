@@ -15,7 +15,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     assert_template 'contracts/show'
     assert_equal "/projects/main/contracts/#{@contract.id}", current_url
 
-    assert_select "div#contract_#{@contract.id}.contract" do
+    assert_select "div.title-bar" do
       assert_select 'h2', :text => @contract.name
     end
   end

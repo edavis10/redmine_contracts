@@ -122,6 +122,8 @@ padding-left: 0px; /* Don't pad submit buttons */
 	border: 0;
 }
 
+.deliverable_finance_table p.inline-hints label {font-weight: normal; float: none; display: auto; margin-left: 0px; } /* An inline label so it needs to be reset from .tabular */
+
 #expand_terms{
 	margin: 10px 0 10px 0;
 	display: block;

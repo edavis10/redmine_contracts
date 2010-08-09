@@ -5,9 +5,9 @@ jQuery(function($) {
 	$("#deliverables table tbody tr td:contains('---')").css("text-align", "center");
 	
 
-	$("#texpand").jExpand();
+	$(".texpand").jExpand();
 	
-	$("#texpand").find("tr.even").next('tr:first').addClass("even");
+	$(".texpand").find("tr.even").next('tr:first').addClass("even");
 	
 	$(window).resize(function() {
 	

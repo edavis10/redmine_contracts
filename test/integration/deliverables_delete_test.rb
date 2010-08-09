@@ -13,7 +13,7 @@ class DeliverablesDeleteTest < ActionController::IntegrationTest
   should "allow anyone to delete the deliverable" do
     visit_contract_page(@contract)
 
-    click_link_within "#fixed_deliverable_#{@deliverable.id}", 'Delete'
+    click_link_within "#deliverable_details_#{@deliverable.id}", 'Delete'
     assert_response :success
     assert_template 'contracts/show'
 

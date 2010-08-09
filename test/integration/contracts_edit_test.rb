@@ -29,7 +29,7 @@ class ContractsEditTest < ActionController::IntegrationTest
     end
 
     fill_in "Name", :with => 'An updated name'
-    click_button "Update Contract"
+    click_button "Save Contract"
 
     assert_response :success
     assert_template 'contracts/show'

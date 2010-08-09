@@ -27,7 +27,7 @@
 
   <li class="numeric optional">
     <%= content_tag(:label, l(:field_labor)) %>
-    <table class="deliverable_finance_table">
+    <table id="deliverable-labor" class="deliverable_finance_table">
 
       <% form.fields_for :labor_budgets do |labor_budget| %>
       <tr>
@@ -36,11 +36,11 @@
           <select><option>TODO: Release 3</option></select>
         </td>
         <td>
-          <p class="inline-hints"><%= l(:text_short_hours) %></p>
+          <p class="inline-hints"><%= labor_budget.label(:hours, l(:text_short_hours)) %></p>
           <%= labor_budget.text_field(:hours, :size => 10) %>
         </td>
         <td>
-          <p class="inline-hints"><%= l(:text_dollar_sign) %></p>
+          <p class="inline-hints"><%= labor_budget.label(:budget, l(:text_dollar_sign)) %></p>
           <%= labor_budget.text_field(:budget, :size => 10) %>
         </td>
         <%# TODO: Green Add button for multiple records %>
@@ -54,7 +54,7 @@
 
   <li class="numeric optional">
     <%= content_tag(:label, l(:field_overhead)) %>
-    <table class="deliverable_finance_table">
+    <table id="deliverable-overhead" class="deliverable_finance_table">
       
       <% form.fields_for :overhead_budgets do |overhead_budget| %>
       <tr>
@@ -63,11 +63,11 @@
           <select><option>TODO: Release 3</option></select>
         </td>
         <td>
-          <p class="inline-hints"><%= l(:text_short_hours) %></p>
+          <p class="inline-hints"><%= overhead_budget.label(:hours, l(:text_short_hours)) %></p>
           <%= overhead_budget.text_field(:hours, :size => 10) %>
         </td>
         <td>
-          <p class="inline-hints"><%= l(:text_dollar_sign) %></p>
+          <p class="inline-hints"><%= overhead_budget.label(:budget, l(:text_dollar_sign)) %></p>
           <%= overhead_budget.text_field(:budget, :size => 10) %>
         </td>
         <%# TODO: Green Add button for multiple records %>
