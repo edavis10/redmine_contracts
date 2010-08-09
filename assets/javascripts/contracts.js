@@ -1,6 +1,10 @@
 jQuery(function($) {
 
-	$('#contract-terms .finance tr td:nth-child ~ td, .c_overview table.right tr td:nth-child ~ td, #deliverables table tr.click td:nth-child(5) ~ td, .deliverable_finance_table tr.aright td:nth-child ~ td').after().css("text-align", "right");
+  var right_align = $('#contract-terms .finance tr td:nth-child ~ td, .c_overview table.right tr td:nth-child ~ td, #deliverables table tr.click td:nth-child(5) ~ td, .deliverable_finance_table tr.aright td:nth-child ~ td');
+
+  if (right_align.length > 0) {
+    right_align.after().css("text-align", "right");
+  }
 	
 	$("#deliverables table tbody tr td:contains('---')").css("text-align", "center");
 	
