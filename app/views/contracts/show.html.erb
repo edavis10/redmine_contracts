@@ -96,8 +96,7 @@
 
         <tbody>
           <% resource.deliverables.each do |deliverable| %>
-            <%#= TODO: even/'' class %>
-            <% content_tag_for(:tr, deliverable, :class => 'click') do %>
+            <% content_tag_for(:tr, deliverable, :class => 'click ' + cycle('even','')) do %>
               <td width="10%" class="arrow end-date"><span><%= h format_date(deliverable.end_date) %></span></td>
               <td width="2%" class="type"><%= h deliverable.short_type %></td>
               <td width="25%" class="title"><%= h deliverable.title %></td>
