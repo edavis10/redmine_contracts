@@ -1,3 +1,4 @@
+<div class="box tabular">
 <% form.inputs :name => l(:text_general_legend) do %>
   <%= form.input :name, :required => true %>
   <%= form.input :account_executive, :required => true, :collection => @project.users.sort %>
@@ -22,10 +23,15 @@
   <%= form.input :client_ap_contact_information, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
   <%= form.input :client_point_of_contact, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
 <% end %>
+</div>
+
 <% form.buttons do %>
-  <%= form.commit_button %>
-  <%# TODO: needs to be on one line. %>
-  <%= link_to(l(:button_cancel), cancel_path) %>
+  <ol>
+    <li class="commit">
+      <%= submit_tag(l(:text_save_contract)) %>
+      <%= link_to(l(:button_cancel), cancel_path) %>  
+    </li>
+  </ol>
 <% end %>
 
 <%= wikitoolbar_for 'contract_discount_note' %>

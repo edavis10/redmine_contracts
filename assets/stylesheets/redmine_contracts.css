@@ -43,6 +43,10 @@ span.contract-details-label { font-weight: bold; }
 padding-left: 120px; /*width of left column containing the label elements*/
 }
 
+.tabular li.commit {
+padding-left: 0px; /* Don't pad submit buttons */
+}
+
 #content .error_msg{
 	background: #ffd5d5;
 	color: #a40000;

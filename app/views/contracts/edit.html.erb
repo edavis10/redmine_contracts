@@ -6,8 +6,7 @@
 
 <%= content_tag(:h2, h(l(:text_edit_contract_name, :name => resource.name))) %>
 
-<div class="box tabular">
 <% semantic_form_for resource, :url => contract_path(@project, resource), :html => {:class => 'tabular'} do |form| %>
 <%= render :partial => 'form', :object => form, :locals => {:cancel_path => contract_path(@project, resource)} %>
 <% end %>
-</div>
+
