@@ -1,4 +1,5 @@
-<% form.inputs do %>
+<div class="box tabular">
+<% form.inputs :name => l(:text_deliverable_details_legend) do %>
   <%= form.input :title, :required => true %>
   <% if resource.new_record? %>
     <%= form.input(:type, :required => true, :as => :select, :collection => [["Fixed", "FixedDeliverable"],["Hourly", "HourlyDeliverable"]], :include_blank => false, :input_html => {:class => 'type'}) %>
@@ -20,30 +21,66 @@
     <%= check_box resource.class.to_s.underscore, 'warranty_sign_off' %>
   </li>
   <% end %>
+<% end %>
 
-  <% form.inputs :name => l(:text_deliverable_finances), :id => 'deliverable-finances' do %>
-    <% form.semantic_fields_for :labor_budgets do |labor_budget| %>
-      <% labor_budget.inputs :name => l(:field_labor), :id => 'deliverable-labor' do %>
-        <%= labor_budget.input :hours, :label => l(:text_short_hours), :input_html => {:size => 10} %>
-        <%= labor_budget.input :budget, :label => l(:text_dollar_sign), :input_html => {:size => 10} %>
-      <% end %>
-    <% end %>
+<% form.inputs :name => l(:text_deliverable_finances), :id => 'deliverable-finances' do %>
+  <% form.fields_for :labor_budgets do |labor_budget| %>
+    <li class="numeric optional">
 
-    <% form.semantic_fields_for :overhead_budgets do |overhead_budget| %>
-      <% overhead_budget.inputs :name => l(:field_overhead), :id => 'deliverable-overhead' do %>
-        <%= overhead_budget.input :hours, :label => l(:text_short_hours), :input_html => {:size => 10} %>
-        <%= overhead_budget.input :budget, :label => l(:text_dollar_sign), :input_html => {:size => 10} %>
-      <% end %>
-    <% end %>
+    <%= content_tag(:label, l(:field_labor)) %>
+    <table class="deliverable_finance_table">
+		  <tr>
+			  <td></td>
+			  <td>
+				  <p class="inline-hints"><%= l(:text_short_hours) %></p>
+          <%= labor_budget.text_field(:hours, :size => 10) %>
+			  </td>
+			  <td>
+				  <p class="inline-hints"><%= l(:text_dollar_sign) %></p>
+          <%= labor_budget.text_field(:budget, :size => 10) %>
+			  </td>
+			  <td></td>
+		  </tr>
+	  </table>
+
+    </li>
+  <% end %>
+
+  <% form.fields_for :overhead_budgets do |overhead_budget| %>
+    <li class="numeric optional">
+
+    <%= content_tag(:label, l(:field_overhead)) %>
+    <table class="deliverable_finance_table">
+		  <tr>
+			  <td></td>
+			  <td>
+				  <p class="inline-hints"><%= l(:text_short_hours) %></p>
+          <%= overhead_budget.text_field(:hours, :size => 10) %>
+			  </td>
+			  <td>
+				  <p class="inline-hints"><%= l(:text_dollar_sign) %></p>
+          <%= overhead_budget.text_field(:budget, :size => 10) %>
+			  </td>
+			  <td></td>
+		  </tr>
+	  </table>
+
+    </li>
   <% end %>
 
   <%= form.input :total, :input_html => {:size => 10}, :wrapper_html => {:class => 'deliverable_total_input'}, :hint => l(:text_dollar_sign) %>
 
 <% end %>
 
+</div>
+
 <% form.buttons do %>
-  <%= form.commit_button :label => l(:button_save) %>
-  <%= link_to(l(:button_cancel), cancel_path) %>
+  <ol>
+    <li class="commit">
+      <%= submit_tag(l(:button_save)) %>
+      <%= link_to(l(:button_cancel), cancel_path) %>
+    </li>
+  </ol>
 <% end %>
 
 <%= wikitoolbar_for resource.to_underscore + '_notes' %>
