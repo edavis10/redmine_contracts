@@ -70,8 +70,8 @@
     <%= content_tag(:h3, l(:field_deliverable_plural)) %>
 
     <div class="actions">
-      <a href="#">CSV</a>
-      <a href="#">View All (9)</a>
+      <a href="#TODO-release-2">CSV (Release 2)</a>
+      <a href="#TODO-release?">View All (9) (Release ?)</a>
       <%= link_to(l(:button_add_new), new_contract_deliverable_path(@project, resource), :id => 'new-deliverable') %>
     </div>
 
@@ -100,11 +100,11 @@
               <td width="10%" class="arrow end-date"><span><%= h format_date(deliverable.end_date) %></span></td>
               <td width="2%" class="type"><%= h deliverable.short_type %></td>
               <td width="25%" class="title"><%= h deliverable.title %></td>
-              <td width="15%">TODO</td>
+              <td width="15%">TODO: Release 5</td>
               <td width="15%" class="manager"><%= h deliverable.manager.try(:name) %></td>
               <%= format_budget_for_deliverable(deliverable, deliverable.labor_budget_spent, deliverable.labor_budget_total) %>
               <%= format_budget_for_deliverable(deliverable, deliverable.overhead_spent, deliverable.overhead_budget_total) %>
-              <%= format_budget_for_deliverable(deliverable, 0, 0) %><%# TODO: Fixed %>
+              <%= format_budget_for_deliverable(deliverable, 0, 0) %><%# TODO: Release 2, Fixed Budgets %>
             <% end %>
 
             <tr class="ign">
@@ -126,7 +126,7 @@
 
                   </div>
 
-                  <%# TODO: skinning port %>
+                  <%# TODO: Release 2, skinning port %>
                   <div class="finance">
                     <table>
                       <thead>
@@ -150,16 +150,16 @@
                           <td class="l"><a href="#"><strong>Labor</strong></a></td>
                           <td><%= h(deliverable.labor_budget_spent) %></td>
                           <td><%= h(deliverable.labor_budget_total) %></td>
-                          <td> TODO / TODO hrs </td>
+                          <td> TODO: Release 2 / TODO hrs </td>
                         </tr>
                         <tr>
                           <td class="l"><a href="#"><strong>Overhead</strong></a></td>
                           <td><%= h(deliverable.overhead_spent) %></td>
                           <td><%= h(deliverable.overhead_budget_total) %></td>
-                          <td> TODO / TODO hrs </td>
+                          <td> TODO: Release 2 / TODO hrs </td>
                         </tr>
-                        <%# TODO: Fixed %>
-                        <%# TODO: Markup %>
+                        <%# TODO: Release 2, Fixed %>
+                        <%# TODO: Release 2, Markup %>
                         <tr>
                           <td class="l">Profit</td>
                           <td><%= h(deliverable.profit_left) %></td>
@@ -170,7 +170,7 @@
                           <td class="l"><strong>Total:</strong></td>
                           <td><strong><%= h(deliverable.total_spent) %></strong></td>
                           <td><strong><%= h(deliverable.total) %></strong></td>
-                          <td><strong>TODO</strong></td>
+                          <td><strong>TODO: Release 2</strong></td>
                         </tr>
                       </tbody>
                     </table>
@@ -183,7 +183,7 @@
                           <th colspan="2"><%= l(:label_issue_status_plural) %></th>
                         </tr>
                       </thead>
-                      <%# TODO: Issue status counters
+                      <%# TODO: Release 2 Issue status counters
                           <tr>
                             <td>Proposed</td>
                       <td class="number">1</td>
@@ -216,7 +216,8 @@
   </div>
   
 <% end %> <%# div_for(resource) %>
-<!-- TODO
+<p>TODO: Release 4, Milestones</p>
+<!--
      <div id="milestones">
        
        <h3>Milestones</h3>
@@ -290,4 +291,4 @@
      </div>
      -->
 
-<%# TODO: history %>
+<p>TODO: Release 2+, history</p>
