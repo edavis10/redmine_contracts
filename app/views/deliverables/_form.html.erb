@@ -24,11 +24,12 @@
 <% end %>
 
 <% form.inputs :name => l(:text_deliverable_finances), :id => 'deliverable-finances' do %>
-  <% form.fields_for :labor_budgets do |labor_budget| %>
-    <li class="numeric optional">
 
+  <li class="numeric optional">
     <%= content_tag(:label, l(:field_labor)) %>
     <table class="deliverable_finance_table">
+
+      <% form.fields_for :labor_budgets do |labor_budget| %>
 		  <tr>
 			  <td></td>
 			  <td>
@@ -41,16 +42,15 @@
 			  </td>
 			  <td></td>
 		  </tr>
+      <% end %>
 	  </table>
+  </li>
 
-    </li>
-  <% end %>
-
-  <% form.fields_for :overhead_budgets do |overhead_budget| %>
-    <li class="numeric optional">
-
+  <li class="numeric optional">
     <%= content_tag(:label, l(:field_overhead)) %>
     <table class="deliverable_finance_table">
+      
+      <% form.fields_for :overhead_budgets do |overhead_budget| %>
 		  <tr>
 			  <td></td>
 			  <td>
@@ -63,10 +63,9 @@
 			  </td>
 			  <td></td>
 		  </tr>
+      <% end %>
 	  </table>
-
-    </li>
-  <% end %>
+  </li>
 
   <%= form.input :total, :input_html => {:size => 10}, :wrapper_html => {:class => 'deliverable_total_input'}, :hint => l(:text_dollar_sign) %>
 
