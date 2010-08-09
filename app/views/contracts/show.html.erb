@@ -102,8 +102,8 @@
               <td width="25%" class="title"><%= h deliverable.title %></td>
               <td width="15%">TODO: Release 5</td>
               <td width="15%" class="manager"><%= h deliverable.manager.try(:name) %></td>
-              <%= format_budget_for_deliverable(deliverable, deliverable.labor_budget_spent, deliverable.labor_budget_total) %>
-              <%= format_budget_for_deliverable(deliverable, deliverable.overhead_spent, deliverable.overhead_budget_total) %>
+              <%= format_budget_for_deliverable(deliverable, deliverable.labor_budget_spent, deliverable.labor_budget_total, :class => 'labor') %>
+              <%= format_budget_for_deliverable(deliverable, deliverable.overhead_spent, deliverable.overhead_budget_total, :class => 'overhead') %>
               <%= format_budget_for_deliverable(deliverable, 0, 0) %><%# TODO: Release 2, Fixed Budgets %>
             <% end %>
 

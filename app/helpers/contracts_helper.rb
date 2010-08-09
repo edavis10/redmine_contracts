@@ -6,12 +6,14 @@ module ContractsHelper
     end
   end
 
-  def format_budget_for_deliverable(deliverable, spent, total)
+  def format_budget_for_deliverable(deliverable, spent, total, options={})
+    extra_css_class = options[:class] || ''
+    
     if total > 0 || spent > 0
-      content_tag(:td, h(number_to_currency(spent, :unit => '')), :class => 'spent-amount') +
-        content_tag(:td, h(number_to_currency(total, :unit => '')), :class => 'total-amount white')
+      content_tag(:td, h(number_to_currency(spent, :unit => '')), :class => 'spent-amount ' + extra_css_class) +
+        content_tag(:td, h(number_to_currency(total, :unit => '')), :class => 'total-amount white ' + extra_css_class)
     else
-      content_tag(:td, '----', :colspan => '2', :class => 'no-value')
+      content_tag(:td, '----', :colspan => '2', :class => 'no-value ' + extra_css_class)
     end
   end
 

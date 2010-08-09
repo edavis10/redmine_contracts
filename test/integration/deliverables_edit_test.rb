@@ -45,7 +45,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
 
   should "allow any user to edit the Hourly deliverable" do
     visit_contract_page(@contract)
-    click_link_within "#hourly_deliverable_#{@hourly_deliverable.id}", 'Edit'
+    click_link_within "#deliverable_details_#{@hourly_deliverable.id}", 'Edit'
     assert_response :success
     assert_template 'deliverables/edit'
 
