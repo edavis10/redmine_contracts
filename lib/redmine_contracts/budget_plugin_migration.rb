@@ -5,10 +5,6 @@ module RedmineContracts
     set_table_name 'deliverables'
   end
   
-  # TODO: decide how this is activated.
-  # Have the user dump yaml themselves?  Or rename the tables and
-  # SQL select the data out into yaml?
-  # Deliverable.all.collect {|d| d.attributes}.to_yaml
   class BudgetPluginMigration
     @@data = nil
 
