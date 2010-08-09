@@ -345,7 +345,7 @@ padding-left: 0px; /* Don't pad submit buttons */
 }
 
 
-	#content #deliverables .title{
+	#content #deliverables div.title{
 		background: #FFF;
 		padding: 6px;
 		border-bottom: 1px solid #e4eff4;
