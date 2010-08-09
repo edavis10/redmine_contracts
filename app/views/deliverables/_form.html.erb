@@ -31,7 +31,7 @@
 
       <% form.fields_for :labor_budgets do |labor_budget| %>
 		  <tr>
-			  <td></td>
+        <%# TODO: Select field for the Time Entry Activity in a td %>
 			  <td>
 				  <p class="inline-hints"><%= l(:text_short_hours) %></p>
           <%= labor_budget.text_field(:hours, :size => 10) %>
@@ -40,7 +40,7 @@
 				  <p class="inline-hints"><%= l(:text_dollar_sign) %></p>
           <%= labor_budget.text_field(:budget, :size => 10) %>
 			  </td>
-			  <td></td>
+        <%# TODO: Green Add button for multiple records %>
 		  </tr>
       <% end %>
 	  </table>
@@ -52,7 +52,7 @@
       
       <% form.fields_for :overhead_budgets do |overhead_budget| %>
 		  <tr>
-			  <td></td>
+        <%# TODO: Select field for the Time Entry Activity in a td %>
 			  <td>
 				  <p class="inline-hints"><%= l(:text_short_hours) %></p>
           <%= overhead_budget.text_field(:hours, :size => 10) %>
@@ -61,7 +61,7 @@
 				  <p class="inline-hints"><%= l(:text_dollar_sign) %></p>
           <%= overhead_budget.text_field(:budget, :size => 10) %>
 			  </td>
-			  <td></td>
+        <%# TODO: Green Add button for multiple records %>
 		  </tr>
       <% end %>
 	  </table>
