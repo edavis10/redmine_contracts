@@ -231,7 +231,7 @@ padding-left: 0px; /* Don't pad submit buttons */
 	}
 
 	#contract-terms table.info{
-		min-width: 60%;
+		width: 60%;
 		background: #f6fbfd;
 	}
 	
