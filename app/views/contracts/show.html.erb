@@ -1,28 +1,5 @@
-<div class="title-bar" id="upper-title-bar">
-  <%= content_tag(:h2, h(resource.name)) %>
-  
-  <div class="title-bar-actions">
-    <span><a href="#TODO" class="">Log time</a></span>
+<%= render :partial => 'title', :locals => {:contract => resource} %>
 
-    <span class="meta-sep"> | </span>
-    
-    <span id="watcher"><a class="icon icon-fav-off" href="#TODO" onclick="">Watch</a></span>
-
-    <span class="meta-sep"> | </span>
-    
-    <span><a href="#TODO">Copy</a></span>
-    <span class="meta-sep"> | </span>
-    
-    <div class="update button-large">
-      <%= link_to(l(:button_update), edit_contract_path(@project, resource)) %>
-    </div>
-  </div>
-</div>
-<%# TODO: contract messages
-    <div class="error_msg">
-             <p>There is $243 worth of time clocked to issues that are not assigned to any deliverables.  <span>Please update the orphaned issues.</span> </p>
-             </div>
-%>
 <% div_for(resource) do %>
 
   <%= avatar(resource.account_executive, :size => 40) %>
