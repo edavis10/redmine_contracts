@@ -58,3 +58,4 @@ en:
   text_save_contract: "Save Contract"
   enumeration_payment_term: "Payment Terms"
   field_deliverable_title: "Deliverable"
+  field_contract_name: "Contract"

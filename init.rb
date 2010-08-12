@@ -69,6 +69,10 @@ Dispatcher.to_prepare :redmine_contracts do
   unless Query.available_columns.collect(&:name).include?(:deliverable_title)
     Query.add_available_column(QueryColumn.new(:deliverable_title, :sortable => "#{Deliverable.table_name}.title"))
   end
+
+  unless Query.available_columns.collect(&:name).include?(:contract_name)
+    Query.add_available_column(QueryColumn.new(:contract_name, :sortable => "#{Contract.table_name}.name"))
+  end
 end
 
 require 'redmine_contracts/hooks/view_layouts_base_html_head_hook'

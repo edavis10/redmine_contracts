@@ -20,6 +20,8 @@ class Deliverable < ActiveRecord::Base
   
   # Accessors
 
+  delegate :name, :to => :contract, :prefix => true, :allow_nil => true
+
   def short_type
     ''
   end
