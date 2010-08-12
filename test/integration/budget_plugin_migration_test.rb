@@ -35,8 +35,8 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
     should "create a new Deliverable for each old Deliverable" do
 
       assert_difference("Deliverable.count", 3) do
-        assert_difference("HourlyDeliverable.count", 2) do
-          assert_difference("FixedDeliverable.count", 1) do
+        assert_difference("HourlyDeliverable.count", 0) do
+          assert_difference("FixedDeliverable.count", 3) do
             RedmineContracts::BudgetPluginMigration.migrate(@data)
           end
         end
@@ -152,15 +152,28 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
     end
 
     context "converting Fixed Deliverables" do
-      should "convert fixed_cost to total" do
+      should "convert the budget field to total" do
         RedmineContracts::BudgetPluginMigration.migrate(@data)
 
         d = FixedDeliverable.find_by_title("Version 1.0")
-        assert_equal 30_000, d.total
+        assert_equal 93_000, d.total
       end
     end
 
     context "converting Hourly Deliverables" do
+      should "convert over into Fixed Deliverables" do
+        assert_difference("FixedDeliverable.count",3) do
+          RedmineContracts::BudgetPluginMigration.migrate(@data)
+        end
+      end
+
+      should "convert the old 'budget' field into the total" do
+        RedmineContracts::BudgetPluginMigration.migrate(@data)
+
+        assert_equal 5600, FixedDeliverable.find_by_title("Deliverable One").total
+        assert_equal 900, FixedDeliverable.find_by_title("Deliverable 2").total
+      end
+      
       should "create a new Labor Budget" do
         assert_difference("LaborBudget.count", 2) do
           RedmineContracts::BudgetPluginMigration.migrate(@data)

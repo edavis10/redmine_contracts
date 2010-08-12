@@ -45,31 +45,33 @@ module RedmineContracts
                                         :end_date => old_deliverable['due'],
                                         :notes => old_deliverable['description']
                                         )
-          deliverable.type = old_deliverable['type']
+          # All deliverables are converted over to FixedDeliverable
+          deliverable.type = 'FixedDeliverable'
           project = Project.find(old_deliverable['project_id'])
           contract = Contract.find_by_project_id(project.id)
           contract ||= create_new_contract(old_deliverable)
 
           deliverable.contract = contract
           deliverable.manager = project.users.first          
-
+          deliverable.total = old_deliverable['budget']
+          
           case old_deliverable['type']
           when 'FixedDeliverable'
-            @total = deliverable.total = old_deliverable['fixed_cost']
+            @total_cost = old_deliverable['fixed_cost']
           when 'HourlyDeliverable'
-            @total = old_deliverable['total_hours'].to_f * old_deliverable['cost_per_hour'].to_f
+            @total_cost = old_deliverable['total_hours'].to_f * old_deliverable['cost_per_hour'].to_f
 
             if old_deliverable['total_hours'].present? || old_deliverable['cost_per_hour'].present?
               deliverable.labor_budgets << LaborBudget.new(:deliverable => deliverable,
-                                                           :budget => @total,
+                                                           :budget => @total_cost,
                                                            :hours => old_deliverable['total_hours'])
             end
           else
-            @total = 0
+            @total_cost = 0
           end
 
-          convert_overhead(deliverable, old_deliverable, @total)
-          convert_materials(deliverable, old_deliverable, @total)
+          convert_overhead(deliverable, old_deliverable, @total_cost)
+          convert_materials(deliverable, old_deliverable, @total_cost)
           append_old_deliverable_to_notes(old_deliverable, deliverable)
           
           deliverable.save!
