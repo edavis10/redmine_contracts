@@ -3,3 +3,5 @@
 <% semantic_form_for resource, :html => {:class => 'tabular'} do |form| %>
 <%= render :partial => 'form', :object => form, :locals => {:cancel_path => contracts_path} %>
 <% end %>
+
+<% html_title "#{l(:text_new_contract)}" %>

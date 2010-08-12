@@ -10,3 +10,4 @@
 <%= render :partial => 'form', :object => form, :locals => {:cancel_path => contract_path(@project, resource)} %>
 <% end %>
 
+<% html_title "#{l(:text_contracts)} - #{h(l(:text_edit_contract_name, :name => resource.name))}" %>

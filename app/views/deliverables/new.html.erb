@@ -5,3 +5,5 @@
 <% semantic_form_for [@project, @contract, setup_nested_deliverable_records(resource)], :url => contract_deliverables_path(@project, @contract), :html => {:class => 'deliverable tabular'} do |form| %>
 <%= render :partial => 'form', :object => form, :locals => {:cancel_path => contract_path(@project, @contract)} %>
 <% end %>
+
+<% html_title "#{l(:field_deliverable_plural)} - #{l(:text_new_deliverable)}" %>
