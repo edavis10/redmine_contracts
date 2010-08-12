@@ -77,4 +77,8 @@ module ContractsHelper
     return '' if value.blank?
     return h(value.name)
   end
+
+  def format_deliverable_value_fields(value)
+    number_with_precision(value, :precision => Deliverable::ViewPrecision, :delimiter => '')
+  end
 end

@@ -1,6 +1,8 @@
 class Deliverable < ActiveRecord::Base
   unloadable
 
+  ViewPrecision = 2
+  
   # Associations
   belongs_to :contract
   belongs_to :manager, :class_name => 'User', :foreign_key => 'manager_id'
