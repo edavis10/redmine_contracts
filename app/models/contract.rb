@@ -33,6 +33,8 @@ class Contract < ActiveRecord::Base
   attr_accessible :client_point_of_contact
   attr_accessible :details
 
+  named_scope :by_name, {:order => "#{Contract.table_name}.name ASC"}
+  
   [:status, :contract_type,
    :fixed_spent, :fixed_budget,
    :markup_spent, :markup_budget,
