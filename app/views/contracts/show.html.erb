@@ -17,9 +17,9 @@
     </table>
     
     <table class="right">
-      <%= show_budget_field(resource, :labor_spent, :labor_budget, :html_options => {:class => 'contract-labor'}, :label_html_options => {:width => '49%'}) %>
-      <%= show_budget_field(resource, :overhead_spent, :overhead_budget, :html_options => {:class => 'contract-overhead'}) %>
-      <%= show_budget_field(resource, :total_spent, :total_budget, :html_options => {:class => 'contract-total'}) %>
+      <%= show_budget_field(resource, :labor_spent, :labor_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-labor'}, :label_html_options => {:width => '49%'}) %>
+      <%= show_budget_field(resource, :overhead_spent, :overhead_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-overhead'}) %>
+      <%= show_budget_field(resource, :total_spent, :total_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-total'}) %>
     </table>
     
     <div class="clear"></div>
@@ -41,12 +41,12 @@
       </div>
 
       <table class="finance">
-        <%= show_budget_field(resource, :labor_spent, :labor_budget, :html_options => {:class => 'contract-labor'}, :label_html_options => {:width => '46%'}) %>
-        <%= show_budget_field(resource, :overhead_spent, :overhead_budget, :html_options => {:class => 'contract-overhead'}) %>
-        <%= show_budget_field(resource, :fixed_spent, :fixed_budget, :html_options => {:class => 'contract-fixed'}) %>
-        <%= show_budget_field(resource, :markup_spent, :markup_budget, :html_options => {:class => 'contract-markup'}) %>
-        <%= show_budget_field(resource, :profit_spent, :profit_budget, :html_options => {:class => 'contract-profit'}) %>
-        <%= show_budget_field(resource, :discount_spent, :discount_budget, :html_options => {:class => 'contract-discount'}) %>
+        <%= show_budget_field(resource, :labor_spent, :labor_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-labor'}, :label_html_options => {:width => '46%'}) %>
+        <%= show_budget_field(resource, :overhead_spent, :overhead_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-overhead'}) %>
+        <%= show_budget_field(resource, :fixed_spent, :fixed_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-fixed'}) %>
+        <%= show_budget_field(resource, :markup_spent, :markup_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-markup'}) %>
+        <%= show_budget_field(resource, :profit_spent, :profit_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-profit'}) %>
+        <%= show_budget_field(resource, :discount_spent, :discount_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-discount'}) %>
 
         <tr>
           <td colspan="3">
@@ -54,7 +54,7 @@
           </td>
         </tr>
 
-        <%= show_budget_field(resource, :total_spent, :total_budget, :html_options => {:class => 'contract-total'}) %>
+        <%= show_budget_field(resource, :total_spent, :total_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-total'}) %>
         <%= show_field(resource, :billable_rate, :format => :format_hourly_rate, :html_options => {:class => 'contract-billable-rate total'}) %>
 
         <%= show_budget_field(resource, :estimated_hour_spent, :estimated_hour_budget, :format => :l_hours, :html_options => {:class => 'contract-estimated-hour total'}) %>
@@ -148,28 +148,28 @@
                       <tbody>
                         <tr>
                           <td class="l"><a href="#"><strong>Labor</strong></a></td>
-                          <td><%= h(deliverable.labor_budget_spent) %></td>
-                          <td><%= h(deliverable.labor_budget_total) %></td>
+                          <td><%= h(format_value_field_for_contracts(deliverable.labor_budget_spent)) %></td>
+                          <td><%= h(format_value_field_for_contracts(deliverable.labor_budget_total)) %></td>
                           <td> TODO: Release 2 / TODO hrs </td>
                         </tr>
                         <tr>
                           <td class="l"><a href="#"><strong>Overhead</strong></a></td>
-                          <td><%= h(deliverable.overhead_spent) %></td>
-                          <td><%= h(deliverable.overhead_budget_total) %></td>
+                          <td><%= h(format_value_field_for_contracts(deliverable.overhead_spent)) %></td>
+                          <td><%= h(format_value_field_for_contracts(deliverable.overhead_budget_total)) %></td>
                           <td> TODO: Release 2 / TODO hrs </td>
                         </tr>
                         <%# TODO: Release 2, Fixed %>
                         <%# TODO: Release 2, Markup %>
                         <tr>
                           <td class="l">Profit</td>
-                          <td><%= h(deliverable.profit_left) %></td>
-                          <td><%= h(deliverable.profit_budget) %></td>
+                          <td><%= h(format_value_field_for_contracts(deliverable.profit_left)) %></td>
+                          <td><%= h(format_value_field_for_contracts(deliverable.profit_budget)) %></td>
                           <td></td>
                         </tr>
                         <tr class="total">
                           <td class="l"><strong>Total:</strong></td>
-                          <td><strong><%= h(deliverable.total_spent) %></strong></td>
-                          <td><strong><%= h(deliverable.total) %></strong></td>
+                          <td><strong><%= h(format_value_field_for_contracts(deliverable.total_spent)) %></strong></td>
+                          <td><strong><%= h(format_value_field_for_contracts(deliverable.total)) %></strong></td>
                           <td><strong>TODO: Release 2</strong></td>
                         </tr>
                       </tbody>

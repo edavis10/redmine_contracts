@@ -10,8 +10,8 @@ module ContractsHelper
     extra_css_class = options[:class] || ''
     
     if total > 0 || spent > 0
-      content_tag(:td, h(number_to_currency(spent, :unit => '')), :class => 'spent-amount ' + extra_css_class) +
-        content_tag(:td, h(number_to_currency(total, :unit => '')), :class => 'total-amount white ' + extra_css_class)
+      content_tag(:td, h(format_value_field_for_contracts(spent)), :class => 'spent-amount ' + extra_css_class) +
+        content_tag(:td, h(format_value_field_for_contracts(total)), :class => 'total-amount white ' + extra_css_class)
     else
       content_tag(:td, '----', :colspan => '2', :class => 'no-value ' + extra_css_class)
     end
@@ -80,5 +80,9 @@ module ContractsHelper
 
   def format_deliverable_value_fields(value)
     number_with_precision(value, :precision => Deliverable::ViewPrecision, :delimiter => '')
+  end
+
+  def format_value_field_for_contracts(value)
+    number_with_precision(value, :precision => Contract::ViewPrecision, :delimiter => ',')
   end
 end

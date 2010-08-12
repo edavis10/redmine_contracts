@@ -119,7 +119,7 @@ class ContractsShowTest < ActionController::IntegrationTest
 
     visit_contract_page(@contract)
     assert_select "table#deliverables" do
-      assert_select "td.labor", :text => /4,200.50/
+      assert_select "td.labor", :text => /4,201/
     end
 
   end
@@ -137,7 +137,7 @@ class ContractsShowTest < ActionController::IntegrationTest
 
     visit_contract_page(@contract)
     assert_select "table#deliverables" do
-      assert_select "td.overhead", :text => /4,200.50/
+      assert_select "td.overhead", :text => /4,201/
     end
 
   end
@@ -171,7 +171,7 @@ class ContractsShowTest < ActionController::IntegrationTest
 
     visit_contract_page(@contract)
     assert_select "table#deliverables" do
-      assert_select "td.labor", :text => /1,000.00/
+      assert_select "td.labor", :text => /1,000/
     end
 
   end
@@ -205,7 +205,7 @@ class ContractsShowTest < ActionController::IntegrationTest
 
     visit_contract_page(@contract)
     assert_select "table#deliverables" do
-      assert_select "td.overhead", :text => /2,000.00/
+      assert_select "td.overhead", :text => /2,000/
     end
 
   end

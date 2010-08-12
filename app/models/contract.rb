@@ -1,6 +1,8 @@
 class Contract < ActiveRecord::Base
   unloadable
 
+  ViewPrecision = 0
+
   # Associations
   belongs_to :project
   belongs_to :account_executive, :class_name => 'User', :foreign_key => 'account_executive_id'
