@@ -53,6 +53,22 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
       assert_equal 2, @project_two.reload.contracts.first.deliverables.count
     end
 
+    context "on new Contracts" do
+      should "default the contract billable rate to $150" do
+        RedmineContracts::BudgetPluginMigration.migrate(@data)
+
+        assert_equal 150, @project_one.reload.contracts.first.billable_rate
+        assert_equal 150, @project_two.reload.contracts.first.billable_rate
+      end
+
+      should "allow overriding the contract billable rate" do
+        RedmineContracts::BudgetPluginMigration.migrate(@data, :contract_rate => '100.50')
+
+        assert_equal 100.5, @project_one.reload.contracts.first.billable_rate
+        assert_equal 100.5, @project_two.reload.contracts.first.billable_rate
+      end
+    end
+
     should "enable the contracts plugin for each project with a contract" do
       @no_deliverables = Project.generate!(:enabled_modules => [])
       RedmineContracts::BudgetPluginMigration.migrate(@data)

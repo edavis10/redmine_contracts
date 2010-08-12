@@ -29,7 +29,9 @@ module RedmineContracts
     end
 
     # * old_data - YAML string of deliverables to migrate
-    def self.migrate(old_data)
+    def self.migrate(old_data, options={})
+      @contract_rate = options[:contract_rate] ? options[:contract_rate].to_f : 150.0
+      
       @@data = YAML.load(old_data)
 
       # Map old deliverable ids to the new ones
@@ -106,6 +108,7 @@ module RedmineContracts
         c.account_executive = project.users.first
         c.start_date ||= Date.today
         c.end_date ||= Date.today
+        c.billable_rate = @contract_rate
       end
 
       contract.save!
