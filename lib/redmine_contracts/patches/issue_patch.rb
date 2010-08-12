@@ -8,6 +8,8 @@ module RedmineContracts
         base.class_eval do
           unloadable
           belongs_to :deliverable
+
+          delegate :title, :to => :deliverable, :prefix => true, :allow_nil => true
         end
       end
 

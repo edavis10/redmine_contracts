@@ -65,6 +65,10 @@ Dispatcher.to_prepare :redmine_contracts do
   Project.send(:include, RedmineContracts::Patches::ProjectPatch)
   require_dependency 'issue'
   Issue.send(:include, RedmineContracts::Patches::IssuePatch)
+
+  unless Query.available_columns.collect(&:name).include?(:deliverable_title)
+    Query.add_available_column(QueryColumn.new(:deliverable_title, :sortable => "#{Deliverable.table_name}.title"))
+  end
 end
 
 require 'redmine_contracts/hooks/view_layouts_base_html_head_hook'
