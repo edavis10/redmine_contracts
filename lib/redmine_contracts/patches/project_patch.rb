@@ -7,8 +7,8 @@ module RedmineContracts
         base.send(:include, InstanceMethods)
         base.class_eval do
           unloadable
-
           has_many :contracts
+          has_many :deliverables, :through => :contracts
         end
       end
 

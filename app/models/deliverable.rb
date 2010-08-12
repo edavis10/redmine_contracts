@@ -22,6 +22,8 @@ class Deliverable < ActiveRecord::Base
 
   delegate :name, :to => :contract, :prefix => true, :allow_nil => true
 
+  named_scope :by_title, {:order => "#{Deliverable.table_name}.title ASC"}
+  
   def short_type
     ''
   end

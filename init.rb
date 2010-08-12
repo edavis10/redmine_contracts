@@ -44,7 +44,6 @@ end
 
 require 'dispatcher'
 Dispatcher.to_prepare :redmine_contracts do
-
   gem 'inherited_resources', :version => '1.0.6'
   require_dependency 'inherited_resources'
   require_dependency 'inherited_resources/base'
@@ -65,6 +64,10 @@ Dispatcher.to_prepare :redmine_contracts do
   Project.send(:include, RedmineContracts::Patches::ProjectPatch)
   require_dependency 'issue'
   Issue.send(:include, RedmineContracts::Patches::IssuePatch)
+  require_dependency 'query'
+  unless Query.included_modules.include? RedmineContracts::Patches::QueryPatch
+    Query.send(:include, RedmineContracts::Patches::QueryPatch)
+  end
 
   unless Query.available_columns.collect(&:name).include?(:deliverable_title)
     Query.add_available_column(QueryColumn.new(:deliverable_title, :sortable => "#{Deliverable.table_name}.title"))
