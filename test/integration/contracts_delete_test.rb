@@ -5,7 +5,7 @@ class ContractsDeleteTest < ActionController::IntegrationTest
   
   def setup
     @project = Project.generate!(:identifier => 'main')
-    @contract = Contract.generate!(:project => @project, :name => 'A Contract', :payment_terms => 'net_15')
+    @contract = Contract.generate!(:project => @project, :name => 'A Contract')
   end
 
   should "allow admins to delete the contract" do

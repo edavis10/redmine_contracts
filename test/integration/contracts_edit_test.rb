@@ -8,7 +8,7 @@ class ContractsEditTest < ActionController::IntegrationTest
     @account_executive = User.generate!
     @role = Role.generate!
     User.add_to_project(@account_executive, @project, @role)
-    @contract = Contract.generate!(:project => @project, :name => 'A Contract', :payment_terms => 'net_15', :account_executive => @account_executive)
+    @contract = Contract.generate!(:project => @project, :name => 'A Contract', :account_executive => @account_executive)
   end
 
   should "allow any user to edit the contract" do
@@ -23,9 +23,7 @@ class ContractsEditTest < ActionController::IntegrationTest
     assert_select "h2", :text => /#{@contract.name}/
     assert_select "form#edit_contract_#{@contract.id}.contract" do
       assert_select "input[value=?]", /#{@contract.name}/
-      assert_select "select#contract_payment_terms" do
-        assert_select "option[selected=selected][value=net_15]"
-      end
+      assert_select "select#contract_payment_term_id"
     end
 
     fill_in "Name", :with => 'An updated name'

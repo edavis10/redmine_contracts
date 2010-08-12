@@ -5,7 +5,7 @@ class DeliverablesDeleteTest < ActionController::IntegrationTest
   
   def setup
     @project = Project.generate!(:identifier => 'main')
-    @contract = Contract.generate!(:project => @project, :name => 'A Contract', :payment_terms => 'net_15')
+    @contract = Contract.generate!(:project => @project, :name => 'A Contract')
     @manager = User.generate!
     @deliverable = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
   end

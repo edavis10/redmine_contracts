@@ -4,6 +4,7 @@ class Contract < ActiveRecord::Base
   # Associations
   belongs_to :project
   belongs_to :account_executive, :class_name => 'User', :foreign_key => 'account_executive_id'
+  belongs_to :payment_term, :class_name => "PaymentTerm", :foreign_key => "payment_term_id"
   has_many :deliverables, :dependent => :destroy
 
   # Validations
@@ -24,7 +25,7 @@ class Contract < ActiveRecord::Base
   attr_accessible :billable_rate
   attr_accessible :discount
   attr_accessible :discount_note
-  attr_accessible :payment_terms
+  attr_accessible :payment_term_id
   attr_accessible :client_ap_contact_information
   attr_accessible :po_number
   attr_accessible :client_point_of_contact
@@ -91,19 +92,6 @@ class Contract < ActiveRecord::Base
   end
   alias_method :profit_spent, :profit_left
 
-  PaymentTerms = {
-    :net_0 => :text_payment_terms_net_0,
-    :net_15 => :text_payment_terms_net_15,
-    :net_30 => :text_payment_terms_net_30,
-    :net_45 => :text_payment_terms_net_45
-  }
-
-  def payment_terms_for_select
-    PaymentTerms.collect {|value, label|
-      [l(label), value.to_s]
-    }
-  end
-  
   def after_initialize
     self.executed = false unless self.executed.present?
   end

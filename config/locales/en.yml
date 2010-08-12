@@ -13,14 +13,10 @@ en:
   field_discount: "Discount"
   field_discount_hint: "$, %"
   field_discount_note: "Discounts Notes"
-  field_payment_terms: "Payment Terms"
+  field_payment_term: "Payment Terms"
   field_client_ap_contact_information: "AP Contact Info"
   field_po_number: "PO Number"
   field_details: "Details"
-  text_payment_terms_net_0: "Net 0"
-  text_payment_terms_net_15: "Net 15"
-  text_payment_terms_net_30: "Net 30"
-  text_payment_terms_net_45: "Net 45"
   button_add_new: Add New
   text_new_deliverable: New Deliverable
   text_edit_deliverable_title: "Edit {{title}}"
@@ -60,4 +56,5 @@ en:
   text_account_legend: "Account Management"
   text_deliverable_details_legend: "Deliverable Details"
   text_save_contract: "Save Contract"
+  enumeration_payment_term: "Payment Terms"
 

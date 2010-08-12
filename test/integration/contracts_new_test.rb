@@ -5,6 +5,8 @@ class ContractsNewTest < ActionController::IntegrationTest
   
   def setup
     @project = Project.generate!(:identifier => 'main')
+    PaymentTerm.generate!(:type => 'PaymentTerm', :name => 'Net 15')
+    PaymentTerm.generate!(:type => 'PaymentTerm', :name => 'Net 30')
   end
 
   should "allow any user to open the new contracts form" do
@@ -40,7 +42,7 @@ class ContractsNewTest < ActionController::IntegrationTest
     assert_equal @account_executive, @contract.account_executive
     assert_equal '2010-01-01', @contract.start_date.to_s
     assert_equal '2010-12-31', @contract.end_date.to_s
-    assert_equal 'net_30', @contract.payment_terms
+    assert_equal 'Net 30', @contract.payment_term.name
     
   end
 end

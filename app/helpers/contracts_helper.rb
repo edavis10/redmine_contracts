@@ -75,6 +75,6 @@ module ContractsHelper
 
   def format_payment_terms(value)
     return '' if value.blank?
-    return l(Contract::PaymentTerms[value.to_sym])
+    return h(value.name)
   end
 end

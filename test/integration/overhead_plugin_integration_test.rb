@@ -3,7 +3,7 @@ require 'test_helper'
 class OverheadPluginIntegrationTest < ActionController::IntegrationTest
   def setup
     @project = Project.generate!(:identifier => 'main')
-    @contract = Contract.generate!(:project => @project, :name => 'A Contract', :payment_terms => 'net_15')
+    @contract = Contract.generate!(:project => @project, :name => 'A Contract')
     @manager = User.generate!
     @role = Role.generate!
     User.add_to_project(@manager, @project, @role)
