@@ -106,6 +106,10 @@ class Contract < ActiveRecord::Base
     end
   end
 
+  def to_s
+    name
+  end
+    
   if Rails.env.test?
     generator_for :name, :method => :next_name
     generator_for :executed => true

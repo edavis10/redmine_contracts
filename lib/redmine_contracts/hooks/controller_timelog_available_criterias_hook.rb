@@ -7,6 +7,11 @@ module RedmineContracts
           :klass => Deliverable,
           :label => :field_deliverable
         }
+        context[:available_criterias]["contract_id"] = {
+          :sql => "(SELECT deliverable.contract_id FROM #{Deliverable.table_name} deliverable WHERE deliverable.id = issues.deliverable_id)",
+          :klass => Contract,
+          :label => :field_contract
+        }
         return ''
       end
     end

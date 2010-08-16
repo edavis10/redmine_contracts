@@ -50,6 +50,28 @@ class RedmineContracts::Hooks::ControllerTimelogAvailableCriteriasTest < ActionC
         assert :field_deliverable, context[:available_criterias]['deliverable_id'][:label]
       end
     end
-    
+
+    context "Contracts" do
+      should "add a contract_id to the available criterias" do
+        @response.body = hook(context)
+        assert context[:available_criterias]['contract_id']
+      end
+      
+      should "add the contact sql to the available criterias" do
+        @response.body = hook(context)
+        assert "issues.deliverable_id", context[:available_criterias]['contract_id'][:sql]
+      end
+
+      should "add the deliverable Class to the available criterias" do
+        @response.body = hook(context)
+        assert Contract, context[:available_criterias]['contract_id'][:klass]
+      end
+
+      should "add the deliverable label to the available criterias" do
+        @response.body = hook(context)
+        assert :field_contract, context[:available_criterias]['contract_id'][:label]
+      end
+    end
+
   end
 end
