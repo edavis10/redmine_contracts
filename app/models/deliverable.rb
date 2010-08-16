@@ -68,6 +68,10 @@ class Deliverable < ActiveRecord::Base
     end_date
   end
 
+  def retainer?
+    type == "RetainerDeliverable"
+  end
+
   if Rails.env.test?
     generator_for :title, :method => :next_title
 

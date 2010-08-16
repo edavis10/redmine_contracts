@@ -119,7 +119,18 @@
                     
                     <%= textilizable(deliverable, :notes) %>
                     
+                    <% if deliverable.retainer? %>
+                    <form action="">
+                      <fieldset>
+                        <select name="m">
+                          <option value="1">TODO: Release 2</option>
+                        </select>
+                      </fieldset>
+                    </form>
+                    <% end %>
+
                     <table>
+                      <%= show_field(deliverable, :frequency, :html_options => {:class => 'deliverable-frequency'}) if deliverable.retainer? %>
                       <%= show_field(deliverable, :start_date, :format => :format_date, :html_options => {:class => 'deliverable-start-date'}) %>
                       <%= show_field(deliverable, :end_date, :format => :format_date, :html_options => {:class => 'deliverable-end-date'}) %>
                     </table>

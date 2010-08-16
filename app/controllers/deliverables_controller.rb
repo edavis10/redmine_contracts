@@ -14,7 +14,7 @@ class DeliverablesController < InheritedResources::Base
 
   def create
     @deliverable = begin_of_association_chain.deliverables.build(params[:deliverable])
-    if params[:deliverable] && params[:deliverable][:type] && ['FixedDeliverable','HourlyDeliverable'].include?(params[:deliverable][:type])
+    if params[:deliverable] && params[:deliverable][:type] && ['FixedDeliverable','HourlyDeliverable','RetainerDeliverable'].include?(params[:deliverable][:type])
       @deliverable.type = params[:deliverable][:type]
     end
     create! { contract_url(@project, @contract) }

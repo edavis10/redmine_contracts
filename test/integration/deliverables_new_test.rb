@@ -111,6 +111,39 @@ class DeliverablesNewTest < ActionController::IntegrationTest
 
   end
 
+  should "create a new Retainer deliverable" do
+    @manager = User.generate!
+    @role = Role.generate!
+    User.add_to_project(@manager, @project, @role)
+
+    visit_contract_page(@contract)
+    click_link 'Add New'
+    assert_response :success
+
+    fill_in "Title", :with => 'A New Deliverable'
+    select "Retainer", :from => "Type"
+    select "Monthly", :from => 'deliverable_frequency'
+    select @manager.name, :from => "Manager"
+    fill_in "Start", :with => '2010-01-01'
+    fill_in "End Date", :with => '2010-12-31'
+    fill_in "Notes", :with => 'Some notes on the deliverable'
+    fill_in "Total", :with => '1,000.00'
+
+    click_button "Save"
+
+    assert_response :success
+    assert_template 'contracts/show'
+
+    @deliverable = Deliverable.last
+    assert_equal "A New Deliverable", @deliverable.title
+    assert_equal @contract, @deliverable.contract
+    assert_equal "RetainerDeliverable", @deliverable.type
+    assert_equal '2010-01-01', @deliverable.start_date.to_s
+    assert_equal '2010-12-31', @deliverable.end_date.to_s
+    assert_equal @manager, @deliverable.manager
+    assert_equal "monthly", @deliverable.frequency
+  end
+
   should "create new budget items for the deliverables" do
     @manager = User.generate!
     @role = Role.generate!
