@@ -22,16 +22,37 @@ jQuery(function($) {
 		$(this).toggleClass('alt');
 	}); 
 
+  showDeliverableTotal = function() {
+    $('.deliverable_total_input').show();
+  },
+
+  hideDeliverableTotal = function() {
+    $('.deliverable_total_input').
+      children('input').val('').end().
+      hide();
+  },
+
+  showDeliverableFrequency = function() {
+    $('#deliverable_frequency').show();
+  },
+
+  hideDeliverableFrequency = function() {
+    $('#deliverable_frequency').hide();
+  },
+
   toggleSpecificDeliverableFields = function(form) {
     var deliverableType = form.find('.type').val();
 
     if (deliverableType == 'FixedDeliverable') {
-      $('.deliverable_total_input').show();
-    } else {
-      $('.deliverable_total_input').
-        children('input').val('').end().
-        hide();
-    }
+      showDeliverableTotal();
+      hideDeliverableFrequency();
+    } else if(deliverableType == "HourlyDeliverable") {
+      hideDeliverableTotal();
+      hideDeliverableFrequency();
+    } else if(deliverableType == "RetainerDeliverable") {
+      hideDeliverableTotal();
+      showDeliverableFrequency();
+   }
   },
 
   toggleSpecificDeliverableFields($('form.deliverable'));
