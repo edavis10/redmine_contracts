@@ -28,6 +28,10 @@ class Deliverable < ActiveRecord::Base
     ''
   end
 
+  def to_s
+    title
+  end
+  
   def to_underscore
     self.class.to_s.underscore
   end
