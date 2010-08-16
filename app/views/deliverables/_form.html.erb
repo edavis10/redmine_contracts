@@ -4,7 +4,7 @@
   <% if resource.new_record? %>
     <li class="select required" id="deliverable_type_input">
       <%= form.label(:type, l(:field_type)) %>
-      <%= form.select(:type, [["Fixed", "FixedDeliverable"], ["Hourly", "HourlyDeliverable"], ["Retainer", "RetainerDeliverable"]], {:include_blank => false}, {:class => 'type'}) %>
+      <%= form.select(:type, Deliverable.valid_types_to_select, {:include_blank => false}, {:class => 'type'}) %>
 
       <%= form.select(:frequency, RetainerDeliverable.frequencies_to_select, :include_blank => false) %>
     </li>

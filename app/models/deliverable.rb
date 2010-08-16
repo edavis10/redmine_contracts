@@ -72,6 +72,17 @@ class Deliverable < ActiveRecord::Base
     type == "RetainerDeliverable"
   end
 
+  def self.valid_types
+    ['FixedDeliverable','HourlyDeliverable','RetainerDeliverable']
+  end
+
+  def self.valid_types_to_select
+    valid_types.inject([]) do |types, type|
+      types << [type.gsub(/Deliverable/i,''), type]
+      types
+    end
+  end
+
   if Rails.env.test?
     generator_for :title, :method => :next_title
 
