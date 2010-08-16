@@ -5,4 +5,21 @@
 class RetainerDeliverable < HourlyDeliverable
   unloadable
 
+  # Associations
+
+  # Validations
+  ValidFrequencies = ["monthly", "quarterly"]
+  validates_inclusion_of :frequency, :in => ValidFrequencies, :allow_nil => true, :allow_blank => true
+  
+  # Accessors
+
+  # Callbacks
+
+  def short_type
+    'R'
+  end
+
+  def self.frequencies_to_select
+    ValidFrequencies.collect {|f| [l("text_#{f}"), f]}
+  end
 end
