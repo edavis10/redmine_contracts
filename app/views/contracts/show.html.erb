@@ -131,6 +131,7 @@
 
                     <table>
                       <%= show_field(deliverable, :frequency, :html_options => {:class => 'deliverable-frequency'}) if deliverable.retainer? %>
+                      <%= show_field(deliverable, :current_period, :html_options => {:class => 'deliverable-current-period'}) if deliverable.retainer? %>
                       <%= show_field(deliverable, :start_date, :format => :format_date, :html_options => {:class => 'deliverable-start-date'}) %>
                       <%= show_field(deliverable, :end_date, :format => :format_date, :html_options => {:class => 'deliverable-end-date'}) %>
                     </table>

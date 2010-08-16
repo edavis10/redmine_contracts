@@ -19,6 +19,10 @@ class RetainerDeliverable < HourlyDeliverable
     'R'
   end
 
+  def current_period
+    'TODO'
+  end
+
   def self.frequencies_to_select
     ValidFrequencies.collect {|f| [l("text_#{f}"), f]}
   end
