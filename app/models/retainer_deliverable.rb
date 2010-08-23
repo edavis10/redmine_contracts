@@ -14,6 +14,7 @@ class RetainerDeliverable < HourlyDeliverable
   # Accessors
 
   # Callbacks
+  after_save :create_budgets_for_periods
 
   def short_type
     'R'
@@ -21,6 +22,39 @@ class RetainerDeliverable < HourlyDeliverable
 
   def current_period
     'TODO'
+  end
+
+  def beginning_date
+    start_date && start_date.beginning_of_month
+  end
+
+  def ending_date
+    end_date && end_date.end_of_month
+  end
+
+  def months
+    month_acc = []
+
+    current_date = beginning_date
+    while current_date < ending_date do
+      month_acc << current_date
+      current_date = current_date.advance(:months => 1)
+    end
+    
+    month_acc
+  end
+  
+  def create_budgets_for_periods
+    # For each month in the time span
+    months.each do |month|
+      # Iterate over all un-dated budgets, created dated versions
+      undated_labor_budgets = labor_budgets.all(:conditions => ["#{LaborBudget.table_name}.year IS NULL AND #{LaborBudget.table_name}.month IS NULL"])
+      undated_labor_budgets.each do |template_budget|
+        labor_budgets.create(template_budget.attributes.merge(:year => month.year, :month => month.month))
+      end
+    end
+    # Destroy origional un-dated budgets
+    labor_budgets.all(:conditions => ["#{LaborBudget.table_name}.year IS NULL AND #{LaborBudget.table_name}.month IS NULL"]).collect(&:destroy)
   end
 
   def self.frequencies_to_select

@@ -127,7 +127,16 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     fill_in "Start", :with => '2010-01-01'
     fill_in "End Date", :with => '2010-12-31'
     fill_in "Notes", :with => 'Some notes on the deliverable'
-    fill_in "Total", :with => '1,000.00'
+
+    within("#deliverable-labor") do
+      fill_in "hrs", :with => '20'
+      fill_in "$", :with => '$2,000'
+    end
+
+    within("#deliverable-overhead") do
+      fill_in "hrs", :with => '10'
+      fill_in "$", :with => '$1,000'
+    end
 
     click_button "Save"
 
@@ -142,6 +151,39 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     assert_equal '2010-12-31', @deliverable.end_date.to_s
     assert_equal @manager, @deliverable.manager
     assert_equal "monthly", @deliverable.frequency
+
+    # Budget items, one per month
+    labor_budgets = @deliverable.labor_budgets
+    assert_equal 12, labor_budgets.length
+    
+    labor_budgets.each do |budget|
+      assert_equal 2000, budget.budget
+      assert_equal 20, budget.hours
+    end
+
+    # Budget dates
+    labor_budgets.each do |budget|
+      assert_equal 2010, budget.year
+    end
+    (1..12).each do |month_number|
+      assert_equal 1, labor_budgets.select {|b| b.month == month_number}.length
+    end
+
+    overhead_budgets = @deliverable.overhead_budgets
+    assert_equal 12, overhead_budgets.length
+    
+    overhead_budgets.each do |budget|
+      assert_equal 1000, budget.budget
+      assert_equal 10, budget.hours
+    end
+
+    # Budget dates
+    overhead_budgets.each do |budget|
+      assert_equal 2010, budget.year
+    end
+    (1..12).each do |month_number|
+      assert_equal 1, overhead_budgets.select {|b| b.month == month_number}.length
+    end
   end
 
   should "create new budget items for the deliverables" do
