@@ -14,8 +14,7 @@ class RetainerDeliverable < HourlyDeliverable
   # Accessors
 
   # Callbacks
-  after_save :create_budgets_for_periods
-
+  
   def short_type
     'R'
   end

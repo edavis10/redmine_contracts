@@ -22,6 +22,16 @@ class Deliverable < ActiveRecord::Base
 
   delegate :name, :to => :contract, :prefix => true, :allow_nil => true
 
+  # Callbacks
+
+  # Register callbacks here, on new records the class isn't set so class-specific
+  # callbacks don't fire.
+  def after_save
+    if type == "RetainerDeliverable"
+      self.becomes(self.type.constantize).create_budgets_for_periods
+    end
+  end
+  
   named_scope :by_title, {:order => "#{Deliverable.table_name}.title ASC"}
   
   def short_type
