@@ -51,9 +51,15 @@ class RetainerDeliverable < HourlyDeliverable
       undated_labor_budgets.each do |template_budget|
         labor_budgets.create(template_budget.attributes.merge(:year => month.year, :month => month.month))
       end
+
+      undated_overhead_budgets = overhead_budgets.all(:conditions => ["#{OverheadBudget.table_name}.year IS NULL AND #{OverheadBudget.table_name}.month IS NULL"])
+      undated_overhead_budgets.each do |template_budget|
+        overhead_budgets.create(template_budget.attributes.merge(:year => month.year, :month => month.month))
+      end
     end
     # Destroy origional un-dated budgets
     labor_budgets.all(:conditions => ["#{LaborBudget.table_name}.year IS NULL AND #{LaborBudget.table_name}.month IS NULL"]).collect(&:destroy)
+    overhead_budgets.all(:conditions => ["#{OverheadBudget.table_name}.year IS NULL AND #{OverheadBudget.table_name}.month IS NULL"]).collect(&:destroy)
   end
 
   def self.frequencies_to_select
