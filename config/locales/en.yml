@@ -28,6 +28,7 @@ en:
   field_feature_sign_off: Feature Sign Off
   field_warranty_sign_off: Warranty Sign Off
   text_deliverable_finances: Deliverable Finances
+  text_deliverable_finances_date: "Deliverable Finances - {{date}}"
   text_short_hours: hrs
   text_dollar_sign: '$'
   field_client_point_of_contact: "Point of Contact"

@@ -1,10 +1,10 @@
-<% form.inputs :name => l(:text_deliverable_finances), :id => 'deliverable-finances' do %>
+<% form.inputs :name => label, :class => 'deliverable-finances' do %>
 
   <li class="numeric optional">
     <%= content_tag(:label, l(:field_labor)) %>
     <table id="deliverable-labor" class="deliverable_finance_table">
 
-      <% form.fields_for :labor_budgets do |labor_budget| %>
+      <% form.fields_for :labor_budgets, labor_budgets do |labor_budget| %>
       <tr>
         <%# TODO: Select field for the Time Entry Activity in a td %>
         <td>
@@ -31,7 +31,7 @@
     <%= content_tag(:label, l(:field_overhead)) %>
     <table id="deliverable-overhead" class="deliverable_finance_table">
       
-      <% form.fields_for :overhead_budgets do |overhead_budget| %>
+      <% form.fields_for :overhead_budgets, overhead_budgets do |overhead_budget| %>
       <tr>
         <%# TODO: Select field for the Time Entry Activity in a td %>
         <td>

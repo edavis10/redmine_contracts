@@ -28,7 +28,13 @@
   <% end %>
 <% end %>
 
-<%= render :partial => 'finance_form', :locals => {:form => form, :resource => resource} %>
+<% if resource.retainer? %>
+<% resource.months.each do |month| %>
+<%= render :partial => 'finance_form', :locals => {:form => form, :labor_budgets => resource.labor_budgets_for_date(month), :overhead_budgets => resource.overhead_budgets_for_date(month), :label => l(:text_deliverable_finances_date, :date => month.strftime("%B, %Y")) } %>
+<% end %>
+<% else %>
+<%= render :partial => 'finance_form', :locals => {:form => form, :labor_budgets => resource.labor_budgets, :overhead_budgets => resource.overhead_budgets, :label => l(:text_deliverable_finances) } %>
+<% end %>
 
 </div>
 

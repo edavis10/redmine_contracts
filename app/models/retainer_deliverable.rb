@@ -44,7 +44,15 @@ class RetainerDeliverable < HourlyDeliverable
     
     month_acc
   end
-  
+
+  def labor_budgets_for_date(date)
+    labor_budgets.all(:conditions => {:year => date.year, :month => date.month})
+  end
+
+  def overhead_budgets_for_date(date)
+    overhead_budgets.all(:conditions => {:year => date.year, :month => date.month})
+  end
+
   def create_budgets_for_periods
     # For each month in the time span
     months.each do |month|
