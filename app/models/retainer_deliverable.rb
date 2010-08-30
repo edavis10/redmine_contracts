@@ -24,17 +24,19 @@ class RetainerDeliverable < HourlyDeliverable
   end
 
   def beginning_date
-    start_date && start_date.beginning_of_month
+    start_date && start_date.beginning_of_month.to_date
   end
 
   def ending_date
-    end_date && end_date.end_of_month
+    end_date && end_date.end_of_month.to_date
   end
 
   def months
     month_acc = []
 
     current_date = beginning_date
+    return [] if current_date.nil? || ending_date.nil?
+    
     while current_date < ending_date do
       month_acc << current_date
       current_date = current_date.advance(:months => 1)

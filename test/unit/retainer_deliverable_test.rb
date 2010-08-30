@@ -10,6 +10,37 @@ class RetainerDeliverableTest < ActiveSupport::TestCase
     should_not_allow_values_for(:frequency, 'anything', 'else', 'weekly')
   end
 
+  context "#months" do
+    should "be an array of months the Deliverable is active in" do
+      d = RetainerDeliverable.new(:start_date => Date.today.beginning_of_month,
+                                  :end_date => 6.months.from_now)
+
+      assert_equal 7, d.months.length # 6 months + current month
+      d.months.each do |month|
+        assert_kind_of Date, month
+      end
+    end
+
+    should "return an empty array if start_date is missing" do
+      d = RetainerDeliverable.new(:start_date => nil,
+                                  :end_date => 6.months.from_now)
+      assert_equal [], d.months
+    end
+
+    should "return an empty array if end_date is missing" do
+      d = RetainerDeliverable.new(:start_date => Date.today.beginning_of_month,
+                                  :end_date => nil)
+      assert_equal [], d.months
+    end
+
+    should "return an empty array if the start_date and end_date are reversed" do
+      d = RetainerDeliverable.new(:start_date => 6.months.from_now,
+                                  :end_date => Date.today.beginning_of_month)
+      assert_equal [], d.months
+    end
+
+  end
+
   context "#create_budgets_for_periods" do
     setup do
       @deliverable = RetainerDeliverable.generate!(:start_date => '2010-01-10',
