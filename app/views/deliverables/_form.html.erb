@@ -28,65 +28,7 @@
   <% end %>
 <% end %>
 
-<% form.inputs :name => l(:text_deliverable_finances), :id => 'deliverable-finances' do %>
-
-  <li class="numeric optional">
-    <%= content_tag(:label, l(:field_labor)) %>
-    <table id="deliverable-labor" class="deliverable_finance_table">
-
-      <% form.fields_for :labor_budgets do |labor_budget| %>
-      <tr>
-        <%# TODO: Select field for the Time Entry Activity in a td %>
-        <td>
-          <select><option>TODO: Release 3</option></select>
-        </td>
-        <td>
-          <p class="inline-hints"><%= labor_budget.label(:hours, l(:text_short_hours)) %></p>
-          <%= labor_budget.text_field(:hours, :value => format_deliverable_value_fields(labor_budget.object.hours), :size => 10) %>
-        </td>
-        <td>
-          <p class="inline-hints"><%= labor_budget.label(:budget, l(:text_dollar_sign)) %></p>
-          <%= labor_budget.text_field(:budget, :value => format_deliverable_value_fields(labor_budget.object.budget), :size => 10) %>
-        </td>
-        <%# TODO: Green Add button for multiple records %>
-        <td>
-          Todo: Add button (Release 3)
-        </td>
-      </tr>
-      <% end %>
-    </table>
-  </li>
-
-  <li class="numeric optional">
-    <%= content_tag(:label, l(:field_overhead)) %>
-    <table id="deliverable-overhead" class="deliverable_finance_table">
-      
-      <% form.fields_for :overhead_budgets do |overhead_budget| %>
-      <tr>
-        <%# TODO: Select field for the Time Entry Activity in a td %>
-        <td>
-          <select><option>TODO: Release 3</option></select>
-        </td>
-        <td>
-          <p class="inline-hints"><%= overhead_budget.label(:hours, l(:text_short_hours)) %></p>
-          <%= overhead_budget.text_field(:hours, :value => format_deliverable_value_fields(overhead_budget.object.hours),:size => 10) %>
-        </td>
-        <td>
-          <p class="inline-hints"><%= overhead_budget.label(:budget, l(:text_dollar_sign)) %></p>
-          <%= overhead_budget.text_field(:budget, :value => format_deliverable_value_fields(overhead_budget.object.budget), :size => 10) %>
-        </td>
-        <%# TODO: Green Add button for multiple records %>
-        <td>
-          Todo: Add button (Release 3)
-        </td>
-      </tr>
-      <% end %>
-    </table>
-  </li>
-
-  <%= form.input :total, :input_html => {:size => 10}, :wrapper_html => {:class => 'deliverable_total_input'}, :hint => l(:text_dollar_sign) %>
-
-<% end %>
+<%= render :partial => 'finance_form', :locals => {:form => form, :resource => resource} %>
 
 </div>
 
