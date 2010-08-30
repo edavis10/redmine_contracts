@@ -22,7 +22,7 @@ class DeliverablesController < InheritedResources::Base
 
   def update
     @deliverable = begin_of_association_chain.deliverables.find_by_id(params[:id])
-    params[:deliverable] = params[:fixed_deliverable] || params[:hourly_deliverable]
+    params[:deliverable] = params[:fixed_deliverable] || params[:hourly_deliverable] || params[:retainer_deliverable]
     update! { contract_url(@project, @contract) }
   end
 

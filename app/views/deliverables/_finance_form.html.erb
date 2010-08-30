@@ -1,10 +1,12 @@
-<% form.inputs :name => label, :class => 'deliverable-finances' do %>
+<% form.inputs :name => label, :class => "deliverable-finances #{fieldset_class}" do %>
 
   <li class="numeric optional">
     <%= content_tag(:label, l(:field_labor)) %>
     <table id="deliverable-labor" class="deliverable_finance_table">
 
       <% form.fields_for :labor_budgets, labor_budgets do |labor_budget| %>
+        <%= labor_budget.hidden_field(:year) %>
+        <%= labor_budget.hidden_field(:month) %>
       <tr>
         <%# TODO: Select field for the Time Entry Activity in a td %>
         <td>
@@ -32,6 +34,8 @@
     <table id="deliverable-overhead" class="deliverable_finance_table">
       
       <% form.fields_for :overhead_budgets, overhead_budgets do |overhead_budget| %>
+        <%= overhead_budget.hidden_field(:year) %>
+        <%= overhead_budget.hidden_field(:month) %>
       <tr>
         <%# TODO: Select field for the Time Entry Activity in a td %>
         <td>

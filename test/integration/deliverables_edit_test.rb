@@ -91,7 +91,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_equal 1000.0, @overhead_budget.budget
   end
 
-  should "show a Deliverable Finances section for each Retainer period" do
+  should "show allow editing the Deliverable Finances section for each Retainer period" do
     @retainer_deliverable = RetainerDeliverable.spawn(:contract => @contract, :manager => @manager, :title => "Retainer")
     @retainer_deliverable.labor_budgets << @labor_budget = LaborBudget.spawn(:deliverable => @retainer_deliverable, :budget => 1000, :hours => 10)
     @retainer_deliverable.overhead_budgets << @overhead_budget = OverheadBudget.spawn(:deliverable => @retainer_deliverable, :budget => 1000, :hours => 10)
@@ -106,5 +106,56 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_template 'deliverables/edit'
 
     assert_select 'fieldset.deliverable-finances', :count => 12
+
+    within ".date-2010-01" do
+      within "#deliverable-labor" do
+        fill_in "hrs", :with => '20'
+        fill_in "$", :with => '2000'
+      end
+      
+      within "#deliverable-overhead" do
+        fill_in "hrs", :with => '100'
+        fill_in "$", :with => '100'
+      end
+    end
+
+    click_button "Save"
+    assert_response :success
+    assert_template 'contracts/show'
+
+    @labor_budgets = @retainer_deliverable.reload.labor_budgets
+    assert_equal 12, @labor_budgets.length
+    @labor_budgets.each do |labor_budget|
+      if labor_budget.year == 2010 && labor_budget.month == 1
+
+        # Specific month's budget updated?
+        assert_equal 20.0, labor_budget.hours
+        assert_equal 2000.0, labor_budget.budget
+
+      else
+
+        assert_equal 10.0, labor_budget.hours
+        assert_equal 1000.0, labor_budget.budget
+
+      end
+    end
+    
+    @overhead_budgets = @retainer_deliverable.reload.overhead_budgets
+    assert_equal 12, @overhead_budgets.length
+    @overhead_budgets.each do |overhead_budget|
+      if overhead_budget.year == 2010 && overhead_budget.month == 1
+
+        # Specific month's budget updated?
+        assert_equal 100.0, overhead_budget.hours
+        assert_equal 100.0, overhead_budget.budget
+
+      else
+
+        assert_equal 10.0, overhead_budget.hours
+        assert_equal 1000.0, overhead_budget.budget
+
+      end
+    end
+
   end
 end
