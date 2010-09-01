@@ -92,6 +92,25 @@ class RetainerDeliverable < HourlyDeliverable
         
       end
     end
+
+    # TODO: brute force. Alternative would be to check start_date_changes to see if the period actually shifted
+    if start_date_changed?
+      first_labor_budget = labor_budgets.first(:order => 'year DESC, month DESC')
+      first_overhead_budget = overhead_budgets.first(:order => 'year DESC, month DESC')
+      
+      months.each do |new_date|
+        existing_labor = labor_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
+        unless existing_labor
+          labor_budgets.create(first_labor_budget.attributes.except('id').merge('year' => new_date.year, 'month' => new_date.month))
+        end
+
+        existing_overhead = overhead_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
+        unless existing_overhead
+          overhead_budgets.create(first_overhead_budget.attributes.except('id').merge('year' => new_date.year, 'month' => new_date.month))
+        end
+        
+      end
+    end
   end
 
   def self.frequencies_to_select
