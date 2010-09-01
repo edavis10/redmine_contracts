@@ -82,12 +82,12 @@ class RetainerDeliverable < HourlyDeliverable
       months.each do |new_date|
         existing_labor = labor_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
         unless existing_labor
-          labor_budgets.create(last_labor_budget.attributes.except('id').merge('year' => new_date.year, 'month' => new_date.month))
+          create_new_labor_budget_based_on_existing_budget(last_labor_budget, 'year' => new_date.year, 'month' => new_date.month)
         end
 
         existing_overhead = overhead_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
         unless existing_overhead
-          overhead_budgets.create(last_overhead_budget.attributes.except('id').merge('year' => new_date.year, 'month' => new_date.month))
+          create_new_overhead_budget_based_on_existing_budget(last_overhead_budget, 'year' => new_date.year, 'month' => new_date.month)
         end
         
       end
@@ -101,12 +101,12 @@ class RetainerDeliverable < HourlyDeliverable
       months.each do |new_date|
         existing_labor = labor_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
         unless existing_labor
-          labor_budgets.create(first_labor_budget.attributes.except('id').merge('year' => new_date.year, 'month' => new_date.month))
+          create_new_labor_budget_based_on_existing_budget(first_labor_budget, 'year' => new_date.year, 'month' => new_date.month)
         end
 
         existing_overhead = overhead_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
         unless existing_overhead
-          overhead_budgets.create(first_overhead_budget.attributes.except('id').merge('year' => new_date.year, 'month' => new_date.month))
+          create_new_overhead_budget_based_on_existing_budget(first_overhead_budget, 'year' => new_date.year, 'month' => new_date.month)
         end
         
       end
@@ -115,5 +115,15 @@ class RetainerDeliverable < HourlyDeliverable
 
   def self.frequencies_to_select
     ValidFrequencies.collect {|f| [l("text_#{f}"), f]}
+  end
+
+  private
+
+  def create_new_labor_budget_based_on_existing_budget(existing_labor_budget, attributes={})
+    labor_budgets.create(existing_labor_budget.attributes.except('id').merge(attributes))
+  end
+
+  def create_new_overhead_budget_based_on_existing_budget(existing_overhead_budget, attributes={})
+    overhead_budgets.create(existing_overhead_budget.attributes.except('id').merge(attributes))
   end
 end
