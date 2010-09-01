@@ -76,40 +76,12 @@ class RetainerDeliverable < HourlyDeliverable
   def check_for_extended_period
     # TODO: brute force. Alternative would be to check end_date_changes to see if the period actually shifted
     if end_date_changed?
-      last_labor_budget = labor_budgets.last(:order => 'year ASC, month ASC')
-      last_overhead_budget = overhead_budgets.last(:order => 'year ASC, month ASC')
-      
-      months.each do |new_date|
-        existing_labor = labor_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
-        unless existing_labor
-          create_new_labor_budget_based_on_existing_budget(last_labor_budget, 'year' => new_date.year, 'month' => new_date.month)
-        end
-
-        existing_overhead = overhead_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
-        unless existing_overhead
-          create_new_overhead_budget_based_on_existing_budget(last_overhead_budget, 'year' => new_date.year, 'month' => new_date.month)
-        end
-        
-      end
+      extend_period_to_new_end_date
     end
 
     # TODO: brute force. Alternative would be to check start_date_changes to see if the period actually shifted
     if start_date_changed?
-      first_labor_budget = labor_budgets.first(:order => 'year DESC, month DESC')
-      first_overhead_budget = overhead_budgets.first(:order => 'year DESC, month DESC')
-      
-      months.each do |new_date|
-        existing_labor = labor_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
-        unless existing_labor
-          create_new_labor_budget_based_on_existing_budget(first_labor_budget, 'year' => new_date.year, 'month' => new_date.month)
-        end
-
-        existing_overhead = overhead_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
-        unless existing_overhead
-          create_new_overhead_budget_based_on_existing_budget(first_overhead_budget, 'year' => new_date.year, 'month' => new_date.month)
-        end
-        
-      end
+      extend_period_to_new_start_date
     end
   end
 
@@ -119,6 +91,43 @@ class RetainerDeliverable < HourlyDeliverable
 
   private
 
+  def extend_period_to_new_end_date
+    last_labor_budget = labor_budgets.last(:order => 'year ASC, month ASC')
+    last_overhead_budget = overhead_budgets.last(:order => 'year ASC, month ASC')
+      
+    months.each do |new_date|
+      existing_labor = labor_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
+      unless existing_labor
+        create_new_labor_budget_based_on_existing_budget(last_labor_budget, 'year' => new_date.year, 'month' => new_date.month)
+      end
+
+      existing_overhead = overhead_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
+      unless existing_overhead
+        create_new_overhead_budget_based_on_existing_budget(last_overhead_budget, 'year' => new_date.year, 'month' => new_date.month)
+      end
+        
+    end
+  end
+
+  def extend_period_to_new_start_date
+    first_labor_budget = labor_budgets.first(:order => 'year DESC, month DESC')
+    first_overhead_budget = overhead_budgets.first(:order => 'year DESC, month DESC')
+    
+    months.each do |new_date|
+      existing_labor = labor_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
+      unless existing_labor
+        create_new_labor_budget_based_on_existing_budget(first_labor_budget, 'year' => new_date.year, 'month' => new_date.month)
+      end
+
+      existing_overhead = overhead_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
+      unless existing_overhead
+        create_new_overhead_budget_based_on_existing_budget(first_overhead_budget, 'year' => new_date.year, 'month' => new_date.month)
+      end
+      
+    end
+
+  end
+  
   def create_new_labor_budget_based_on_existing_budget(existing_labor_budget, attributes={})
     labor_budgets.create(existing_labor_budget.attributes.except('id').merge(attributes))
   end
