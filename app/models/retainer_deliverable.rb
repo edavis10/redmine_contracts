@@ -95,17 +95,8 @@ class RetainerDeliverable < HourlyDeliverable
     last_labor_budget = labor_budgets.last(:order => 'year ASC, month ASC')
     last_overhead_budget = overhead_budgets.last(:order => 'year ASC, month ASC')
       
-    months.each do |new_date|
-      existing_labor = labor_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
-      unless existing_labor
-        create_new_labor_budget_based_on_existing_budget(last_labor_budget, 'year' => new_date.year, 'month' => new_date.month)
-      end
-
-      existing_overhead = overhead_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
-      unless existing_overhead
-        create_new_overhead_budget_based_on_existing_budget(last_overhead_budget, 'year' => new_date.year, 'month' => new_date.month)
-      end
-        
+    months.each do |new_period|
+      create_budgets_for_new_period(new_period, last_labor_budget, last_overhead_budget)
     end
   end
 
@@ -113,19 +104,23 @@ class RetainerDeliverable < HourlyDeliverable
     first_labor_budget = labor_budgets.first(:order => 'year DESC, month DESC')
     first_overhead_budget = overhead_budgets.first(:order => 'year DESC, month DESC')
     
-    months.each do |new_date|
-      existing_labor = labor_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
-      unless existing_labor
-        create_new_labor_budget_based_on_existing_budget(first_labor_budget, 'year' => new_date.year, 'month' => new_date.month)
-      end
-
-      existing_overhead = overhead_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
-      unless existing_overhead
-        create_new_overhead_budget_based_on_existing_budget(first_overhead_budget, 'year' => new_date.year, 'month' => new_date.month)
-      end
-      
+    months.each do |new_period|
+      create_budgets_for_new_period(new_period, first_labor_budget, first_overhead_budget)
     end
 
+  end
+
+  def create_budgets_for_new_period(new_period, labor_budget_to_copy, overhead_budget_to_copy)
+    existing_labor = labor_budgets.first(:conditions => {:year => new_period.year, :month => new_period.month})
+    unless existing_labor
+      create_new_labor_budget_based_on_existing_budget(labor_budget_to_copy, 'year' => new_period.year, 'month' => new_period.month)
+    end
+
+    existing_overhead = overhead_budgets.first(:conditions => {:year => new_period.year, :month => new_period.month})
+    unless existing_overhead
+      create_new_overhead_budget_based_on_existing_budget(overhead_budget_to_copy, 'year' => new_period.year, 'month' => new_period.month)
+    end
+      
   end
   
   def create_new_labor_budget_based_on_existing_budget(existing_labor_budget, attributes={})
