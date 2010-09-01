@@ -63,11 +63,6 @@ class Deliverable < ActiveRecord::Base
     issues.inject(0) {|total, issue| total += issue.spent_hours }
   end
 
-  # Wrapper for the old Budget plugins' API
-  def due
-    end_date
-  end
-
   def retainer?
     type == "RetainerDeliverable"
   end
@@ -81,6 +76,37 @@ class Deliverable < ActiveRecord::Base
       types << [type.gsub(/Deliverable/i,''), type]
       types
     end
+  end
+
+  # Accessors from the budget plugin that need to be wrapped
+  def subject
+    warn "[DEPRECATION] Deliverable#subject is deprecated.  Please use Deliverable#title instead."
+    title
+  end
+
+  def due
+    warn "[DEPRECATION] Deliverable#due is deprecated.  Please use Deliverable#end_date instead."
+    end_date
+  end
+
+  def hours_used
+    warn "[DEPRECATION] Deliverable#hours_used is deprecated.  Please use Deliverable#hours_spent_total instead."
+    hours_spent_total
+  end
+
+  def spent
+    warn "[DEPRECATION] Deliverable#spent is deprecated.  Please use Deliverable#total_spent instead."
+    total_spent
+  end
+
+  def total_hours
+    warn "[DEPRECATION] Deliverable#total_hours is deprecated.  Please use Deliverable#estimated_hour_budget_total instead."
+    estimated_hour_budget_total
+  end
+
+  def labor_budget
+    warn "[DEPRECATION] Deliverable#labor_budget is deprecated.  Please use Deliverable#labor_budget_total instead."
+    labor_budget_total
   end
 
   if Rails.env.test?
