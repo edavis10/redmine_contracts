@@ -158,4 +158,44 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     end
 
   end
+
+  should "allow extending a Retainer's out to additional months" do
+    @retainer_deliverable = RetainerDeliverable.spawn(:contract => @contract, :manager => @manager, :title => "Retainer")
+    @retainer_deliverable.labor_budgets << @labor_budget = LaborBudget.spawn(:deliverable => @retainer_deliverable, :budget => 1000, :hours => 10)
+    @retainer_deliverable.overhead_budgets << @overhead_budget = OverheadBudget.spawn(:deliverable => @retainer_deliverable, :budget => 1000, :hours => 10)
+    @retainer_deliverable.start_date = '2010-01-01'
+    @retainer_deliverable.end_date = '2010-12-31'
+    @retainer_deliverable.save!
+    assert_equal 12, @retainer_deliverable.months.length
+
+    @last_labor_budget = @retainer_deliverable.labor_budgets.last
+    @last_overhead_budget = @retainer_deliverable.overhead_budgets.last
+    
+    visit_contract_page(@contract)
+    click_link_within "#deliverable_details_#{@retainer_deliverable.id}", 'Edit'
+    assert_response :success
+    assert_template 'deliverables/edit'
+
+    # Extend the period
+    fill_in "End Date", :with => '2011-12-01' # 12 new months
+    click_button "Save"
+    assert_response :success
+    assert_template 'contracts/show'
+
+    @labor_budgets = @retainer_deliverable.reload.labor_budgets
+    assert_equal 24, @labor_budgets.length
+    @labor_budgets[-12,24].each do |labor_budget| # Last 12
+      assert_equal @last_labor_budget.hours, labor_budget.hours
+      assert_equal @last_labor_budget.budget, labor_budget.budget
+    end
+
+
+    @overhead_budgets = @retainer_deliverable.reload.overhead_budgets
+    assert_equal 24, @overhead_budgets.length
+    @overhead_budgets[-12,24].each do |overhead_budget| # Last 12
+      assert_equal @last_overhead_budget.hours, overhead_budget.hours
+      assert_equal @last_overhead_budget.budget, overhead_budget.budget
+    end
+
+  end
 end

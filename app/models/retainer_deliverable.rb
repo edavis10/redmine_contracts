@@ -14,6 +14,7 @@ class RetainerDeliverable < HourlyDeliverable
   # Accessors
 
   # Callbacks
+  before_update :check_for_extended_period
   
   def short_type
     'R'
@@ -70,6 +71,27 @@ class RetainerDeliverable < HourlyDeliverable
     # Destroy origional un-dated budgets
     labor_budgets.all(:conditions => ["#{LaborBudget.table_name}.year IS NULL AND #{LaborBudget.table_name}.month IS NULL"]).collect(&:destroy)
     overhead_budgets.all(:conditions => ["#{OverheadBudget.table_name}.year IS NULL AND #{OverheadBudget.table_name}.month IS NULL"]).collect(&:destroy)
+  end
+
+  def check_for_extended_period
+    # TODO: brute force. Alternative would be to check end_date_changes to see if the period actually shifted
+    if end_date_changed?
+      last_labor_budget = labor_budgets.last(:order => 'year ASC, month ASC')
+      last_overhead_budget = overhead_budgets.last(:order => 'year ASC, month ASC')
+      
+      months.each do |new_date|
+        existing_labor = labor_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
+        unless existing_labor
+          labor_budgets.create(last_labor_budget.attributes.except('id').merge('year' => new_date.year, 'month' => new_date.month))
+        end
+
+        existing_overhead = overhead_budgets.first(:conditions => {:year => new_date.year, :month => new_date.month})
+        unless existing_overhead
+          overhead_budgets.create(last_overhead_budget.attributes.except('id').merge('year' => new_date.year, 'month' => new_date.month))
+        end
+        
+      end
+    end
   end
 
   def self.frequencies_to_select
