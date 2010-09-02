@@ -64,3 +64,5 @@ en:
   field_frequency: "Frequency"
   text_monthly: "Monthly"
   text_quarterly: "Quarterly"
+  text_start_date_empty: "The start date is empty. If this form is submitted, no budget items will be created."
+  text_end_date_empty: "The end date is empty. If this form is submitted, no budget items will be created."

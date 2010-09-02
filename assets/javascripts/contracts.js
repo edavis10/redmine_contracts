@@ -60,6 +60,19 @@ jQuery(function($) {
   $('select#deliverable_type').change(function() {
     toggleSpecificDeliverableFields($('form.deliverable'));
   });
+
+  $('form.deliverable').submit(function() {
+    var deliverableType = $('form.deliverable').find('.type').val();
+
+    if (deliverableType == 'RetainerDeliverable') {
+      if ($('form.deliverable .start-date[value!=""]').length == 0) {
+        return confirm(i18nStartDateEmpty);
+      }
+      if ($('form.deliverable .end-date[value!=""]').length == 0) {
+        return confirm(i18nEndDateEmpty);
+      }
+    }
+  });
 });
 
 /* Jquery Table Expander Plugin */
