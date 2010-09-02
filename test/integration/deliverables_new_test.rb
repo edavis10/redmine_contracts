@@ -122,7 +122,6 @@ class DeliverablesNewTest < ActionController::IntegrationTest
 
     fill_in "Title", :with => 'A New Deliverable'
     select "Retainer", :from => "Type"
-    select "Monthly", :from => 'deliverable_frequency'
     select @manager.name, :from => "Manager"
     fill_in "Start", :with => '2010-01-01'
     fill_in "End Date", :with => '2010-12-31'
@@ -150,7 +149,6 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     assert_equal '2010-01-01', @deliverable.start_date.to_s
     assert_equal '2010-12-31', @deliverable.end_date.to_s
     assert_equal @manager, @deliverable.manager
-    assert_equal "monthly", @deliverable.frequency
 
     # Budget items, one per month
     labor_budgets = @deliverable.labor_budgets

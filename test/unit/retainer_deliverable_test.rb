@@ -5,11 +5,6 @@ class RetainerDeliverableTest < ActiveSupport::TestCase
     assert_equal HourlyDeliverable, RetainerDeliverable.superclass
   end
 
-  context "#frequency" do
-    should_allow_values_for(:frequency, nil, '', 'monthly', 'quarterly')
-    should_not_allow_values_for(:frequency, 'anything', 'else', 'weekly')
-  end
-
   context "#months" do
     should "be an array of months the Deliverable is active in" do
       d = RetainerDeliverable.new(:start_date => Date.today.beginning_of_month,
