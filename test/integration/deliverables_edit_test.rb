@@ -160,13 +160,27 @@ class DeliverablesEditTest < ActionController::IntegrationTest
   end
 
   should "allow extending a Retainer's start and end months" do
+    labor_budget_hours_1 = 10
+    labor_budget_hours_2 = 20
+    labor_budget_amount_1 = 1000
+    labor_budget_amount_2 = 2000
+    overhead_budget_hours_1 = 10
+    overhead_budget_hours_2 = 20
+    overhead_budget_amount_1 = 1000
+    overhead_budget_amount_2 = 2000
+    
+    
     @retainer_deliverable = RetainerDeliverable.spawn(:contract => @contract, :manager => @manager, :title => "Retainer")
-    @retainer_deliverable.labor_budgets << @labor_budget = LaborBudget.spawn(:deliverable => @retainer_deliverable, :budget => 1000, :hours => 10)
-    @retainer_deliverable.overhead_budgets << @overhead_budget = OverheadBudget.spawn(:deliverable => @retainer_deliverable, :budget => 1000, :hours => 10)
+    @retainer_deliverable.labor_budgets << @labor_budget = LaborBudget.spawn(:deliverable => @retainer_deliverable, :budget => labor_budget_amount_1, :hours => labor_budget_hours_1)
+    @retainer_deliverable.labor_budgets << @labor_budget = LaborBudget.spawn(:deliverable => @retainer_deliverable, :budget => labor_budget_amount_2, :hours => labor_budget_hours_2)
+    @retainer_deliverable.overhead_budgets << @overhead_budget = OverheadBudget.spawn(:deliverable => @retainer_deliverable, :budget => overhead_budget_amount_1, :hours => overhead_budget_hours_1)
+    @retainer_deliverable.overhead_budgets << @overhead_budget = OverheadBudget.spawn(:deliverable => @retainer_deliverable, :budget => overhead_budget_amount_2, :hours => overhead_budget_hours_2)
     @retainer_deliverable.start_date = '2010-01-01'
     @retainer_deliverable.end_date = '2010-12-31'
     @retainer_deliverable.save!
     assert_equal 12, @retainer_deliverable.months.length
+    assert_equal 24, @retainer_deliverable.reload.labor_budgets.count # 12 months * 2 records
+    assert_equal 24, @retainer_deliverable.reload.overhead_budgets.count # 12 months * 2 records
 
     @first_labor_budget = @retainer_deliverable.labor_budgets.first
     @first_overhead_budget = @retainer_deliverable.overhead_budgets.first
@@ -185,27 +199,66 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_response :success
     assert_template 'contracts/show'
 
+    @retainer_deliverable.reload
+    
+    assert_equal 36, @retainer_deliverable.months.length
+
     @labor_budgets = @retainer_deliverable.reload.labor_budgets
-    assert_equal 36, @labor_budgets.length
-    @labor_budgets[0,12].each do |labor_budget| # First 12
-      assert_equal @first_labor_budget.hours, labor_budget.hours
-      assert_equal @first_labor_budget.budget, labor_budget.budget
-    end
-    @labor_budgets[-12,36].each do |labor_budget| # Last 12
-      assert_equal @last_labor_budget.hours, labor_budget.hours
-      assert_equal @last_labor_budget.budget, labor_budget.budget
+    assert_equal 72, @labor_budgets.length # 36 months * 2 records
+
+    @labor_budgets_for_2009 = @labor_budgets.select {|l| l.year == 2009 }
+    @labor_budgets_for_2010 = @labor_budgets.select {|l| l.year == 2010 }
+    @labor_budgets_for_2011 = @labor_budgets.select {|l| l.year == 2011 }
+
+    assert_equal 24, @labor_budgets_for_2009.length
+    assert_equal 24, @labor_budgets_for_2010.length
+    assert_equal 24, @labor_budgets_for_2011.length
+
+    @labor_budgets_for_2009.each do |labor_budget|
+      assert_equal 2009, labor_budget.year
+      assert [labor_budget_hours_1, labor_budget_hours_2].include?(labor_budget.hours), "Extended labor budget hours not matching template budget"
+      assert [labor_budget_amount_1, labor_budget_amount_2].include?(labor_budget.budget), "Extended labor budget dollars not matching template budget"
     end
 
+    @labor_budgets_for_2010.each do |labor_budget|
+      assert_equal 2010, labor_budget.year
+      assert [labor_budget_hours_1, labor_budget_hours_2].include?(labor_budget.hours), "Extended labor budget hours not matching template budget"
+      assert [labor_budget_amount_1, labor_budget_amount_2].include?(labor_budget.budget), "Extended labor budget dollars not matching template budget"
+    end
+
+    @labor_budgets_for_2011.each do |labor_budget|
+      assert_equal 2011, labor_budget.year
+      assert [labor_budget_hours_1, labor_budget_hours_2].include?(labor_budget.hours), "Extended labor budget hours not matching template budget"
+      assert [labor_budget_amount_1, labor_budget_amount_2].include?(labor_budget.budget), "Extended labor budget dollars not matching template budget"
+    end
 
     @overhead_budgets = @retainer_deliverable.reload.overhead_budgets
-    assert_equal 36, @overhead_budgets.length
-    @overhead_budgets[0,12].each do |overhead_budget| # First 12
-      assert_equal @first_overhead_budget.hours, overhead_budget.hours
-      assert_equal @first_overhead_budget.budget, overhead_budget.budget
+    assert_equal 72, @overhead_budgets.length # 36 months * 2 records
+
+    @overhead_budgets_for_2009 = @overhead_budgets.select {|l| l.year == 2009 }
+    @overhead_budgets_for_2010 = @overhead_budgets.select {|l| l.year == 2010 }
+    @overhead_budgets_for_2011 = @overhead_budgets.select {|l| l.year == 2011 }
+
+    assert_equal 24, @overhead_budgets_for_2009.length
+    assert_equal 24, @overhead_budgets_for_2010.length
+    assert_equal 24, @overhead_budgets_for_2011.length
+
+    @overhead_budgets_for_2009.each do |overhead_budget|
+      assert_equal 2009, overhead_budget.year
+      assert [overhead_budget_hours_1, overhead_budget_hours_2].include?(overhead_budget.hours), "Extended overhead budget hours not matching template budget"
+      assert [overhead_budget_amount_1, overhead_budget_amount_2].include?(overhead_budget.budget), "Extended overhead budget dollars not matching template budget"
     end
-    @overhead_budgets[-12,36].each do |overhead_budget| # Last 12
-      assert_equal @last_overhead_budget.hours, overhead_budget.hours
-      assert_equal @last_overhead_budget.budget, overhead_budget.budget
+
+    @overhead_budgets_for_2010.each do |overhead_budget|
+      assert_equal 2010, overhead_budget.year
+      assert [overhead_budget_hours_1, overhead_budget_hours_2].include?(overhead_budget.hours), "Extended overhead budget hours not matching template budget"
+      assert [overhead_budget_amount_1, overhead_budget_amount_2].include?(overhead_budget.budget), "Extended overhead budget dollars not matching template budget"
+    end
+
+    @overhead_budgets_for_2011.each do |overhead_budget|
+      assert_equal 2011, overhead_budget.year
+      assert [overhead_budget_hours_1, overhead_budget_hours_2].include?(overhead_budget.hours), "Extended overhead budget hours not matching template budget"
+      assert [overhead_budget_amount_1, overhead_budget_amount_2].include?(overhead_budget.budget), "Extended overhead budget dollars not matching template budget"
     end
 
   end

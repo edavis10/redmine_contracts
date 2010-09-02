@@ -46,6 +46,16 @@ class RetainerDeliverable < HourlyDeliverable
     month_acc
   end
 
+  # Returns the months used by the Deliverable that are before date
+  def months_before_date(date)
+    months.select {|m| m < date }
+  end
+
+  # Returns the months used by the Deliverable that are after date
+  def months_after_date(date)
+    months.select {|m| m > date }
+  end
+
   def labor_budgets_for_date(date)
     labor_budgets.all(:conditions => {:year => date.year, :month => date.month})
   end
@@ -92,35 +102,34 @@ class RetainerDeliverable < HourlyDeliverable
   private
 
   def extend_period_to_new_end_date
-    last_labor_budget = labor_budgets.last(:order => 'year ASC, month ASC')
-    last_overhead_budget = overhead_budgets.last(:order => 'year ASC, month ASC')
-      
-    months.each do |new_period|
-      create_budgets_for_new_period(new_period, last_labor_budget, last_overhead_budget)
+    old_end_date = end_date_change[0]
+    last_labor_budgets = labor_budgets.all(:conditions => {:year => old_end_date.year, :month => old_end_date.month})
+    last_overhead_budgets = overhead_budgets.all(:conditions => {:year => old_end_date.year, :month => old_end_date.month})
+
+    months_after_date(old_end_date.end_of_month.to_date).each do |new_period|
+      create_budgets_for_new_period(new_period, last_labor_budgets, last_overhead_budgets)
     end
   end
 
   def extend_period_to_new_start_date
-    first_labor_budget = labor_budgets.first(:order => 'year DESC, month DESC')
-    first_overhead_budget = overhead_budgets.first(:order => 'year DESC, month DESC')
+    old_start_date = start_date_change[0]
+    first_labor_budgets = labor_budgets.all(:conditions => {:year => old_start_date.year, :month => old_start_date.month})
+    first_overhead_budgets = overhead_budgets.all(:conditions => {:year => old_start_date.year, :month => old_start_date.month})
     
-    months.each do |new_period|
-      create_budgets_for_new_period(new_period, first_labor_budget, first_overhead_budget)
+    months_before_date(old_start_date.beginning_of_month.to_date).each do |new_period|
+      create_budgets_for_new_period(new_period, first_labor_budgets, first_overhead_budgets)
     end
 
   end
 
-  def create_budgets_for_new_period(new_period, labor_budget_to_copy, overhead_budget_to_copy)
-    existing_labor = labor_budgets.first(:conditions => {:year => new_period.year, :month => new_period.month})
-    unless existing_labor
+  def create_budgets_for_new_period(new_period, labor_budgets_to_copy, overhead_budgets_to_copy)
+    labor_budgets_to_copy.each do |labor_budget_to_copy|
       create_new_labor_budget_based_on_existing_budget(labor_budget_to_copy, 'year' => new_period.year, 'month' => new_period.month)
     end
 
-    existing_overhead = overhead_budgets.first(:conditions => {:year => new_period.year, :month => new_period.month})
-    unless existing_overhead
+    overhead_budgets_to_copy.each do |overhead_budget_to_copy|
       create_new_overhead_budget_based_on_existing_budget(overhead_budget_to_copy, 'year' => new_period.year, 'month' => new_period.month)
     end
-      
   end
   
   def create_new_labor_budget_based_on_existing_budget(existing_labor_budget, attributes={})
