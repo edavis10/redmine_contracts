@@ -58,11 +58,15 @@ class RetainerDeliverable < HourlyDeliverable
   end
 
   def labor_budgets_for_date(date)
-    labor_budgets.all(:conditions => {:year => date.year, :month => date.month})
+    budgets = labor_budgets.all(:conditions => {:year => date.year, :month => date.month})
+    budgets = [labor_budgets.build(:year => date.year, :month => date.month)] if budgets.empty?
+    budgets
   end
 
   def overhead_budgets_for_date(date)
-    overhead_budgets.all(:conditions => {:year => date.year, :month => date.month})
+    budgets = overhead_budgets.all(:conditions => {:year => date.year, :month => date.month})
+    budgets = [overhead_budgets.build(:year => date.year, :month => date.month)] if budgets.empty?
+    budgets
   end
 
   def create_budgets_for_periods

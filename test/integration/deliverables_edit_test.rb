@@ -331,4 +331,60 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_equal 24, @overhead_budgets.length # 12 months * 2 records
 
   end
+
+  should "show empty budget fields for a Retainer that has missing budgets" do
+    @retainer_deliverable = RetainerDeliverable.spawn(:contract => @contract, :manager => @manager, :title => "Retainer")
+    @retainer_deliverable.start_date = '2010-01-01'
+    @retainer_deliverable.end_date = '2010-03-31'
+    @retainer_deliverable.save!
+    assert_equal 3, @retainer_deliverable.months.length
+    assert_equal 0, @retainer_deliverable.reload.labor_budgets.count # 3 months * 0 records
+    assert_equal 0, @retainer_deliverable.reload.overhead_budgets.count # 3 months * 0 records
+
+    visit_contract_page(@contract)
+    click_link_within "#deliverable_details_#{@retainer_deliverable.id}", 'Edit'
+    assert_response :success
+    assert_template 'deliverables/edit'
+
+    # Should show 6 inputs:
+    # * labor hidden year
+    # * labor hidden month
+    # * labor hours
+    # * labor amount
+    # * overhead hidden year
+    # * overhead hidden month
+    # * overhead hours
+    # * overhead amount
+    # * total (hidden)
+    assert_select ".date-2010-01" do
+      assert_select "input", :count => 9
+    end
+
+
+    within ".date-2010-01" do
+      within "#deliverable-labor" do
+        fill_in "hrs", :with => '20'
+        fill_in "$", :with => '2000'
+      end
+      
+      within "#deliverable-overhead" do
+        fill_in "hrs", :with => '100'
+        fill_in "$", :with => '100'
+      end
+    end
+
+    click_button "Save"
+    assert_response :success
+    assert_template 'contracts/show'
+
+    @retainer_deliverable.reload
+    
+    assert_equal 3, @retainer_deliverable.labor_budgets.count
+    assert_equal [20, nil, nil], @retainer_deliverable.labor_budgets.collect(&:hours)
+    assert_equal [2000, nil, nil], @retainer_deliverable.labor_budgets.collect(&:budget)
+
+    assert_equal 3, @retainer_deliverable.overhead_budgets.count
+    assert_equal [100, nil, nil], @retainer_deliverable.overhead_budgets.collect(&:hours)
+    assert_equal [100, nil, nil], @retainer_deliverable.overhead_budgets.collect(&:budget)
+  end
 end
