@@ -182,11 +182,6 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_equal 24, @retainer_deliverable.reload.labor_budgets.count # 12 months * 2 records
     assert_equal 24, @retainer_deliverable.reload.overhead_budgets.count # 12 months * 2 records
 
-    @first_labor_budget = @retainer_deliverable.labor_budgets.first
-    @first_overhead_budget = @retainer_deliverable.overhead_budgets.first
-    @last_labor_budget = @retainer_deliverable.labor_budgets.last
-    @last_overhead_budget = @retainer_deliverable.overhead_budgets.last
-    
     visit_contract_page(@contract)
     click_link_within "#deliverable_details_#{@retainer_deliverable.id}", 'Edit'
     assert_response :success
