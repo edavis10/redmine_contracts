@@ -109,6 +109,7 @@ class RetainerDeliverable < HourlyDeliverable
   private
 
   def shrink_budgets_to_new_period
+    return if beginning_date.nil? || ending_date.nil?
     labor_budgets.all.each do |labor_budget|
       # Purge un-dated budgets, should not be saved at all
       labor_budget.destroy unless labor_budget.year.present?
