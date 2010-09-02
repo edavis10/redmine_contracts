@@ -135,6 +135,8 @@ class RetainerDeliverable < HourlyDeliverable
   end
 
   def extend_period_to_new_end_date
+    return if end_date_change[0].nil? # No previous end date, so it will not have budgets
+
     old_end_date = end_date_change[0]
     last_labor_budgets = labor_budgets.all(:conditions => {:year => old_end_date.year, :month => old_end_date.month})
     last_overhead_budgets = overhead_budgets.all(:conditions => {:year => old_end_date.year, :month => old_end_date.month})
@@ -145,6 +147,8 @@ class RetainerDeliverable < HourlyDeliverable
   end
 
   def extend_period_to_new_start_date
+    return if start_date_change[0].nil? # No previous start date, so it will not have budgets
+    
     old_start_date = start_date_change[0]
     first_labor_budgets = labor_budgets.all(:conditions => {:year => old_start_date.year, :month => old_start_date.month})
     first_overhead_budgets = overhead_budgets.all(:conditions => {:year => old_start_date.year, :month => old_start_date.month})
