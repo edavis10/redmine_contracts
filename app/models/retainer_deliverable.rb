@@ -15,6 +15,7 @@ class RetainerDeliverable < HourlyDeliverable
 
   # Callbacks
   before_update :check_for_extended_period
+  before_update :check_for_shrunk_period
   
   def short_type
     'R'
@@ -95,11 +96,43 @@ class RetainerDeliverable < HourlyDeliverable
     end
   end
 
+  def check_for_shrunk_period
+    if end_date_changed? || start_date_changed?
+      shrink_budgets_to_new_period
+    end
+  end
+
   def self.frequencies_to_select
     ValidFrequencies.collect {|f| [l("text_#{f}"), f]}
   end
 
   private
+
+  def shrink_budgets_to_new_period
+    labor_budgets.all.each do |labor_budget|
+      # Purge un-dated budgets, should not be saved at all
+      labor_budget.destroy unless labor_budget.year.present?
+      labor_budget.destroy unless labor_budget.month.present?
+
+      # Purge budgets outside the new beginning/ending range
+      unless (beginning_date..ending_date).to_a.include?(Date.new(labor_budget.year, labor_budget.month, 1))
+        labor_budget.destroy
+      end
+    end
+
+    overhead_budgets.all.each do |overhead_budget|
+      # Purge un-dated budgets, should not be saved at all
+      overhead_budget.destroy unless overhead_budget.year.present?
+      overhead_budget.destroy unless overhead_budget.month.present?
+
+      # Purge budgets outside the new beginning/ending range
+      unless (beginning_date..ending_date).to_a.include?(Date.new(overhead_budget.year, overhead_budget.month, 1))
+        overhead_budget.destroy
+      end
+    end
+
+    true
+  end
 
   def extend_period_to_new_end_date
     old_end_date = end_date_change[0]
