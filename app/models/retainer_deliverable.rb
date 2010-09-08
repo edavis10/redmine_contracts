@@ -87,6 +87,18 @@ class RetainerDeliverable < HourlyDeliverable
     end
   end
 
+  def overhead_budget_total_for_date(date=nil)
+    if date
+      if within_date_range?(date)
+        overhead_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+      else
+        0 # outside of range
+      end
+    else
+      overhead_budgets.sum(:budget)
+    end
+  end
+
   def create_budgets_for_periods
     # For each month in the time span
     months.each do |month|

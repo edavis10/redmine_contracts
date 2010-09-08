@@ -66,6 +66,10 @@ class Deliverable < ActiveRecord::Base
     overhead_budgets.sum(:budget)
   end
 
+  def overhead_budget_total_for_date(date=nil) #Used on subclasses
+    overhead_budget_total
+  end
+
   # Total number of hours estimated in the Deliverable's budgets
   def estimated_hour_budget_total
     (labor_budgets.sum(:hours) || 0.0) +
