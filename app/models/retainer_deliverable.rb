@@ -20,7 +20,7 @@ class RetainerDeliverable < HourlyDeliverable
   end
 
   def current_period
-    'TODO'
+    Date.today.strftime("%B %Y")
   end
 
   def beginning_date

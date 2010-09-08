@@ -209,4 +209,21 @@ class ContractsShowTest < ActionController::IntegrationTest
     end
 
   end
+
+  should "show the current period for a Retainer" do
+    today_mock = Date.new(2010,2,15)
+    Date.stubs(:today).returns(today_mock)
+
+    @manager = User.generate!
+    @retainer_deliverable = RetainerDeliverable.generate!(:contract => @contract, :manager => @manager, :title => "Retainer", :start_date => '2010-01-01', :end_date => '2010-03-31')
+
+    visit_contract_page(@contract)
+
+    assert_select "table#deliverables" do
+      assert_select "#deliverable_details_#{@retainer_deliverable.id}" do
+        assert_select ".deliverable-current-period", :text => /February 2010/i
+      end
+    end
+
+  end
 end
