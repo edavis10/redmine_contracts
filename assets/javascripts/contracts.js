@@ -1,4 +1,6 @@
 jQuery(function($) {
+  $("#ajax-indicator").ajaxStart(function(){ $(this).show();  });
+  $("#ajax-indicator").ajaxStop(function(){ $(this).hide();  });
 
   var right_align = $('#contract-terms .finance tr td:nth-child ~ td, .c_overview table.right tr td:nth-child ~ td, #deliverables table tr.click td:nth-child(5) ~ td, .deliverable_finance_table tr.aright td:nth-child ~ td');
 
@@ -82,6 +84,11 @@ jQuery(function($) {
       }
 
     }
+  });
+
+  $('select.retainer_period_change').live('change', function() {
+    var deliverable_url = $(this).closest('form').attr('action');
+    $(this).closest('tr').load(deliverable_url, this.form.serialize());
   });
 });
 

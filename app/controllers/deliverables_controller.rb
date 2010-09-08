@@ -27,7 +27,11 @@ class DeliverablesController < InheritedResources::Base
   end
 
   def show
-    redirect_to contract_url(@project, @contract)
+    if show_partial?
+      render :partial => 'deliverables/details_row', :locals => {:contract => @contract, :deliverable => @contract.deliverables.find(params[:id])}
+    else
+      redirect_to contract_url(@project, @contract)
+    end
   end
 
   def destroy
@@ -38,6 +42,11 @@ class DeliverablesController < InheritedResources::Base
 
   def begin_of_association_chain
     @contract
+  end
+
+  # Is only a partial requested?
+  def show_partial?
+    params[:format] == 'js' && params[:as] == 'deliverable_details_row'
   end
   
   private
