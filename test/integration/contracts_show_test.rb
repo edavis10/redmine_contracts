@@ -226,4 +226,23 @@ class ContractsShowTest < ActionController::IntegrationTest
     end
 
   end
+
+  should "show a selector for changing the currently shown Retainer's period" do
+    @manager = User.generate!
+    @retainer_deliverable = RetainerDeliverable.generate!(:contract => @contract, :manager => @manager, :title => "Retainer", :start_date => '2010-01-01', :end_date => '2010-03-31')
+
+    visit_contract_page(@contract)
+
+    assert_select "table#deliverables" do
+      assert_select "#deliverable_details_#{@retainer_deliverable.id}" do
+        assert_select "select#retainer_period_change_#{@retainer_deliverable.id}" do
+          assert_select "option", /All/
+          assert_select "option", /January 2010/
+          assert_select "option", /February 2010/
+          assert_select "option", /March 2010/
+        end
+      end
+    end
+    
+  end
 end

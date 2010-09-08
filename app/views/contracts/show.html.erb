@@ -122,8 +122,8 @@
                     <% if deliverable.retainer? %>
                     <form action="">
                       <fieldset>
-                        <select name="m">
-                          <option value="1">TODO: Release 2</option>
+                        <select name="retainer_period_change_<%= h(deliverable.id) %>" id="retainer_period_change_<%= h(deliverable.id) %>">
+                          <%= retainer_period_options(deliverable) %>
                         </select>
                       </fieldset>
                     </form>

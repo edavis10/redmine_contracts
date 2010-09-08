@@ -85,4 +85,15 @@ module ContractsHelper
   def format_value_field_for_contracts(value)
     number_with_precision(value, :precision => Contract::ViewPrecision, :delimiter => ',')
   end
+
+  def retainer_period_options(deliverable)
+    options = []
+    options << content_tag(:option, l(:label_all).capitalize, :value => '')
+
+    deliverable.months.collect do |month|
+      options << content_tag(:option, month.strftime("%B %Y"), :value => month.strftime("%Y-%m"))
+    end
+    
+    options
+  end
 end
