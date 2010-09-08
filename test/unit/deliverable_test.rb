@@ -33,4 +33,38 @@ class DeliverableTest < ActiveSupport::TestCase
       assert_equal 20100.00, d.total.to_f
     end
   end
+
+  context "#labor_budget_spent_for_period" do
+    should "use all periods"
+  end
+  
+  context "#labor_budget_total_for_period" do
+    should "use all periods"
+  end
+  
+  context "#overhead_spent_for_period" do
+    should "use all periods"
+  end
+  
+  context "#overhead_budget_total_for_period" do
+    should "use all periods"
+  end
+  
+  context "#profit_left_for_period" do
+    should "use all periods"
+  end
+  
+  context "#profit_budget_for_period" do
+    should "use all periods"
+  end
+  
+  context "#total_spent_for_period" do
+    should "use all periods"
+  end
+  
+  context "#total_for_period" do
+    should "use all periods"
+  end
+  
+
 end

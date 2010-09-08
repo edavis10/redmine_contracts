@@ -31,6 +31,14 @@ class RetainerDeliverable < HourlyDeliverable
     end_date && end_date.end_of_month.to_date
   end
 
+  def date_range
+    (beginning_date..ending_date)
+  end
+
+  def within_date_range?(date)
+    date_range.include?(date)
+  end
+
   def months
     month_acc = []
 
@@ -65,6 +73,18 @@ class RetainerDeliverable < HourlyDeliverable
     budgets = overhead_budgets.all(:conditions => {:year => date.year, :month => date.month})
     budgets = [overhead_budgets.build(:year => date.year, :month => date.month)] if budgets.empty?
     budgets
+  end
+
+  def labor_budget_total_for_date(date=nil)
+    if date
+      if within_date_range?(date)
+        labor_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+      else
+        0 # outside of range
+      end
+    else
+      labor_budgets.sum(:budget)
+    end
   end
 
   def create_budgets_for_periods

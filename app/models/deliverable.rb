@@ -58,6 +58,10 @@ class Deliverable < ActiveRecord::Base
     labor_budgets.sum(:budget)
   end
 
+  def labor_budget_total_for_date(date=nil) #Used on subclasses
+    labor_budget_total
+  end
+  
   def overhead_budget_total
     overhead_budgets.sum(:budget)
   end
