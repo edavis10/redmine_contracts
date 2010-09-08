@@ -71,6 +71,16 @@ jQuery(function($) {
       if ($('form.deliverable .end-date[value!=""]').length == 0) {
         return confirm(i18nEndDateEmpty);
       }
+
+      if ($('form.deliverable #deliverable_stored_id').val() != '') {
+        if ($('form.deliverable .start-date').val() != $('#deliverable_stored_start_date').val()) {
+          return confirm(i18nChangedPeriodMessage);
+        }
+        if ($('form.deliverable .end-date').val() != $('#deliverable_stored_end_date').val()) {
+          return confirm(i18nChangedPeriodMessage);
+        }
+      }
+
     }
   });
 });

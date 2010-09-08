@@ -64,4 +64,5 @@ en:
   text_start_date_empty: "The start date is empty. If this form is submitted, no budget items will be created."
   text_end_date_empty: "The end date is empty. If this form is submitted, no budget items will be created."
   text_missing_period: "This deliverable is missing a date range so it cannot have budget items. Please save start and end dates before adding any budget items."
+  text_changed_period_message: "The period for this deliverable has been changed. Would you like to expand/shrink the Deliverable Finances?"
   field_current_period: "Current period"

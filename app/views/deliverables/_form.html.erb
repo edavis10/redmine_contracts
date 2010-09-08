@@ -1,8 +1,11 @@
 <%= javascript_tag("var i18nStartDateEmpty = '#{l(:text_start_date_empty)}'") %>
 <%= javascript_tag("var i18nEndDateEmpty = '#{l(:text_end_date_empty)}'") %>
+<%= javascript_tag("var i18nChangedPeriodMessage = '#{l(:text_changed_period_message)}'") %>
 
 <div class="box tabular">
 <% form.inputs :name => l(:text_deliverable_details_legend) do %>
+  <%# Used by jquery to check if this is a new or existing record %>
+  <%= hidden_field_tag('deliverable_id', h(resource.id), :id => 'deliverable_stored_id') %>
   <%= form.input :title, :required => true %>
   <% if resource.new_record? %>
     <li class="select required" id="deliverable_type_input">
@@ -13,8 +16,13 @@
     <%= form.input :type, :as => :hidden, :class => 'type' %>
   <% end %>
   <%= form.input :manager, :required => true, :collection => @project.users.sort %>
+
   <%= form.input :start_date, :as => :string, :input_html => {:size => 10, :class => 'start-date'}, :hint => calendar_for('deliverable_start_date') %>
+  <%= hidden_field_tag('deliverable_stored_start_date', h(resource.start_date), :id => 'deliverable_stored_start_date') %>
+
   <%= form.input :end_date, :as => :string, :input_html => {:size => 10, :class => 'end-date'}, :hint => calendar_for('deliverable_end_date') %>
+  <%= hidden_field_tag('deliverable_stored_end_date', h(resource.end_date), :id => 'deliverable_stored_end_date') %>
+
   <%= form.input :notes, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
 
   <% unless resource.new_record? %>
