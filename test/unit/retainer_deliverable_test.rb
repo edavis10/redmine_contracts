@@ -80,7 +80,7 @@ class RetainerDeliverableTest < ActiveSupport::TestCase
     end
   end
 
-  context "#labor_budget_spent_for_date" do
+  context "#labor_budget_spent" do
     context "with a empty period" do
       should "use all periods"
     end
@@ -94,7 +94,7 @@ class RetainerDeliverableTest < ActiveSupport::TestCase
     end
   end
 
-  context "#labor_budget_total_for_date" do
+  context "#labor_budget_total" do
     setup do
       @deliverable = RetainerDeliverable.generate!(:start_date => '2010-01-01', :end_date => '2010-03-31')
       @deliverable.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10)
@@ -103,32 +103,32 @@ class RetainerDeliverableTest < ActiveSupport::TestCase
     
     context "with a empty period" do
       should "use all periods" do
-        assert_equal 300.0, @deliverable.labor_budget_total_for_date(nil)
+        assert_equal 300.0, @deliverable.labor_budget_total(nil)
       end
     end
 
     context "with a period out of the retainer range" do
       should "filter the records" do
-        assert_equal 0, @deliverable.labor_budget_total_for_date(Date.new(2011,1,1))
+        assert_equal 0, @deliverable.labor_budget_total(Date.new(2011,1,1))
       end
     end
 
     context "with an invalid period" do
       should "return 0" do
-        assert_equal 0, @deliverable.labor_budget_total_for_date('1')
+        assert_equal 0, @deliverable.labor_budget_total('1')
       end
     end
 
     context "with a period in the retainer range" do
       should "filter the records" do
-        assert_equal 100.0, @deliverable.labor_budget_total_for_date(Date.new(2010,2,1))
+        assert_equal 100.0, @deliverable.labor_budget_total(Date.new(2010,2,1))
       end
     end
   end
 
-  # context "#overhead_spent_for_date"
+  # context "#overhead_spent"
   
-  context "#overhead_budget_total_for_date" do
+  context "#overhead_budget_total" do
     setup do
       @deliverable = RetainerDeliverable.generate!(:start_date => '2010-01-01', :end_date => '2010-03-31')
       @deliverable.overhead_budgets << OverheadBudget.spawn(:budget => 100, :hours => 10)
@@ -137,31 +137,105 @@ class RetainerDeliverableTest < ActiveSupport::TestCase
     
     context "with a empty period" do
       should "use all periods" do
-        assert_equal 300.0, @deliverable.overhead_budget_total_for_date(nil)
+        assert_equal 300.0, @deliverable.overhead_budget_total(nil)
       end
     end
 
     context "with a period out of the retainer range" do
       should "filter the records" do
-        assert_equal 0, @deliverable.overhead_budget_total_for_date(Date.new(2011,1,1))
+        assert_equal 0, @deliverable.overhead_budget_total(Date.new(2011,1,1))
       end
     end
 
     context "with an invalid period" do
       should "return 0" do
-        assert_equal 0, @deliverable.overhead_budget_total_for_date('1')
+        assert_equal 0, @deliverable.overhead_budget_total('1')
       end
     end
 
     context "with a period in the retainer range" do
       should "filter the records" do
-        assert_equal 100.0, @deliverable.overhead_budget_total_for_date(Date.new(2010,2,1))
+        assert_equal 100.0, @deliverable.overhead_budget_total(Date.new(2010,2,1))
       end
     end
   end
 
-  # context "#profit_left_for_date"
-  # context "#profit_budget_for_date"
-  # context "#total_spent_for_date"
-  # context "#total_for_date"
+  # context "#profit_left"
+  
+  context "#profit_budget" do
+    setup do
+      @contract = Contract.generate!(:billable_rate => 100)
+      @deliverable = RetainerDeliverable.generate!(:start_date => '2010-01-01', :end_date => '2010-03-31', :contract => @contract)
+      @deliverable.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10)
+      @deliverable.overhead_budgets << OverheadBudget.spawn(:budget => 100, :hours => 10)
+      @deliverable.save!
+
+      assert_equal 100 * 30, @deliverable.total
+      assert_equal 2400, @deliverable.profit_budget # 3000 - 300 - 300
+    end
+    
+    context "with a empty period" do
+      should "use all periods" do
+        assert_equal 2400, @deliverable.profit_budget(nil)
+      end
+    end
+
+    context "with a period out of the retainer range" do
+      should "filter the records" do
+        assert_equal 0, @deliverable.profit_budget(Date.new(2011,1,1))
+      end
+    end
+
+    context "with an invalid period" do
+      should "return 0" do
+        assert_equal 0, @deliverable.profit_budget('1')
+      end
+    end
+
+    context "with a period in the retainer range" do
+      should "filter the records" do
+        assert_equal 1000 - 200, @deliverable.profit_budget(Date.new(2010,2,1))
+      end
+    end
+
+  end
+  
+  # context "#total_spent"
+  
+  context "#total" do
+    setup do
+      @contract = Contract.generate!(:billable_rate => 100)
+      @deliverable = RetainerDeliverable.generate!(:start_date => '2010-01-01', :end_date => '2010-03-31', :contract => @contract)
+      @deliverable.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10)
+      @deliverable.overhead_budgets << OverheadBudget.spawn(:budget => 100, :hours => 10)
+      @deliverable.save!
+
+      assert_equal 100 * 30, @deliverable.total
+    end
+    
+    context "with a empty period" do
+      should "use all periods" do
+        assert_equal 3000, @deliverable.total(nil)
+      end
+    end
+
+    context "with a period out of the retainer range" do
+      should "filter the records" do
+        assert_equal 0, @deliverable.total(Date.new(2011,1,1))
+      end
+    end
+
+    context "with an invalid period" do
+      should "return 0" do
+        assert_equal 0, @deliverable.total('1')
+      end
+    end
+
+    context "with a period in the retainer range" do
+      should "filter the records" do
+        assert_equal 1000, @deliverable.total(Date.new(2010,2,1))
+      end
+    end
+
+  end
 end

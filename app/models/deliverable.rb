@@ -54,20 +54,20 @@ class Deliverable < ActiveRecord::Base
     end
   end
 
-  def labor_budget_total
+  def labor_budget_total(date=nil)
     labor_budgets.sum(:budget)
   end
 
-  def labor_budget_total_for_date(date=nil) #Used on subclasses
-    labor_budget_total
-  end
-  
-  def overhead_budget_total
+  def overhead_budget_total(date=nil)
     overhead_budgets.sum(:budget)
   end
 
-  def overhead_budget_total_for_date(date=nil) #Used on subclasses
-    overhead_budget_total
+  def profit_budget(date=nil)
+    nil
+  end
+
+  def labor_budget_hours(date=nil)
+    labor_budgets.sum(:hours)
   end
 
   # Total number of hours estimated in the Deliverable's budgets
@@ -79,6 +79,10 @@ class Deliverable < ActiveRecord::Base
   # OPTIMIZE: N+1
   def hours_spent_total
     issues.inject(0) {|total, issue| total += issue.spent_hours }
+  end
+
+  def filter_by_date(date=nil, &block)
+    block.call
   end
 
   def retainer?

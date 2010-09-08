@@ -11,7 +11,7 @@ class FixedDeliverable < Deliverable
     'F'
   end
 
-  def total
+  def total(date=nil)
     read_attribute(:total) || 0.0
   end
 
@@ -22,9 +22,9 @@ class FixedDeliverable < Deliverable
 
   # The amount of profit that is budgeted for this deliverable.
   # Profit = Total - ( Labor + Overhead + Fixed + Markup )
-  def profit_budget
-    budgets = labor_budget_total + overhead_budget_total
-    (total || 0.0) - budgets
+  def profit_budget(date=nil)
+    budgets = labor_budget_total(date) + overhead_budget_total(date)
+    (total(date) || 0.0) - budgets
   end
 
   # The amount of money remaining after expenses have been taken out

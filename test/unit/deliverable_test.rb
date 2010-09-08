@@ -34,37 +34,4 @@ class DeliverableTest < ActiveSupport::TestCase
     end
   end
 
-  context "#labor_budget_spent_for_period" do
-    should "use all periods"
-  end
-  
-  context "#labor_budget_total_for_period" do
-    should "use all periods"
-  end
-  
-  context "#overhead_spent_for_period" do
-    should "use all periods"
-  end
-  
-  context "#overhead_budget_total_for_period" do
-    should "use all periods"
-  end
-  
-  context "#profit_left_for_period" do
-    should "use all periods"
-  end
-  
-  context "#profit_budget_for_period" do
-    should "use all periods"
-  end
-  
-  context "#total_spent_for_period" do
-    should "use all periods"
-  end
-  
-  context "#total_for_period" do
-    should "use all periods"
-  end
-  
-
 end

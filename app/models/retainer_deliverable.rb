@@ -75,7 +75,7 @@ class RetainerDeliverable < HourlyDeliverable
     budgets
   end
 
-  def labor_budget_total_for_date(date=nil)
+  def labor_budget_total(date=nil)
     if date
       if within_date_range?(date)
         labor_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
@@ -83,11 +83,11 @@ class RetainerDeliverable < HourlyDeliverable
         0 # outside of range
       end
     else
-      labor_budgets.sum(:budget)
+      super
     end
   end
 
-  def overhead_budget_total_for_date(date=nil)
+  def overhead_budget_total(date=nil)
     if date
       if within_date_range?(date)
         overhead_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
@@ -95,7 +95,19 @@ class RetainerDeliverable < HourlyDeliverable
         0 # outside of range
       end
     else
-      overhead_budgets.sum(:budget)
+      super
+    end
+  end
+
+  def labor_budget_hours(date=nil)
+    if date
+      if within_date_range?(date)
+        labor_budgets.sum(:hours, :conditions => {:year => date.year, :month => date.month})
+      else
+        0 # outside of range
+      end
+    else
+      super
     end
   end
 
