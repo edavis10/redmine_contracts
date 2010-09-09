@@ -28,7 +28,8 @@ class DeliverablesController < InheritedResources::Base
 
   def show
     if show_partial?
-      render :partial => 'deliverables/details_row', :locals => {:contract => @contract, :deliverable => @contract.deliverables.find(params[:id])}
+      @period = params[:period]
+      render :partial => 'deliverables/details_row', :locals => {:contract => @contract, :deliverable => @contract.deliverables.find(params[:id]), :period => @period}
     else
       redirect_to contract_url(@project, @contract)
     end
