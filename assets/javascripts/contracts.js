@@ -48,12 +48,20 @@ jQuery(function($) {
     if (deliverableType == 'FixedDeliverable') {
       showDeliverableTotal();
       hideDeliverableFrequency();
+      $('#retainer-finances-message').hide();
     } else if(deliverableType == "HourlyDeliverable") {
       hideDeliverableTotal();
       hideDeliverableFrequency();
+      $('#retainer-finances-message').hide();
     } else if(deliverableType == "RetainerDeliverable") {
       hideDeliverableTotal();
       showDeliverableFrequency();
+      if ($('form.deliverable #deliverable_stored_id').val() == '') {
+        $('#retainer-finances-message').show();
+      } else {
+        $('#retainer-finances-message').hide();
+      }
+
    }
   },
 
