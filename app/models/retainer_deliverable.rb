@@ -84,36 +84,33 @@ class RetainerDeliverable < HourlyDeliverable
   end
 
   def labor_budget_total(date=nil)
-    if date
-      if within_date_range?(date)
-        labor_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
-      else
-        0 # outside of range
-      end
+    case scope_date_status(date)
+    when :in
+      labor_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+    when :out
+      0
     else
       super
     end
   end
 
   def overhead_budget_total(date=nil)
-    if date
-      if within_date_range?(date)
-        overhead_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
-      else
-        0 # outside of range
-      end
+    case scope_date_status(date)
+    when :in
+      overhead_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+    when :out
+      0
     else
       super
     end
   end
 
   def labor_budget_hours(date=nil)
-    if date
-      if within_date_range?(date)
-        labor_budgets.sum(:hours, :conditions => {:year => date.year, :month => date.month})
-      else
-        0 # outside of range
-      end
+    case scope_date_status(date)
+    when :in
+      labor_budgets.sum(:hours, :conditions => {:year => date.year, :month => date.month})
+    when :out
+      0
     else
       super
     end
@@ -192,53 +189,49 @@ class RetainerDeliverable < HourlyDeliverable
   end
 
   def labor_budget_spent(date=nil)
-    if date
-      if within_date_range?(date)
-        labor_budget_spent_with_filter do
-          issue_ids = self.issues.collect(&:id)
-          if issue_ids.present?
-            TimeEntry.all(:conditions => ["#{Issue.table_name}.id IN (:issue_ids) AND tyear = (:year) AND tmonth = (:month)",
-                                          {:issue_ids => issue_ids,
-                                            :year => date.year,
-                                            :month => date.month}
-                                         ],
-                          :include => :issue)
-          else
-            []
-          end
+    case scope_date_status(date)
+    when :in
+      labor_budget_spent_with_filter do
+        issue_ids = self.issues.collect(&:id)
+        if issue_ids.present?
+          TimeEntry.all(:conditions => ["#{Issue.table_name}.id IN (:issue_ids) AND tyear = (:year) AND tmonth = (:month)",
+                                        {:issue_ids => issue_ids,
+                                          :year => date.year,
+                                          :month => date.month}
+                                       ],
+                        :include => :issue)
+        else
+          []
         end
-      else
-        0 # outside of range
       end
+    when :out
+      0
     else
       labor_budget_spent_with_filter
     end
-
   end
 
   def overhead_spent(date=nil)
-    if date
-      if within_date_range?(date)
-        overhead_spent_with_filter do
-          issue_ids = self.issues.collect(&:id)
-          if issue_ids.present?
-            TimeEntry.all(:conditions => ["#{Issue.table_name}.id IN (:issue_ids) AND tyear = (:year) AND tmonth = (:month)",
-                                          {:issue_ids => issue_ids,
-                                            :year => date.year,
-                                            :month => date.month}
-                                         ],
-                          :include => :issue)
-          else
-            []
-          end
+    case scope_date_status(date)
+    when :in
+      overhead_spent_with_filter do
+        issue_ids = self.issues.collect(&:id)
+        if issue_ids.present?
+          TimeEntry.all(:conditions => ["#{Issue.table_name}.id IN (:issue_ids) AND tyear = (:year) AND tmonth = (:month)",
+                                        {:issue_ids => issue_ids,
+                                          :year => date.year,
+                                          :month => date.month}
+                                       ],
+                        :include => :issue)
+        else
+          []
         end
-      else
-        0 # outside of range
       end
+    when :out
+      0
     else
       overhead_spent_with_filter
     end
-
   end
 
   def create_budgets_for_periods
@@ -348,5 +341,19 @@ class RetainerDeliverable < HourlyDeliverable
 
   def create_new_overhead_budget_based_on_existing_budget(existing_overhead_budget, attributes={})
     overhead_budgets.create(existing_overhead_budget.attributes.except('id').merge(attributes))
+  end
+
+  def scope_date_status(date)
+    if date
+      if within_date_range?(date)
+        status = :in
+      else
+        status = :out # outside of range
+      end
+    else
+      status = :no_date
+    end
+
+    status
   end
 end
