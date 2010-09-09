@@ -16,7 +16,7 @@ class FixedDeliverable < Deliverable
   end
 
   # Fixed deliverables are always 100% spent
-  def total_spent
+  def total_spent(date=nil)
     total
   end
 

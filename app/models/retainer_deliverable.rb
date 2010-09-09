@@ -111,6 +111,40 @@ class RetainerDeliverable < HourlyDeliverable
     end
   end
 
+  def total_spent(date=nil)
+    if date
+      if within_date_range?(date)
+        # TODO: duplicated on HourlyDeliverable#total_spent
+        return 0 if contract.nil?
+        return 0 if contract.billable_rate.blank?
+        return 0 unless self.issues.count > 0
+
+        issue_ids = self.issues.collect(&:id)
+        if issue_ids.present?
+          time_logs = TimeEntry.all(:conditions => ["#{Issue.table_name}.id IN (:issue_ids) AND tyear = (:year) AND tmonth = (:month)",
+                                                    {:issue_ids => issue_ids,
+                                                      :year => date.year,
+                                                      :month => date.month}
+                                                   ],
+                                    :include => :issue)
+        end
+        time_logs ||= []
+        hours = time_logs.inject(0) {|total, time_entry|
+          total += time_entry.hours if time_entry.billable?
+          total
+        }
+
+        return hours * contract.billable_rate
+
+      else
+        0 # outside of range
+      end
+    else
+      super
+    end
+
+  end
+
   # TODO: stolen directly from redmine_overhead but with a block option
   def labor_budget_spent_with_filter(&block)
     return 0.0 unless self.issues.size > 0

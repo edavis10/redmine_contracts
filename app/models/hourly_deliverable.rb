@@ -24,7 +24,7 @@ class HourlyDeliverable < Deliverable
 
   # Total amount to be billed on the deliverable, using the total time logged
   # and the contract rate
-  def total_spent
+  def total_spent(date=nil)
     return 0 if contract.nil?
     return 0 if contract.billable_rate.blank?
     return 0 unless self.issues.count > 0
@@ -56,7 +56,7 @@ class HourlyDeliverable < Deliverable
 
   # The amount of money remaining after expenses have been taken out
   # Profit left = Total - Labor spent - Overhead spent
-  def profit_left
-    total_spent - labor_budget_spent - overhead_spent
+  def profit_left(date=nil)
+    total_spent(date) - labor_budget_spent(date) - overhead_spent(date)
   end
 end
