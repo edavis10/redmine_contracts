@@ -111,6 +111,94 @@ class RetainerDeliverable < HourlyDeliverable
     end
   end
 
+  # TODO: stolen directly from redmine_overhead but with a block option
+  def labor_budget_spent_with_filter(&block)
+    return 0.0 unless self.issues.size > 0
+    total = 0.0
+    
+    # Get all timelogs assigned
+    if block_given?
+      time_logs = block.call
+    else
+      time_logs = self.issues.collect(&:time_entries).flatten
+    end
+    
+    return time_logs.collect {|time_log|
+      if time_log.billable?
+        time_log.cost
+      else
+        0.0
+      end
+    }.sum
+  end
+
+  # TODO: stolen directly from redmine_overhead but with a block option
+  def overhead_spent_with_filter(&block)
+    if block_given?
+      time_logs = block.call
+    else
+      time_logs = issues.collect(&:time_entries).flatten
+    end
+
+    return time_logs.collect {|time_entry|
+      if time_entry.billable?
+        0
+      else
+        time_entry.cost
+      end
+    }.sum 
+  end
+
+  def labor_budget_spent(date=nil)
+    if date
+      if within_date_range?(date)
+        labor_budget_spent_with_filter do
+          issue_ids = self.issues.collect(&:id)
+          if issue_ids.present?
+            TimeEntry.all(:conditions => ["#{Issue.table_name}.id IN (:issue_ids) AND tyear = (:year) AND tmonth = (:month)",
+                                          {:issue_ids => issue_ids,
+                                            :year => date.year,
+                                            :month => date.month}
+                                         ],
+                          :include => :issue)
+          else
+            []
+          end
+        end
+      else
+        0 # outside of range
+      end
+    else
+      labor_budget_spent_with_filter
+    end
+
+  end
+
+  def overhead_spent(date=nil)
+    if date
+      if within_date_range?(date)
+        overhead_spent_with_filter do
+          issue_ids = self.issues.collect(&:id)
+          if issue_ids.present?
+            TimeEntry.all(:conditions => ["#{Issue.table_name}.id IN (:issue_ids) AND tyear = (:year) AND tmonth = (:month)",
+                                          {:issue_ids => issue_ids,
+                                            :year => date.year,
+                                            :month => date.month}
+                                         ],
+                          :include => :issue)
+          else
+            []
+          end
+        end
+      else
+        0 # outside of range
+      end
+    else
+      overhead_spent_with_filter
+    end
+
+  end
+
   def create_budgets_for_periods
     # For each month in the time span
     months.each do |month|
