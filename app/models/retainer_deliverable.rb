@@ -125,15 +125,8 @@ class RetainerDeliverable < HourlyDeliverable
         return 0 unless self.issues.count > 0
 
         issue_ids = self.issues.collect(&:id)
-        if issue_ids.present?
-          time_logs = TimeEntry.all(:conditions => ["#{Issue.table_name}.id IN (:issue_ids) AND tyear = (:year) AND tmonth = (:month)",
-                                                    {:issue_ids => issue_ids,
-                                                      :year => date.year,
-                                                      :month => date.month}
-                                                   ],
-                                    :include => :issue)
-        end
-        time_logs ||= []
+        time_logs = time_entries_for_date_and_issue_ids(date, issue_ids)
+
         hours = time_logs.inject(0) {|total, time_entry|
           total += time_entry.hours if time_entry.billable?
           total
