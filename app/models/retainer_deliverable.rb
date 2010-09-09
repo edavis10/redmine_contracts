@@ -117,26 +117,24 @@ class RetainerDeliverable < HourlyDeliverable
   end
 
   def total_spent(date=nil)
-    if date
-      if within_date_range?(date)
-        # TODO: duplicated on HourlyDeliverable#total_spent
-        return 0 if contract.nil?
-        return 0 if contract.billable_rate.blank?
-        return 0 unless self.issues.count > 0
+    case scope_date_status(date)
+    when :in
+      # TODO: duplicated on HourlyDeliverable#total_spent
+      return 0 if contract.nil?
+      return 0 if contract.billable_rate.blank?
+      return 0 unless self.issues.count > 0
 
-        issue_ids = self.issues.collect(&:id)
-        time_logs = time_entries_for_date_and_issue_ids(date, issue_ids)
+      issue_ids = self.issues.collect(&:id)
+      time_logs = time_entries_for_date_and_issue_ids(date, issue_ids)
 
-        hours = time_logs.inject(0) {|total, time_entry|
-          total += time_entry.hours if time_entry.billable?
-          total
-        }
+      hours = time_logs.inject(0) {|total, time_entry|
+        total += time_entry.hours if time_entry.billable?
+        total
+      }
 
-        return hours * contract.billable_rate
-
-      else
-        0 # outside of range
-      end
+      return hours * contract.billable_rate
+    when :out
+      0
     else
       super
     end
