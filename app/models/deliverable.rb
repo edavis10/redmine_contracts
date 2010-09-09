@@ -8,6 +8,7 @@ class Deliverable < ActiveRecord::Base
   belongs_to :manager, :class_name => 'User', :foreign_key => 'manager_id'
   has_many :labor_budgets
   has_many :overhead_budgets
+  has_many :fixed_budgets
   has_many :issues
 
   accepts_nested_attributes_for :labor_budgets
