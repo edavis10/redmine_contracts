@@ -193,16 +193,7 @@ class RetainerDeliverable < HourlyDeliverable
     when :in
       labor_budget_spent_with_filter do
         issue_ids = self.issues.collect(&:id)
-        if issue_ids.present?
-          TimeEntry.all(:conditions => ["#{Issue.table_name}.id IN (:issue_ids) AND tyear = (:year) AND tmonth = (:month)",
-                                        {:issue_ids => issue_ids,
-                                          :year => date.year,
-                                          :month => date.month}
-                                       ],
-                        :include => :issue)
-        else
-          []
-        end
+        time_entries_for_date_and_issue_ids(date, issue_ids)
       end
     when :out
       0
@@ -216,16 +207,7 @@ class RetainerDeliverable < HourlyDeliverable
     when :in
       overhead_spent_with_filter do
         issue_ids = self.issues.collect(&:id)
-        if issue_ids.present?
-          TimeEntry.all(:conditions => ["#{Issue.table_name}.id IN (:issue_ids) AND tyear = (:year) AND tmonth = (:month)",
-                                        {:issue_ids => issue_ids,
-                                          :year => date.year,
-                                          :month => date.month}
-                                       ],
-                        :include => :issue)
-        else
-          []
-        end
+        time_entries_for_date_and_issue_ids(date, issue_ids)
       end
     when :out
       0
@@ -356,4 +338,18 @@ class RetainerDeliverable < HourlyDeliverable
 
     status
   end
+
+  def time_entries_for_date_and_issue_ids(date, issue_ids)
+    if issue_ids.present?
+      TimeEntry.all(:conditions => ["#{Issue.table_name}.id IN (:issue_ids) AND tyear = (:year) AND tmonth = (:month)",
+                                    {:issue_ids => issue_ids,
+                                      :year => date.year,
+                                      :month => date.month}
+                                   ],
+                    :include => :issue)
+    else
+      []
+    end
+  end
+  
 end
