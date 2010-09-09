@@ -28,7 +28,7 @@ class DeliverablesController < InheritedResources::Base
 
   def show
     if show_partial?
-      @period = params[:period]
+      @period = extract_period(params[:period])
       render :partial => 'deliverables/details_row', :locals => {:contract => @contract, :deliverable => @contract.deliverables.find(params[:id]), :period => @period}
     else
       redirect_to contract_url(@project, @contract)
@@ -55,6 +55,15 @@ class DeliverablesController < InheritedResources::Base
   def find_contract
     @contract = Contract.find(params[:contract_id])
     @project = @contract.project
+  end
+
+  def extract_period(param)
+    period = nil
+    if param.present? && param.match(/\A\d{4}-\d{2}\z/) # "YYYY-MM"
+      year, month = param.split('-')
+      period = Date.new(year.to_i, month.to_i, 1)
+    end
+    period
   end
 
 end

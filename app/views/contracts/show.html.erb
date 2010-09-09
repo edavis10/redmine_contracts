@@ -108,7 +108,7 @@
             <% end %>
 
             <tr id="deliverable_details_<%= h(deliverable.id) %>" class="ign">
-              <%= render :partial => 'deliverables/details_row', :locals => {:deliverable => deliverable, :contract => resource} %>
+              <%= render :partial => 'deliverables/details_row', :locals => {:deliverable => deliverable, :contract => resource, :period => deliverable.current_date} %>
             </tr>
           <% end %>
         </tbody>

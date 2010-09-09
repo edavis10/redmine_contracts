@@ -86,12 +86,18 @@ module ContractsHelper
     number_with_precision(value, :precision => Contract::ViewPrecision, :delimiter => ',')
   end
 
-  def retainer_period_options(deliverable)
+  def retainer_period_options(deliverable, method_options={})
+    selected = method_options[:selected]
+    if selected && selected.is_a?(Date)
+      selected = selected.strftime("%Y-%m")
+    end
+
     options = []
     options << content_tag(:option, l(:label_all).capitalize, :value => '')
 
     deliverable.months.collect do |month|
-      options << content_tag(:option, month.strftime("%B %Y"), :value => month.strftime("%Y-%m"))
+      value = month.strftime("%Y-%m")
+      options << content_tag(:option, month.strftime("%B %Y"), :value => value, :selected => (selected == value) ? 'selected' : nil)
     end
     
     options

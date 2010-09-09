@@ -38,6 +38,11 @@ class Deliverable < ActiveRecord::Base
     ''
   end
 
+  # Deliverable's aren't dated. Subclasses may override this for period behavior.
+  def current_date
+    nil
+  end
+
   def to_s
     title
   end

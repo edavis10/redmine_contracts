@@ -32,7 +32,6 @@ class DeliverableDetailsShowTest < ActionController::IntegrationTest
       
       visit "/projects/#{@project.id}/contracts/#{@contract.id}/deliverables/#{@deliverable1.id}", :get, {:format => 'js', :as => 'deliverable_details_row', :period => '2010-02'}
 
-      puts response.body
       assert_response :success
       assert_select ".deliverable_details_outer_wrapper_#{@deliverable1.id}" do
         assert_select "td.labor_budget_total", '100'
@@ -40,7 +39,7 @@ class DeliverableDetailsShowTest < ActionController::IntegrationTest
         assert_select "td.total", '100'
 
         assert_select "select.retainer_period_change" do
-          assert_select "option[selected=selected]", "Feburary 2010"
+          assert_select "option[selected=selected]", "February 2010"
         end
       end
       

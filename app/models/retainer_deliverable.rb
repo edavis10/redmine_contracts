@@ -19,8 +19,12 @@ class RetainerDeliverable < HourlyDeliverable
     'R'
   end
 
+  def current_date
+    Date.today
+  end
+  
   def current_period
-    Date.today.strftime("%B %Y")
+    current_date.strftime("%B %Y")
   end
 
   def beginning_date
@@ -32,7 +36,11 @@ class RetainerDeliverable < HourlyDeliverable
   end
 
   def date_range
-    (beginning_date..ending_date)
+    if beginning_date && ending_date && beginning_date <= ending_date
+      (beginning_date..ending_date)
+    else
+      []
+    end
   end
 
   def within_date_range?(date)

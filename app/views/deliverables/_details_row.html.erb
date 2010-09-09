@@ -1,4 +1,4 @@
-<% period ||= '' %>
+<% period ||= nil %>
 
               <td colspan="11" class="deliverable_details_outer_wrapper_<%= h(deliverable.id) %>">
                 
@@ -16,7 +16,7 @@
                     <form method="get" action="<%= contract_deliverable_path(@project, contract, deliverable, :format => 'js', :as => 'deliverable_details_row') %>">
                       <fieldset>
                         <select name="period" id="retainer_period_change_<%= h(deliverable.id) %>" class="retainer_period_change">
-                          <%= retainer_period_options(deliverable) %>
+                          <%= retainer_period_options(deliverable, :selected => period) %>
                         </select>
                       </fieldset>
                     </form>
@@ -52,28 +52,28 @@
                       <tbody>
                         <tr>
                           <td class="l"><a href="#"><strong>Labor</strong></a></td>
-                          <td class="labor_budget_spent"><%= h(format_value_field_for_contracts(deliverable.labor_budget_spent)) %></td>
-                          <td class="labor_budget_total"><%= h(format_value_field_for_contracts(deliverable.labor_budget_total)) %></td>
+                          <td class="labor_budget_spent"><%= h(format_value_field_for_contracts(deliverable.labor_budget_spent(period))) %></td>
+                          <td class="labor_budget_total"><%= h(format_value_field_for_contracts(deliverable.labor_budget_total(period))) %></td>
                           <td> TODO: Release 2 / TODO hrs </td>
                         </tr>
                         <tr>
                           <td class="l"><a href="#"><strong>Overhead</strong></a></td>
-                          <td class="overhead_budget_spent"><%= h(format_value_field_for_contracts(deliverable.overhead_spent)) %></td>
-                          <td class="overhead_budget_total"><%= h(format_value_field_for_contracts(deliverable.overhead_budget_total)) %></td>
+                          <td class="overhead_budget_spent"><%= h(format_value_field_for_contracts(deliverable.overhead_spent(period))) %></td>
+                          <td class="overhead_budget_total"><%= h(format_value_field_for_contracts(deliverable.overhead_budget_total(period))) %></td>
                           <td> TODO: Release 2 / TODO hrs </td>
                         </tr>
                         <%# TODO: Release 2, Fixed %>
                         <%# TODO: Release 2, Markup %>
                         <tr>
                           <td class="l">Profit</td>
-                          <td><%= h(format_value_field_for_contracts(deliverable.profit_left)) %></td>
-                          <td><%= h(format_value_field_for_contracts(deliverable.profit_budget)) %></td>
+                          <td><%= h(format_value_field_for_contracts(deliverable.profit_left(period))) %></td>
+                          <td><%= h(format_value_field_for_contracts(deliverable.profit_budget(period))) %></td>
                           <td></td>
                         </tr>
                         <tr class="total">
                           <td class="l"><strong>Total:</strong></td>
-                          <td class="total_spent"><strong><%= h(format_value_field_for_contracts(deliverable.total_spent)) %></strong></td>
-                          <td class="total"><strong><%= h(format_value_field_for_contracts(deliverable.total)) %></strong></td>
+                          <td class="total_spent"><strong><%= h(format_value_field_for_contracts(deliverable.total_spent(period))) %></strong></td>
+                          <td class="total"><strong><%= h(format_value_field_for_contracts(deliverable.total(period))) %></strong></td>
                           <td><strong>TODO: Release 2</strong></td>
                         </tr>
                       </tbody>
