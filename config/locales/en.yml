@@ -67,3 +67,7 @@ en:
   text_changed_period_message: "The period for this deliverable has been changed. Would you like to expand/shrink the Deliverable Finances?"
   field_current_period: "Current period"
   text_retainer_monthly_message: "For a single month"
+  text_flash_deliverable_created: "Deliverable: {{name}} was successfully created."
+  text_flash_deliverable_updated: "Deliverable: {{name}} was successfully updated."
+  text_flash_deliverable_destroyed: "Deliverable: {{name}} was successfully destroyed."
+

@@ -17,13 +17,13 @@ class DeliverablesController < InheritedResources::Base
     if params[:deliverable] && params[:deliverable][:type] && Deliverable.valid_types.include?(params[:deliverable][:type])
       @deliverable.type = params[:deliverable][:type]
     end
-    create! { contract_url(@project, @contract) }
+    create!(:notice => l(:text_flash_deliverable_created, :name => @deliverable.title))  { contract_url(@project, @contract) }
   end
 
   def update
     @deliverable = begin_of_association_chain.deliverables.find_by_id(params[:id])
     params[:deliverable] = params[:fixed_deliverable] || params[:hourly_deliverable] || params[:retainer_deliverable]
-    update! { contract_url(@project, @contract) }
+    update!(:notice => l(:text_flash_deliverable_updated, :name => @deliverable.title)) { contract_url(@project, @contract) }
   end
 
   def show
@@ -36,7 +36,7 @@ class DeliverablesController < InheritedResources::Base
   end
 
   def destroy
-    destroy! { contract_url(@project, @contract) }
+    destroy!(:notice => l(:text_flash_deliverable_destroyed, :name => resource.title)) { contract_url(@project, @contract) }
   end
 
   protected
