@@ -7,6 +7,14 @@ class FixedBudget < ActiveRecord::Base
   # Validations
 
   # Accessors
+  def budget=(v)
+    if v.is_a? String
+      write_attribute(:budget, v.gsub(/[$ ,]/, ''))
+    else
+      write_attribute(:budget, v)
+    end
+  end
+
   def markup_value
     return 0 if budget.blank? || markup.blank?
 

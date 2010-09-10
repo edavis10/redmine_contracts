@@ -62,6 +62,37 @@
     </table>
   </li>
 
+  <li class="numeric optional">
+    <div id="deliverable-fixed" class="fixed-item-form">
+		  <label for="contract_discount">Fixed</label>
+
+      <% form.fields_for :fixed_budgets, fixed_budgets do |fixed_budget| %>
+        <p class="inline-hints" style="display:none;"><%= fixed_budget.label(:title, l(:field_title))%></p>
+        <%= fixed_budget.text_field(:title) %>
+        
+        <p class="inline-hints">
+          <%= fixed_budget.label(:budget, l(:field_budget), :style => 'display: none;')%> <%# Hidden label :| %>
+          <%= l(:text_dollar_sign) %>
+        </p>
+		    <%= fixed_budget.text_field(:budget) %>
+
+		    <p class="inline-hints">
+          <%= fixed_budget.label(:markup, l(:field_markup), :style => 'display: none;')%> <%# Hidden label :| %>
+          <%= l(:field_discount_hint) %>
+        </p>
+        <%= fixed_budget.text_field(:markup) %>
+
+        <p class="inline-hints" style="display:none;"><%= fixed_budget.label(:description, l(:field_description), :for => "fixed-description#{fixed_budget.object.object_id}")%></p>
+        <%= fixed_budget.text_area(:description, :class => 'wiki-edit', :rows => '5', :id => "fixed-description#{fixed_budget.object.object_id}") %>
+        <%= wikitoolbar_for "fixed-description#{fixed_budget.object.object_id}" %>
+
+        <p>Todo: Add button (Release 3)</p>
+      <% end %>
+	  </div>
+	  
+
+  </li>
+
   <%= form.input :total, :input_html => {:size => 10}, :wrapper_html => {:class => 'deliverable_total_input'}, :hint => l(:text_dollar_sign) %>
 
 <% end %>

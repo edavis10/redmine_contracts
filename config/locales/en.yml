@@ -70,4 +70,5 @@ en:
   text_flash_deliverable_created: "Deliverable: {{name}} was successfully created."
   text_flash_deliverable_updated: "Deliverable: {{name}} was successfully updated."
   text_flash_deliverable_destroyed: "Deliverable: {{name}} was successfully destroyed."
-
+  field_budget: Budget
+  field_markup: Markup

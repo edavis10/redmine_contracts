@@ -13,6 +13,7 @@ class Deliverable < ActiveRecord::Base
 
   accepts_nested_attributes_for :labor_budgets
   accepts_nested_attributes_for :overhead_budgets
+  accepts_nested_attributes_for :fixed_budgets
   
   # Validations
   validates_presence_of :title

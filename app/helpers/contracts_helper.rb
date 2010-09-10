@@ -3,6 +3,7 @@ module ContractsHelper
     returning(deliverable) do |d|
       d.labor_budgets.build if d.labor_budgets.empty?
       d.overhead_budgets.build if d.overhead_budgets.empty?
+      d.fixed_budgets.build if d.fixed_budgets.empty?
     end
   end
 

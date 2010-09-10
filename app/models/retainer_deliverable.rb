@@ -83,6 +83,12 @@ class RetainerDeliverable < HourlyDeliverable
     budgets
   end
 
+  def fixed_budgets_for_date(date)
+    budgets = fixed_budgets.all(:conditions => {:year => date.year, :month => date.month})
+    budgets = [fixed_budgets.build(:year => date.year, :month => date.month)] if budgets.empty?
+    budgets
+  end
+
   def labor_budget_total(date=nil)
     case scope_date_status(date)
     when :in

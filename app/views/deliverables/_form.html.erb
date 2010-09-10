@@ -3,7 +3,7 @@
 <%= javascript_tag("var i18nChangedPeriodMessage = '#{l(:text_changed_period_message)}'") %>
 
 <div class="box tabular">
-<% form.inputs :name => l(:text_deliverable_details_legend) do %>
+<% form.inputs :name => l(:text_deliverable_details_legend), :id => 'deliverable-details' do %>
   <%# Used by jquery to check if this is a new or existing record %>
   <%= hidden_field_tag('deliverable_id', h(resource.id), :id => 'deliverable_stored_id') %>
   <%= form.input :title, :required => true %>
@@ -40,13 +40,13 @@
 <% if resource.retainer? && resource.respond_to?(:months) %>
 <% if resource.months.present? %>
 <% resource.months.each do |month| %>
-<%= render :partial => 'finance_form', :locals => {:form => form, :labor_budgets => resource.labor_budgets_for_date(month), :overhead_budgets => resource.overhead_budgets_for_date(month), :label => l(:text_deliverable_finances_date, :date => month.strftime("%B, %Y")), :fieldset_class => 'date-' + month.strftime('%Y-%m') } %>
+<%= render :partial => 'finance_form', :locals => {:form => form, :labor_budgets => resource.labor_budgets_for_date(month), :overhead_budgets => resource.overhead_budgets_for_date(month), :fixed_budgets => resource.fixed_budgets_for_date(month), :label => l(:text_deliverable_finances_date, :date => month.strftime("%B, %Y")), :fieldset_class => 'date-' + month.strftime('%Y-%m') } %>
 <% end %>
 <% else %>
 <%= content_tag(:p, l(:text_missing_period), :class => 'nodata') %>
 <% end %>
 <% else %>
-<%= render :partial => 'finance_form', :locals => {:form => form, :labor_budgets => resource.labor_budgets, :overhead_budgets => resource.overhead_budgets, :label => l(:text_deliverable_finances), :fieldset_class => '' } %>
+<%= render :partial => 'finance_form', :locals => {:form => form, :labor_budgets => resource.labor_budgets, :overhead_budgets => resource.overhead_budgets, :fixed_budgets => resource.fixed_budgets, :label => l(:text_deliverable_finances), :fieldset_class => '' } %>
 <% end %>
 
 </div>
