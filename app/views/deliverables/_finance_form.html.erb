@@ -67,6 +67,9 @@
 		  <label for="contract_discount">Fixed</label>
 
       <% form.fields_for :fixed_budgets, fixed_budgets do |fixed_budget| %>
+        <%= fixed_budget.hidden_field(:year) %>
+        <%= fixed_budget.hidden_field(:month) %>
+
         <p class="inline-hints" style="display:none;"><%= fixed_budget.label(:title, l(:field_title))%></p>
         <%= fixed_budget.text_field(:title) %>
         
