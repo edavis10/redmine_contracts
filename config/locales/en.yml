@@ -66,7 +66,7 @@ en:
   text_missing_period: "This deliverable is missing a date range so it cannot have budget items. Please save start and end dates before adding any budget items."
   text_changed_period_message: "The period for this deliverable has been changed. Would you like to expand/shrink the Deliverable Finances?"
   field_current_period: "Current period"
-  text_retainer_monthly_message: "For a single month"
+  text_retainer_monthly_message: "Enter budget for a representative month. Any overrides to individual months can be done via the editor after saving."
   text_flash_deliverable_created: "Deliverable: {{name}} was successfully created."
   text_flash_deliverable_updated: "Deliverable: {{name}} was successfully updated."
   text_flash_deliverable_destroyed: "Deliverable: {{name}} was successfully destroyed."
