@@ -86,6 +86,14 @@ module ContractsHelper
     number_with_precision(value, :precision => Contract::ViewPrecision, :delimiter => ',')
   end
 
+  def format_as_yes_or_no(value)
+    if value
+      l(:general_text_Yes)
+    else
+      l(:general_text_No)
+    end
+  end
+
   def retainer_period_options(deliverable, method_options={})
     selected = method_options[:selected]
     if selected && selected.is_a?(Date)

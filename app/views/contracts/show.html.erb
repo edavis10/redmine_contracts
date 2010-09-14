@@ -31,7 +31,7 @@
       <div class="left">
         <table class="info">
           <%= show_field(resource, :client_point_of_contact, :format => :textilizable, :raw => true, :html_options => {:class => 'contract-client-point-of-contact padd'}, :label_html_options => {:width => '25%'}) %>
-          <%= show_field(resource, :executed, :html_options => {:class => 'contract-executed'}) %>
+          <%= show_field(resource, :executed, :format => :format_as_yes_or_no, :html_options => {:class => 'contract-executed'}) %>
           <%= show_field(resource, :discount_note, :format => :textilizable, :raw => true, :html_options => {:class => 'contract-discount-note'}) %>
           <%= show_field(resource, :payment_term, :format => :format_payment_terms, :html_options => {:class => 'contract-payment-terms'}) %>
           <%= show_field(resource, :client_ap_contact_information, :format => :textilizable, :raw => true, :html_options => {:class => 'contract-client-ap-contact-information'}) %>
