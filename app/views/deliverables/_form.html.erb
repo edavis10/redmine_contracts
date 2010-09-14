@@ -17,10 +17,10 @@
   <% end %>
   <%= form.input :manager, :required => true, :collection => @project.users.sort %>
 
-  <%= form.input :start_date, :as => :string, :input_html => {:size => 10, :class => 'start-date'}, :hint => calendar_for('deliverable_start_date') %>
+  <%= form.input :start_date, :as => :string, :input_html => {:size => 10, :class => 'start-date', :id => 'deliverable_start_date'}, :hint => calendar_for('deliverable_start_date') %>
   <%= hidden_field_tag('deliverable_stored_start_date', h(resource.start_date), :id => 'deliverable_stored_start_date') %>
 
-  <%= form.input :end_date, :as => :string, :input_html => {:size => 10, :class => 'end-date'}, :hint => calendar_for('deliverable_end_date') %>
+  <%= form.input :end_date, :as => :string, :input_html => {:size => 10, :class => 'end-date', :id => 'deliverable_end_date'}, :hint => calendar_for('deliverable_end_date') %>
   <%= hidden_field_tag('deliverable_stored_end_date', h(resource.end_date), :id => 'deliverable_stored_end_date') %>
 
   <%= form.input :notes, :input_html => {:class => 'wiki-edit', :rows => '5'} %>
