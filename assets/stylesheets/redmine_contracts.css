@@ -45,6 +45,8 @@ padding-left: 120px; /*width of left column containing the label elements*/
 padding-left: 0px; /* Don't pad submit buttons */
 }
 
+#retainer-finances-message label { margin-left: -50px; } /* Unpad the label a bit */
+
 #content .error_msg{
 	background: #ffd5d5;
 	color: #a40000;
