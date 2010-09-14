@@ -71,7 +71,7 @@ module ContractsHelper
   end
 
   def format_hourly_rate(decimal)
-    number_to_currency(decimal) + "/hr" if decimal
+    number_to_currency(decimal, :precision => 0) + "/hr" if decimal
   end
 
   def format_payment_terms(value)
