@@ -30,7 +30,8 @@ module ContractsHelper
 
     formatter = options[:format]
     raw_content = options[:raw] || false
-    wrap_in_td = options[:wrap_in_td] || true
+    wrap_in_td = options[:wrap_in_td]
+    wrap_in_td = true if wrap_in_td.nil?
 
     content = ''
     
