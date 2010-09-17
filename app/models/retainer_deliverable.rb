@@ -47,6 +47,17 @@ class RetainerDeliverable < HourlyDeliverable
     date_range.include?(date)
   end
 
+  # period in the format of "%Y-%m" or "%B %Y"
+  def within_period_range?(period)
+    begin
+      # both valid formats work by adding a day to the end like -01
+      date = Date.parse(period.to_s + "-01")
+      within_date_range?(date)
+    rescue ArgumentError
+      return false
+    end
+  end
+
   def months
     month_acc = []
 

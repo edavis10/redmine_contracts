@@ -111,4 +111,12 @@ module ContractsHelper
     
     options
   end
+
+  # Given a deliverable and period, validate the period
+  # TODO: could use a better name
+  def validate_period(deliverable, period)
+    if deliverable.current_date && deliverable.within_period_range?(period)
+      return period
+    end
+  end
 end
