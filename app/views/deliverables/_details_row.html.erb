@@ -72,7 +72,13 @@
                         </tr>
                         <% end %>
 
-                        <%# TODO: Release 2, Markup %>
+                        <tr>
+                          <td class="l"><%= l(:field_markup) %></td>
+                          <td class="fixed_markup_budget_spent">0</td>
+                          <td class="fixed_markup_budget_total"><%= h(format_value_field_for_contracts(deliverable.fixed_markup_budget_total(period))) %></td>
+                          <td></td>
+                        </tr>
+
                         <tr>
                           <td class="l">Profit</td>
                           <td><%= h(format_value_field_for_contracts(deliverable.profit_left(period))) %></td>
