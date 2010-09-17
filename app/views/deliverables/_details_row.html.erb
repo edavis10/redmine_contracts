@@ -62,7 +62,16 @@
                           <td class="overhead_budget_total"><%= h(format_value_field_for_contracts(deliverable.overhead_budget_total(period))) %></td>
                           <td> TODO: Release 2 / TODO hrs </td>
                         </tr>
-                        <%# TODO: Release 2, Fixed %>
+
+                        <% deliverable.fixed_budgets.each do |fixed_budget| %>
+                        <tr id="fixed_budget_<%= fixed_budget.id %>">
+                          <td class="l fixed_title"><%= h(fixed_budget.title) %></td>
+                          <td class="fixed_budget_spent">0</td>
+                          <td class="fixed_budget_total"><%= h(format_value_field_for_contracts(fixed_budget.budget)) %></td>
+                          <td></td>
+                        </tr>
+                        <% end %>
+
                         <%# TODO: Release 2, Markup %>
                         <tr>
                           <td class="l">Profit</td>
