@@ -122,6 +122,29 @@ class RetainerDeliverable < HourlyDeliverable
     end
   end
 
+  def fixed_budget_total(date=nil)
+    case scope_date_status(date)
+    when :in
+      fixed_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+    when :out
+      0
+    else
+      super
+    end
+  end
+
+  def fixed_markup_budget_total(date=nil)
+    case scope_date_status(date)
+    when :in
+      fixed_budgets.
+        all(:conditions => {:year => date.year, :month => date.month}).
+        inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
+    when :out
+      0
+    else
+      super
+    end
+  end
   def total_spent(date=nil)
     case scope_date_status(date)
     when :in
