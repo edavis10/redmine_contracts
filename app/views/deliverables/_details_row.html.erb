@@ -66,7 +66,7 @@
                         <% deliverable.fixed_budgets.by_period(period).each do |fixed_budget| %>
                         <% next if fixed_budget.blank_record? %>
                         <tr id="fixed_budget_<%= fixed_budget.id %>">
-                          <td class="l fixed_title"><%= h(fixed_budget.title) %></td>
+                          <td class="l fixed_title" title="<%= h(fixed_budget.description) %>"><%= h(fixed_budget.title) %></td>
                           <td class="fixed_budget_spent">0</td>
                           <td class="fixed_budget_total"><%= h(format_value_field_for_contracts(fixed_budget.budget)) %></td>
                           <td></td>
