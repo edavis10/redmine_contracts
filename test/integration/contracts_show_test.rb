@@ -210,6 +210,23 @@ class ContractsShowTest < ActionController::IntegrationTest
 
   end
 
+  should "show the total fixed budget for a Deliverable" do
+    @manager = User.generate!
+
+    @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
+
+    FixedBudget.generate!(:deliverable => @deliverable1, :budget => '$1,000', :markup => '$100')
+    FixedBudget.generate!(:deliverable => @deliverable1, :budget => '$2,000', :markup => '200%')
+
+    visit_contract_page(@contract)
+    assert_select "table#deliverables" do
+      assert_select "td.fixed", :text => /3,000/
+    end
+
+  end
+
+  should "QUESTION: show the total fixed budget spent for a Deliverable"
+  
   should "show the current period for a Retainer" do
     today_mock = Date.new(2010,2,15)
     Date.stubs(:today).returns(today_mock)
