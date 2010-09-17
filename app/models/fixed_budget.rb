@@ -15,6 +15,14 @@ class FixedBudget < ActiveRecord::Base
     end
   end
 
+  named_scope :by_period, lambda {|date|
+    if date
+      {
+        :conditions => {:year => date.year, :month => date.month}
+      }
+    end
+  }
+
   def markup_value
     return 0 if budget.blank? || markup.blank?
 
