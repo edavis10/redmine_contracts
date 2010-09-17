@@ -254,4 +254,38 @@ class ContractTest < ActiveSupport::TestCase
     end
 
   end
+
+  context "#fixed_budget" do
+    should "sum all fixed budget amounts on the Deliverables" do
+      contract = Contract.generate!
+      contract.deliverables << @deliverable_1 = FixedDeliverable.generate!
+      FixedBudget.generate!(:deliverable => @deliverable_1, :budget => '$1,000')
+      contract.deliverables << @deliverable_2 = HourlyDeliverable.generate!
+      FixedBudget.generate!(:deliverable => @deliverable_2, :budget => '$2,000')
+
+      assert_equal 3000, contract.fixed_budget
+    end
+  end
+
+  context "#fixed_spent" do
+    should "QUESTION: how to compute the amount spent"
+  end
+
+  context "#fixed_markup_budget" do
+    should "sum all fixed budget markup values on the Deliverables" do
+      contract = Contract.generate!
+      contract.deliverables << @deliverable_1 = FixedDeliverable.generate!
+      FixedBudget.generate!(:deliverable => @deliverable_1, :budget => '$1,000', :markup => '$100')
+      contract.deliverables << @deliverable_2 = HourlyDeliverable.generate!
+      FixedBudget.generate!(:deliverable => @deliverable_2, :budget => '$2,000', :markup => '200%')
+
+      assert_equal (100) + (2.00 * 2000), contract.fixed_markup_budget
+    end
+    
+  end
+
+  context "#fixed_markup_spent" do
+    should "QUESTION: how to compute the amount spent"
+  end
+
 end
