@@ -37,5 +37,11 @@ class FixedBudget < ActiveRecord::Base
   def straight_markup?
     markup && markup.match(/\$/)
   end
-  
+
+  # Is this a blank budget item. Retainers will create blank ones when
+  # they are copied. (RetainerDeliverable#create_budgets_for_periods)
+  def blank_record?
+    return true if new_record?
+    return title.blank? && budget.blank? && markup.blank?
+  end
 end

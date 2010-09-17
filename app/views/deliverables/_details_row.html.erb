@@ -64,6 +64,7 @@
                         </tr>
 
                         <% deliverable.fixed_budgets.each do |fixed_budget| %>
+                        <% next if fixed_budget.blank_record? %>
                         <tr id="fixed_budget_<%= fixed_budget.id %>">
                           <td class="l fixed_title"><%= h(fixed_budget.title) %></td>
                           <td class="fixed_budget_spent">0</td>
