@@ -27,11 +27,31 @@ Redmine::Plugin.register :redmine_contracts do
                }, :public => true)
   end
 
+  contract_list_submenu_items = Proc.new {|project|
+    if project && project.module_enabled?(:contracts)
+
+      project.contracts.inject([]) do |menu_items, contract|
+
+        menu_items << ::Redmine::MenuManager::MenuItem.new("contract-#{contract.id}",
+                                                           { :controller => 'contracts', :action => 'show', :id => contract.id, :project_id => project},
+                                                           # TODO: http://www.redmine.org/issues/6426
+                                                           # contract_path(project, contract),
+                                                           {
+                                                             :caption => contract.name, # h-escaped in Redmine
+                                                             :param => :project_id,
+                                                             :parent => :contracts
+                                                           })
+      end
+      
+    end
+  }
+  
   menu(:project_menu,
        :contracts,
        {:controller => 'contracts', :action => 'index'},
        :caption => :text_contracts,
-       :param => :project_id)
+       :param => :project_id,
+       :children => contract_list_submenu_items)
 
   menu(:project_menu,
        :new_contract,
