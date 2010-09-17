@@ -20,13 +20,14 @@ class HourlyDeliverableTest < ActiveSupport::TestCase
       assert_equal 0, d.total
     end
     
-    should "multiply the total number of labor budget hours by the contract billable rate" do
+    should "multiply the total number of labor budget hours by the contract billable rate and add the fixed budget and markup" do
       contract = Contract.generate!(:billable_rate => 100.0)
       d = HourlyDeliverable.generate!(:contract => contract)
       d.labor_budgets << LaborBudget.generate!(:hours => 10)
       d.overhead_budgets << OverheadBudget.generate!(:hours => 20)
+      d.fixed_budgets << FixedBudget.generate!(:budget => '$100', :markup => '50%') # $50 markup
 
-      assert_equal 100.0 * 10, d.total
+      assert_equal (100.0 * 10) + (100 + 50), d.total
     end
   end
 
@@ -86,9 +87,10 @@ class HourlyDeliverableTest < ActiveSupport::TestCase
       LaborBudget.generate!(:deliverable => @deliverable, :hours => 5, :budget => 250)
       LaborBudget.generate!(:deliverable => @deliverable, :hours => 5, :budget => 250)
       OverheadBudget.generate!(:deliverable => @deliverable, :hours => 3, :budget => 225)
+      FixedBudget.generate!(:deliverable => @deliverable, :budget => '$100', :markup => '50%') # $50 markup
 
-      assert_equal 1500, @deliverable.total
-      assert_equal 1500 - (225 + 250 + 250), @deliverable.profit_budget
+      assert_equal 1650, @deliverable.total # has the FixedBudget items added to the total also
+      assert_equal 1650 - (225 + 250 + 250 + 100 + 50), @deliverable.profit_budget
     end
   end
 

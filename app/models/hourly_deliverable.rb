@@ -14,12 +14,14 @@ class HourlyDeliverable < Deliverable
     'H'
   end
 
+  # Total = ( Labor Hours * Billing Rate ) + ( Fixed + Markup )
   def total(date=nil)
     return 0 if contract.nil?
     return 0 if contract.billable_rate.blank?
     return 0 if labor_budgets.count == 0 && overhead_budgets.count == 0
 
-    return contract.billable_rate * labor_budget_hours(date)
+    fixed_budget_amount = fixed_budget_total(date) + fixed_markup_budget_total(date)
+    return (contract.billable_rate * labor_budget_hours(date)) + fixed_budget_amount
   end
 
   # Total amount to be billed on the deliverable, using the total time logged
@@ -50,7 +52,7 @@ class HourlyDeliverable < Deliverable
   # The amount of profit that is budgeted for this deliverable
   # Profit = Total - ( Labor + Overhead + Fixed + Markup )
   def profit_budget(date=nil)
-    budgets = labor_budget_total(date) + overhead_budget_total(date)
+    budgets = labor_budget_total(date) + overhead_budget_total(date) + fixed_budget_total(date) + fixed_markup_budget_total(date)
     (total(date) || 0.0) - budgets
   end
 
