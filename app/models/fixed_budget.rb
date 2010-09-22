@@ -23,6 +23,8 @@ class FixedBudget < ActiveRecord::Base
     end
   }
 
+  named_scope :paid, {:conditions => {:paid => true}}
+
   def markup_value
     return 0 if budget.blank? || markup.blank?
 
@@ -36,6 +38,14 @@ class FixedBudget < ActiveRecord::Base
       0 # Invalid markup
     end
     
+  end
+
+  def budget_spent
+    if paid?
+      budget
+    else
+      0
+    end
   end
 
   def percent_markup?

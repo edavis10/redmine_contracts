@@ -104,7 +104,7 @@
               <td width="15%" class="manager"><%= h deliverable.manager.try(:name) %></td>
               <%= format_budget_for_deliverable(deliverable, deliverable.labor_budget_spent, deliverable.labor_budget_total, :class => 'labor') %>
               <%= format_budget_for_deliverable(deliverable, deliverable.overhead_spent, deliverable.overhead_budget_total, :class => 'overhead') %>
-              <%= format_budget_for_deliverable(deliverable, 0, deliverable.fixed_budget_total, :class => 'fixed') %>
+              <%= format_budget_for_deliverable(deliverable, deliverable.fixed_budget_total_spent, deliverable.fixed_budget_total, :class => 'fixed') %>
             <% end %>
 
             <tr id="deliverable_details_<%= h(deliverable.id) %>" class="ign">

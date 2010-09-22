@@ -225,14 +225,26 @@ class ContractsShowTest < ActionController::IntegrationTest
 
   end
 
-  should "QUESTION: show the total fixed budget spent for a Deliverable"
+  should "show the total fixed budget spent for a Deliverable" do
+    @manager = User.generate!
+
+    @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
+
+    FixedBudget.generate!(:deliverable => @deliverable1, :budget => '$1,000', :markup => '$100', :paid => true)
+    FixedBudget.generate!(:deliverable => @deliverable1, :budget => '$2,000', :markup => '200%')
+
+    visit_contract_page(@contract)
+    assert_select "table#deliverables" do
+      assert_select "td.fixed.spent-amount", :text => /1,000/
+    end
+  end
   
   should "show each fixed budget item in the details for the Deliverable" do
     @manager = User.generate!
 
     @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
 
-    @budget1 = FixedBudget.generate!(:deliverable => @deliverable1, :title => 'Item 1', :budget => '$1,000', :markup => '$100')
+    @budget1 = FixedBudget.generate!(:deliverable => @deliverable1, :title => 'Item 1', :budget => '$1,000', :markup => '$100', :paid => true)
     @budget2 = FixedBudget.generate!(:deliverable => @deliverable1, :title => 'Item 2', :budget => '$2,000', :markup => '200%')
 
     visit_contract_page(@contract)
@@ -240,7 +252,7 @@ class ContractsShowTest < ActionController::IntegrationTest
       assert_select "#deliverable_details_#{@deliverable1.id}" do
         assert_select "tr#fixed_budget_#{@budget1.id}" do
           assert_select 'td.fixed_title', :text => /#{@budget1.title}/
-          assert_select 'td.fixed_budget_spent', :text => '0'
+          assert_select 'td.fixed_budget_spent', :text => '1,000'
           assert_select 'td.fixed_budget_total', :text => '1,000'
         end
 
@@ -259,13 +271,13 @@ class ContractsShowTest < ActionController::IntegrationTest
 
     @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
 
-    @budget1 = FixedBudget.generate!(:deliverable => @deliverable1, :title => 'Item 1', :budget => '$1,000', :markup => '$100')
+    @budget1 = FixedBudget.generate!(:deliverable => @deliverable1, :title => 'Item 1', :budget => '$1,000', :markup => '$100', :paid => true)
     @budget2 = FixedBudget.generate!(:deliverable => @deliverable1, :title => 'Item 2', :budget => '$2,000', :markup => '200%')
 
     visit_contract_page(@contract)
     assert_select "table#deliverables" do
       assert_select "#deliverable_details_#{@deliverable1.id}" do
-        assert_select 'td.fixed_markup_budget_spent', :text => '0'
+        assert_select 'td.fixed_markup_budget_spent', :text => '100'
         assert_select 'td.fixed_markup_budget_total', :text => '4,100'
       end
     end

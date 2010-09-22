@@ -92,9 +92,18 @@ class Deliverable < ActiveRecord::Base
     fixed_budgets.sum(:budget)
   end
 
+  def fixed_budget_total_spent(date=nil)
+    fixed_budgets.paid.sum(:budget)
+  end
+
   # OPTIMIZE: N+1
   def fixed_markup_budget_total(date=nil)
     fixed_budgets.inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
+  end
+  
+  # OPTIMIZE: N+1
+  def fixed_markup_budget_total_spent(date=nil)
+    fixed_budgets.paid.inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
   end
   
   def filter_by_date(date=nil, &block)
