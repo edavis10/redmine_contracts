@@ -72,3 +72,4 @@ en:
   text_flash_deliverable_destroyed: "Deliverable: {{name}} was successfully destroyed."
   field_budget: Budget
   field_markup: Markup
+  field_paid: Paid

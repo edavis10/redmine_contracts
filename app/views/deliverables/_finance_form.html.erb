@@ -85,6 +85,12 @@
         </p>
         <%= fixed_budget.text_field(:markup) %>
 
+        <p class="inline-hints">
+          <%= fixed_budget.label(:paid, l(:field_paid), :style => 'display: none;') %><%# Hidden label :| %>
+          <%= l(:field_paid) %>
+        </p>
+        <%= fixed_budget.check_box(:paid) %>
+
         <p class="inline-hints" style="display:none;"><%= fixed_budget.label(:description, l(:field_description), :for => "fixed-description#{fixed_budget.object.object_id}")%></p>
         <%= fixed_budget.text_area(:description, :class => 'wiki-edit', :rows => '5', :id => "fixed-description#{fixed_budget.object.object_id}") %>
         <%= wikitoolbar_for "fixed-description#{fixed_budget.object.object_id}" %>
