@@ -50,12 +50,15 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     click_link 'Add New'
     assert_response :success
 
-    fill_in "Title", :with => 'A New Deliverable'
-    select "Fixed", :from => "Type"
-    select @manager.name, :from => "Manager"
-    fill_in "Start", :with => '2010-01-01'
-    fill_in "End Date", :with => '2010-12-31'
-    fill_in "Notes", :with => 'Some notes on the deliverable'
+    within("#deliverable-details") do
+      fill_in "Title", :with => 'A New Deliverable'
+      select "Fixed", :from => "Type"
+      select @manager.name, :from => "Manager"
+      fill_in "Start", :with => '2010-01-01'
+      fill_in "End Date", :with => '2010-12-31'
+      fill_in "Notes", :with => 'Some notes on the deliverable'
+    end
+    
     fill_in "Total", :with => '1,000.00'
     # TODO: webrat can't trigger DOM events so it can't appear
     # assert js("jQuery('#deliverable_total').is(':visible')"), "Total is hidden when it should be visible"
@@ -84,12 +87,14 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     click_link 'Add New'
     assert_response :success
 
-    fill_in "Title", :with => 'A New Deliverable'
-    select "Hourly", :from => "Type"
-    select @manager.name, :from => "Manager"
-    fill_in "Start", :with => '2010-01-01'
-    fill_in "End Date", :with => '2010-12-31'
-    fill_in "Notes", :with => 'Some notes on the deliverable'
+    within("#deliverable-details") do
+      fill_in "Title", :with => 'A New Deliverable'
+      select "Hourly", :from => "Type"
+      select @manager.name, :from => "Manager"
+      fill_in "Start", :with => '2010-01-01'
+      fill_in "End Date", :with => '2010-12-31'
+      fill_in "Notes", :with => 'Some notes on the deliverable'
+    end
     fill_in "Total", :with => '1,000.00'
 
     # # Hide and clear the total
@@ -120,13 +125,15 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     click_link 'Add New'
     assert_response :success
 
-    fill_in "Title", :with => 'A New Deliverable'
-    select "Retainer", :from => "Type"
-    select @manager.name, :from => "Manager"
-    fill_in "Start", :with => '2010-01-01'
-    fill_in "End Date", :with => '2010-12-31'
-    fill_in "Notes", :with => 'Some notes on the deliverable'
-
+    within("#deliverable-details") do
+      fill_in "Title", :with => 'A New Deliverable'
+      select "Retainer", :from => "Type"
+      select @manager.name, :from => "Manager"
+      fill_in "Start", :with => '2010-01-01'
+      fill_in "End Date", :with => '2010-12-31'
+      fill_in "Notes", :with => 'Some notes on the deliverable'
+    end
+    
     within("#deliverable-labor") do
       fill_in "hrs", :with => '20'
       fill_in "$", :with => '$2,000'
@@ -193,12 +200,14 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     click_link 'Add New'
     assert_response :success
 
-    fill_in "Title", :with => 'A New Deliverable'
-    select "Hourly", :from => "Type"
-    select @manager.name, :from => "Manager"
-    fill_in "Start", :with => '2010-01-01'
-    fill_in "End Date", :with => '2010-12-31'
-    fill_in "Notes", :with => 'Some notes on the deliverable'
+    within("#deliverable-details") do
+      fill_in "Title", :with => 'A New Deliverable'
+      select "Hourly", :from => "Type"
+      select @manager.name, :from => "Manager"
+      fill_in "Start", :with => '2010-01-01'
+      fill_in "End Date", :with => '2010-12-31'
+      fill_in "Notes", :with => 'Some notes on the deliverable'
+    end
 
     within("#deliverable-labor") do
       fill_in "hrs", :with => '20'
@@ -210,6 +219,13 @@ class DeliverablesNewTest < ActionController::IntegrationTest
       fill_in "$", :with => '$1,000'
     end
 
+    within("#deliverable-fixed") do
+      fill_in "title", :with => 'Flight to NYC'
+      fill_in "budget", :with => '$600'
+      fill_in "markup", :with => '50%'
+      fill_in "description", :with => 'Need to fly to NYC for the week'
+    end
+    
     click_button "Save"
 
     assert_response :success
@@ -226,6 +242,14 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     @overhead_budget = @deliverable.overhead_budgets.first
     assert_equal 10, @overhead_budget.hours
     assert_equal 1000.0, @overhead_budget.budget
+
+    assert_equal 1, @deliverable.fixed_budgets.count
+    @fixed_budget = @deliverable.fixed_budgets.first
+    assert_equal "Flight to NYC", @fixed_budget.title
+    assert_equal 600, @fixed_budget.budget
+    assert_equal "50%", @fixed_budget.markup
+    assert_equal 300, @fixed_budget.markup_value # 600 * 50%
+    
   end
 
 end

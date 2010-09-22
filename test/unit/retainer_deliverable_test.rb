@@ -476,4 +476,152 @@ class RetainerDeliverableTest < ActiveSupport::TestCase
     end
 
   end
+
+  context "#fixed_budget_total" do
+    setup do
+      @contract = Contract.generate!(:billable_rate => 100)
+      @deliverable = RetainerDeliverable.generate!(:start_date => '2010-01-01', :end_date => '2010-03-31', :contract => @contract)
+      @deliverable.fixed_budgets << FixedBudget.spawn(:budget => 1000)
+      @deliverable.fixed_budgets << FixedBudget.spawn(:budget => 2000)
+      @deliverable.save!
+
+      assert_equal 3000 * 3, @deliverable.fixed_budget_total
+    end
+    
+    context "with a empty period" do
+      should "use all periods" do
+        assert_equal 9000, @deliverable.fixed_budget_total(nil)
+      end
+    end
+
+    context "with a period out of the retainer range" do
+      should "filter the records" do
+        assert_equal 0, @deliverable.fixed_budget_total(Date.new(2011,1,1))
+      end
+    end
+
+    context "with an invalid period" do
+      should "return 0" do
+        assert_equal 0, @deliverable.fixed_budget_total('1')
+      end
+    end
+
+    context "with a period in the retainer range" do
+      should "filter the records" do
+        assert_equal 3000, @deliverable.fixed_budget_total(Date.new(2010,2,1))
+      end
+    end
+
+  end
+
+  context "#fixed_budget_total_spent" do
+    setup do
+      @contract = Contract.generate!(:billable_rate => 100)
+      @deliverable = RetainerDeliverable.generate!(:start_date => '2010-01-01', :end_date => '2010-03-31', :contract => @contract)
+      @deliverable.fixed_budgets << FixedBudget.spawn(:budget => 1000, :paid => true)
+      @deliverable.fixed_budgets << FixedBudget.spawn(:budget => 2000)
+      @deliverable.save!
+
+      assert_equal 1000 * 3, @deliverable.fixed_budget_total_spent
+    end
+    
+    context "with a empty period" do
+      should "use all periods" do
+        assert_equal 3000, @deliverable.fixed_budget_total_spent(nil)
+      end
+    end
+
+    context "with a period out of the retainer range" do
+      should "filter the records" do
+        assert_equal 0, @deliverable.fixed_budget_total_spent(Date.new(2011,1,1))
+      end
+    end
+
+    context "with an invalid period" do
+      should "return 0" do
+        assert_equal 0, @deliverable.fixed_budget_total_spent('1')
+      end
+    end
+
+    context "with a period in the retainer range" do
+      should "filter the records" do
+        assert_equal 1000, @deliverable.fixed_budget_total_spent(Date.new(2010,2,1))
+      end
+    end
+
+  end
+
+  context "#fixed_markup_budget_total" do
+    setup do
+      @contract = Contract.generate!(:billable_rate => 100)
+      @deliverable = RetainerDeliverable.generate!(:start_date => '2010-01-01', :end_date => '2010-03-31', :contract => @contract)
+      @deliverable.fixed_budgets << FixedBudget.spawn(:budget => 1000, :markup => '50%')
+      @deliverable.fixed_budgets << FixedBudget.spawn(:budget => 2000, :markup => '$1000')
+      @deliverable.save!
+
+      assert_equal (500 + 1000) * 3, @deliverable.fixed_markup_budget_total
+    end
+    
+    context "with a empty period" do
+      should "use all periods" do
+        assert_equal 4500, @deliverable.fixed_markup_budget_total(nil)
+      end
+    end
+
+    context "with a period out of the retainer range" do
+      should "filter the records" do
+        assert_equal 0, @deliverable.fixed_markup_budget_total(Date.new(2011,1,1))
+      end
+    end
+
+    context "with an invalid period" do
+      should "return 0" do
+        assert_equal 0, @deliverable.fixed_markup_budget_total('1')
+      end
+    end
+
+    context "with a period in the retainer range" do
+      should "filter the records" do
+        assert_equal 1500, @deliverable.fixed_markup_budget_total(Date.new(2010,2,1))
+      end
+    end
+
+  end
+
+  context "#fixed_markup_budget_total_spent" do
+    setup do
+      @contract = Contract.generate!(:billable_rate => 100)
+      @deliverable = RetainerDeliverable.generate!(:start_date => '2010-01-01', :end_date => '2010-03-31', :contract => @contract)
+      @deliverable.fixed_budgets << FixedBudget.spawn(:budget => 1000, :markup => '50%', :paid => true)
+      @deliverable.fixed_budgets << FixedBudget.spawn(:budget => 2000, :markup => '$1000')
+      @deliverable.save!
+
+      assert_equal (500) * 3, @deliverable.fixed_markup_budget_total_spent
+    end
+    
+    context "with a empty period" do
+      should "use all periods" do
+        assert_equal 1500, @deliverable.fixed_markup_budget_total_spent(nil)
+      end
+    end
+
+    context "with a period out of the retainer range" do
+      should "filter the records" do
+        assert_equal 0, @deliverable.fixed_markup_budget_total_spent(Date.new(2011,1,1))
+      end
+    end
+
+    context "with an invalid period" do
+      should "return 0" do
+        assert_equal 0, @deliverable.fixed_markup_budget_total_spent('1')
+      end
+    end
+
+    context "with a period in the retainer range" do
+      should "filter the records" do
+        assert_equal 500, @deliverable.fixed_markup_budget_total_spent(Date.new(2010,2,1))
+      end
+    end
+
+  end
 end

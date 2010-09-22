@@ -94,6 +94,12 @@ class RetainerDeliverable < HourlyDeliverable
     budgets
   end
 
+  def fixed_budgets_for_date(date)
+    budgets = fixed_budgets.all(:conditions => {:year => date.year, :month => date.month})
+    budgets = [fixed_budgets.build(:year => date.year, :month => date.month)] if budgets.empty?
+    budgets
+  end
+
   def labor_budget_total(date=nil)
     case scope_date_status(date)
     when :in
@@ -120,6 +126,55 @@ class RetainerDeliverable < HourlyDeliverable
     case scope_date_status(date)
     when :in
       labor_budgets.sum(:hours, :conditions => {:year => date.year, :month => date.month})
+    when :out
+      0
+    else
+      super
+    end
+  end
+
+  def fixed_budget_total(date=nil)
+    case scope_date_status(date)
+    when :in
+      fixed_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+    when :out
+      0
+    else
+      super
+    end
+  end
+
+  def fixed_budget_total_spent(date=nil)
+    case scope_date_status(date)
+    when :in
+      fixed_budgets.paid.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+    when :out
+      0
+    else
+      super
+    end
+  end
+
+  def fixed_markup_budget_total(date=nil)
+    case scope_date_status(date)
+    when :in
+      fixed_budgets.
+        all(:conditions => {:year => date.year, :month => date.month}).
+        inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
+    when :out
+      0
+    else
+      super
+    end
+  end
+
+  def fixed_markup_budget_total_spent(date=nil)
+    case scope_date_status(date)
+    when :in
+      fixed_budgets.
+        paid.
+        all(:conditions => {:year => date.year, :month => date.month}).
+        inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
     when :out
       0
     else
@@ -231,10 +286,16 @@ class RetainerDeliverable < HourlyDeliverable
       undated_overhead_budgets.each do |template_budget|
         overhead_budgets.create(template_budget.attributes.merge(:year => month.year, :month => month.month))
       end
+
+      undated_fixed_budgets = fixed_budgets.all(:conditions => ["#{FixedBudget.table_name}.year IS NULL AND #{FixedBudget.table_name}.month IS NULL"])
+      undated_fixed_budgets.each do |template_budget|
+        fixed_budgets.create(template_budget.attributes.merge(:year => month.year, :month => month.month))
+      end
     end
     # Destroy origional un-dated budgets
     labor_budgets.all(:conditions => ["#{LaborBudget.table_name}.year IS NULL AND #{LaborBudget.table_name}.month IS NULL"]).collect(&:destroy)
     overhead_budgets.all(:conditions => ["#{OverheadBudget.table_name}.year IS NULL AND #{OverheadBudget.table_name}.month IS NULL"]).collect(&:destroy)
+    fixed_budgets.all(:conditions => ["#{FixedBudget.table_name}.year IS NULL AND #{FixedBudget.table_name}.month IS NULL"]).collect(&:destroy)
   end
 
   def check_for_extended_period
@@ -281,6 +342,17 @@ class RetainerDeliverable < HourlyDeliverable
       end
     end
 
+    fixed_budgets.all.each do |fixed_budget|
+      # Purge un-dated budgets, should not be saved at all
+      fixed_budget.destroy unless fixed_budget.year.present?
+      fixed_budget.destroy unless fixed_budget.month.present?
+
+      # Purge budgets outside the new beginning/ending range
+      unless (beginning_date..ending_date).to_a.include?(Date.new(fixed_budget.year, fixed_budget.month, 1))
+        fixed_budget.destroy
+      end
+    end
+
     true
   end
 
@@ -290,9 +362,10 @@ class RetainerDeliverable < HourlyDeliverable
     old_end_date = end_date_change[0]
     last_labor_budgets = labor_budgets.all(:conditions => {:year => old_end_date.year, :month => old_end_date.month})
     last_overhead_budgets = overhead_budgets.all(:conditions => {:year => old_end_date.year, :month => old_end_date.month})
-
+    last_fixed_budgets = fixed_budgets.all(:conditions => {:year => old_end_date.year, :month => old_end_date.month})
+    
     months_after_date(old_end_date.end_of_month.to_date).each do |new_period|
-      create_budgets_for_new_period(new_period, last_labor_budgets, last_overhead_budgets)
+      create_budgets_for_new_period(new_period, last_labor_budgets, last_overhead_budgets, last_fixed_budgets)
     end
   end
 
@@ -302,20 +375,25 @@ class RetainerDeliverable < HourlyDeliverable
     old_start_date = start_date_change[0]
     first_labor_budgets = labor_budgets.all(:conditions => {:year => old_start_date.year, :month => old_start_date.month})
     first_overhead_budgets = overhead_budgets.all(:conditions => {:year => old_start_date.year, :month => old_start_date.month})
+    first_fixed_budgets = fixed_budgets.all(:conditions => {:year => old_start_date.year, :month => old_start_date.month})
     
     months_before_date(old_start_date.beginning_of_month.to_date).each do |new_period|
-      create_budgets_for_new_period(new_period, first_labor_budgets, first_overhead_budgets)
+      create_budgets_for_new_period(new_period, first_labor_budgets, first_overhead_budgets, first_fixed_budgets)
     end
 
   end
 
-  def create_budgets_for_new_period(new_period, labor_budgets_to_copy, overhead_budgets_to_copy)
+  def create_budgets_for_new_period(new_period, labor_budgets_to_copy, overhead_budgets_to_copy, fixed_budgets_to_copy)
     labor_budgets_to_copy.each do |labor_budget_to_copy|
       create_new_labor_budget_based_on_existing_budget(labor_budget_to_copy, 'year' => new_period.year, 'month' => new_period.month)
     end
 
     overhead_budgets_to_copy.each do |overhead_budget_to_copy|
       create_new_overhead_budget_based_on_existing_budget(overhead_budget_to_copy, 'year' => new_period.year, 'month' => new_period.month)
+    end
+
+    fixed_budgets_to_copy.each do |fixed_budget_to_copy|
+      create_new_fixed_budget_based_on_existing_budget(fixed_budget_to_copy, 'year' => new_period.year, 'month' => new_period.month)
     end
   end
   
@@ -325,6 +403,10 @@ class RetainerDeliverable < HourlyDeliverable
 
   def create_new_overhead_budget_based_on_existing_budget(existing_overhead_budget, attributes={})
     overhead_budgets.create(existing_overhead_budget.attributes.except('id').merge(attributes))
+  end
+
+  def create_new_fixed_budget_based_on_existing_budget(existing_fixed_budget, attributes={})
+    fixed_budgets.create(existing_fixed_budget.attributes.except('id').merge(attributes))
   end
 
   def scope_date_status(date)

@@ -62,8 +62,24 @@
                           <td class="overhead_budget_total"><%= h(format_value_field_for_contracts(deliverable.overhead_budget_total(validated_period))) %></td>
                           <td> TODO: Release 2 / TODO hrs </td>
                         </tr>
-                        <%# TODO: Release 2, Fixed %>
-                        <%# TODO: Release 2, Markup %>
+
+                        <% deliverable.fixed_budgets.by_period(period).each do |fixed_budget| %>
+                        <% next if fixed_budget.blank_record? %>
+                        <tr id="fixed_budget_<%= fixed_budget.id %>">
+                          <td class="l fixed_title" title="<%= h(fixed_budget.description) %>"><%= h(fixed_budget.title) %></td>
+                          <td class="fixed_budget_spent"><%= h(format_value_field_for_contracts(fixed_budget.budget_spent)) %></td>
+                          <td class="fixed_budget_total"><%= h(format_value_field_for_contracts(fixed_budget.budget)) %></td>
+                          <td></td>
+                        </tr>
+                        <% end %>
+
+                        <tr>
+                          <td class="l"><%= l(:field_markup) %></td>
+                          <td class="fixed_markup_budget_spent"><%= h(format_value_field_for_contracts(deliverable.fixed_markup_budget_total_spent(period))) %></td>
+                          <td class="fixed_markup_budget_total"><%= h(format_value_field_for_contracts(deliverable.fixed_markup_budget_total(period))) %></td>
+                          <td></td>
+                        </tr>
+
                         <tr>
                           <td class="l">Profit</td>
                           <td><%= h(format_value_field_for_contracts(deliverable.profit_left(validated_period))) %></td>

@@ -44,7 +44,7 @@
         <%= show_budget_field(resource, :labor_spent, :labor_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-labor'}, :label_html_options => {:width => '46%'}) %>
         <%= show_budget_field(resource, :overhead_spent, :overhead_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-overhead'}) %>
         <%= show_budget_field(resource, :fixed_spent, :fixed_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-fixed'}) %>
-        <%= show_budget_field(resource, :markup_spent, :markup_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-markup'}) %>
+        <%= show_budget_field(resource, :fixed_markup_spent, :fixed_markup_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-markup'}) %>
         <%= show_budget_field(resource, :profit_spent, :profit_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-profit'}) %>
         <%= show_budget_field(resource, :discount_spent, :discount_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-discount'}) %>
 
@@ -104,7 +104,7 @@
               <td width="15%" class="manager"><%= h deliverable.manager.try(:name) %></td>
               <%= format_budget_for_deliverable(deliverable, deliverable.labor_budget_spent, deliverable.labor_budget_total, :class => 'labor') %>
               <%= format_budget_for_deliverable(deliverable, deliverable.overhead_spent, deliverable.overhead_budget_total, :class => 'overhead') %>
-              <%= format_budget_for_deliverable(deliverable, 0, 0) %><%# TODO: Release 2, Fixed Budgets %>
+              <%= format_budget_for_deliverable(deliverable, deliverable.fixed_budget_total_spent, deliverable.fixed_budget_total, :class => 'fixed') %>
             <% end %>
 
             <tr id="deliverable_details_<%= h(deliverable.id) %>" class="ign">

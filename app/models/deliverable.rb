@@ -8,10 +8,12 @@ class Deliverable < ActiveRecord::Base
   belongs_to :manager, :class_name => 'User', :foreign_key => 'manager_id'
   has_many :labor_budgets
   has_many :overhead_budgets
+  has_many :fixed_budgets
   has_many :issues
 
   accepts_nested_attributes_for :labor_budgets
   accepts_nested_attributes_for :overhead_budgets
+  accepts_nested_attributes_for :fixed_budgets
   
   # Validations
   validates_presence_of :title
@@ -86,6 +88,24 @@ class Deliverable < ActiveRecord::Base
     issues.inject(0) {|total, issue| total += issue.spent_hours }
   end
 
+  def fixed_budget_total(date=nil)
+    fixed_budgets.sum(:budget)
+  end
+
+  def fixed_budget_total_spent(date=nil)
+    fixed_budgets.paid.sum(:budget)
+  end
+
+  # OPTIMIZE: N+1
+  def fixed_markup_budget_total(date=nil)
+    fixed_budgets.inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
+  end
+  
+  # OPTIMIZE: N+1
+  def fixed_markup_budget_total_spent(date=nil)
+    fixed_budgets.paid.inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
+  end
+  
   def filter_by_date(date=nil, &block)
     block.call
   end

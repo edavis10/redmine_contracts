@@ -13,8 +13,9 @@ class FixedDeliverableTest < ActiveSupport::TestCase
       LaborBudget.generate!(:deliverable => deliverable, :budget => 200)
       LaborBudget.generate!(:deliverable => deliverable, :budget => 200)
       OverheadBudget.generate!(:deliverable => deliverable, :budget => 200)
+      FixedBudget.generate!(:deliverable => deliverable, :budget => '$100', :markup => '50%') # $50 markup
 
-      assert_equal 400, deliverable.profit_budget
+      assert_equal 400 - 150, deliverable.profit_budget
     end
 
     should "be 0 if there is no total" do

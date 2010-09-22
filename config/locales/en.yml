@@ -40,8 +40,8 @@ en:
   field_fixed_spent: "Fixed"
   field_labor_budget: "Labor"
   field_labor_spent: "Labor"
-  field_markup_budget: "Markup"
-  field_markup_spent: "Markup"
+  field_fixed_markup_budget: "Markup"
+  field_fixed_markup_spent: "Markup"
   field_overhead_budget: "Overhead"
   field_overhead_spent: "Overhead"
   field_profit_budget: "Profit"
@@ -70,4 +70,6 @@ en:
   text_flash_deliverable_created: "Deliverable: {{name}} was successfully created."
   text_flash_deliverable_updated: "Deliverable: {{name}} was successfully updated."
   text_flash_deliverable_destroyed: "Deliverable: {{name}} was successfully destroyed."
-
+  field_budget: Budget
+  field_markup: Markup
+  field_paid: Paid

@@ -27,10 +27,11 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_select "select#fixed_deliverable_type", :count => 0 # Not editable
     assert js("jQuery('#fixed_deliverable_total_input').is(':visible')"), "Total is hidden when it should be visible"
 
-
-    fill_in "Title", :with => 'An updated title'
-    check "Feature Sign Off"
-    check "Warranty Sign Off"
+    within("#deliverable-details") do
+      fill_in "Title", :with => 'An updated title'
+      check "Feature Sign Off"
+      check "Warranty Sign Off"
+    end
     click_button "Save"
 
     assert_response :success
@@ -56,9 +57,11 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_select "select#hourly_deliverable_type", :count => 0 # Not editable
     assert js("jQuery('#hourly_deliverable_total_input').is(':hidden')"), "Total is visible when it should be hidden"
     
-    fill_in "Title", :with => 'An updated title'
-    check "Feature Sign Off"
-    check "Warranty Sign Off"
+    within("#deliverable-details") do
+      fill_in "Title", :with => 'An updated title'
+      check "Feature Sign Off"
+      check "Warranty Sign Off"
+    end
 
     within("#deliverable-labor") do
       fill_in "hrs", :with => '20'
@@ -95,6 +98,8 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     @retainer_deliverable = RetainerDeliverable.spawn(:contract => @contract, :manager => @manager, :title => "Retainer")
     @retainer_deliverable.labor_budgets << @labor_budget = LaborBudget.spawn(:deliverable => @retainer_deliverable, :budget => 1000, :hours => 10)
     @retainer_deliverable.overhead_budgets << @overhead_budget = OverheadBudget.spawn(:deliverable => @retainer_deliverable, :budget => 1000, :hours => 10)
+    @retainer_deliverable.fixed_budgets << @fixed_budget = FixedBudget.spawn(:deliverable => @retainer_deliverable, :title => 'Printing supplies', :budget => 100, :markup => 0)
+    
     @retainer_deliverable.start_date = '2010-01-01'
     @retainer_deliverable.end_date = '2010-12-31'
     @retainer_deliverable.save!
@@ -116,6 +121,13 @@ class DeliverablesEditTest < ActionController::IntegrationTest
       within "#deliverable-overhead" do
         fill_in "hrs", :with => '100'
         fill_in "$", :with => '100'
+      end
+
+      within "#deliverable-fixed" do
+        fill_in "title", :with => 'Flight to NYC'
+        fill_in "budget", :with => '$600'
+        fill_in "markup", :with => '50%'
+        fill_in "description", :with => 'Need to fly to NYC for the week'
       end
     end
 
@@ -157,6 +169,24 @@ class DeliverablesEditTest < ActionController::IntegrationTest
       end
     end
 
+    @fixed_budgets = @retainer_deliverable.reload.fixed_budgets
+    assert_equal 12, @fixed_budgets.length
+    @fixed_budgets.each do |fixed_budget|
+      if fixed_budget.year == 2010 && fixed_budget.month == 1
+
+        # Specific month's budget updated?
+        assert_equal 600, fixed_budget.budget
+        assert_equal '50%', fixed_budget.markup
+        assert_equal 300, fixed_budget.markup_value
+
+      else
+
+        assert_equal 100, fixed_budget.budget
+        assert_equal '0', fixed_budget.markup
+
+      end
+    end
+
   end
 
   should "allow extending a Retainer's start and end months" do
@@ -175,6 +205,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     @retainer_deliverable.labor_budgets << @labor_budget = LaborBudget.spawn(:deliverable => @retainer_deliverable, :budget => labor_budget_amount_2, :hours => labor_budget_hours_2)
     @retainer_deliverable.overhead_budgets << @overhead_budget = OverheadBudget.spawn(:deliverable => @retainer_deliverable, :budget => overhead_budget_amount_1, :hours => overhead_budget_hours_1)
     @retainer_deliverable.overhead_budgets << @overhead_budget = OverheadBudget.spawn(:deliverable => @retainer_deliverable, :budget => overhead_budget_amount_2, :hours => overhead_budget_hours_2)
+    @retainer_deliverable.fixed_budgets << @fixed_budget = FixedBudget.spawn(:deliverable => @retainer_deliverable, :title => 'Printing supplies', :budget => 100, :markup => 0)
     @retainer_deliverable.start_date = '2010-01-01'
     @retainer_deliverable.end_date = '2010-12-31'
     @retainer_deliverable.save!
@@ -256,6 +287,17 @@ class DeliverablesEditTest < ActionController::IntegrationTest
       assert [overhead_budget_amount_1, overhead_budget_amount_2].include?(overhead_budget.budget), "Extended overhead budget dollars not matching template budget"
     end
 
+    @fixed_budgets = @retainer_deliverable.reload.fixed_budgets
+    assert_equal 36, @fixed_budgets.length # 36 months * 1 record
+    
+    @fixed_budgets_for_2009 = @fixed_budgets.select {|l| l.year == 2009 }
+    @fixed_budgets_for_2010 = @fixed_budgets.select {|l| l.year == 2010 }
+    @fixed_budgets_for_2011 = @fixed_budgets.select {|l| l.year == 2011 }
+
+    assert_equal 12, @fixed_budgets_for_2009.length
+    assert_equal 12, @fixed_budgets_for_2010.length
+    assert_equal 12, @fixed_budgets_for_2011.length
+
   end
 
   should "allow shrinking a Retainer's start and end months" do
@@ -264,6 +306,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     @retainer_deliverable.labor_budgets << @labor_budget = LaborBudget.spawn(:deliverable => @retainer_deliverable, :budget => 2000, :hours => 20)
     @retainer_deliverable.overhead_budgets << @overhead_budget = OverheadBudget.spawn(:deliverable => @retainer_deliverable, :budget => 1000, :hours => 10)
     @retainer_deliverable.overhead_budgets << @overhead_budget = OverheadBudget.spawn(:deliverable => @retainer_deliverable, :budget => 2000, :hours => 20)
+    @retainer_deliverable.fixed_budgets << @fixed_budget = FixedBudget.spawn(:deliverable => @retainer_deliverable, :title => 'Printing supplies', :budget => 100, :markup => 0)
     @retainer_deliverable.start_date = '2010-01-01'
     @retainer_deliverable.end_date = '2010-12-31'
     @retainer_deliverable.save!
@@ -292,6 +335,9 @@ class DeliverablesEditTest < ActionController::IntegrationTest
 
     @overhead_budgets = @retainer_deliverable.reload.overhead_budgets
     assert_equal 12, @overhead_budgets.length # 6 months * 2 records
+
+    @fixed_budgets = @retainer_deliverable.reload.fixed_budgets
+    assert_equal 6, @fixed_budgets.length # 6 months * 1 records
 
   end
 
@@ -346,7 +392,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_response :success
     assert_template 'deliverables/edit'
 
-    # Should show 6 inputs:
+    # Should show inputs:
     # * labor hidden year
     # * labor hidden month
     # * labor hours
@@ -355,9 +401,17 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     # * overhead hidden month
     # * overhead hours
     # * overhead amount
+    # * fixed hidden year
+    # * fixed hidden month
+    # * fixed title
+    # * fixed budget
+    # * fixed markup
+    # * fixed paid checkbox
+    # * fixed paid hidden field
     # * total (hidden)
     assert_select ".date-2010-01" do
-      assert_select "input", :count => 9
+      assert_select "input", :count => 16
+      assert_select "textarea.wiki-edit", :count => 1 # Fixed description
     end
 
 
@@ -371,6 +425,14 @@ class DeliverablesEditTest < ActionController::IntegrationTest
         fill_in "hrs", :with => '100'
         fill_in "$", :with => '100'
       end
+
+      within "#deliverable-fixed" do
+        fill_in "title", :with => 'Flight to NYC'
+        fill_in "budget", :with => '$600'
+        fill_in "markup", :with => '50%'
+        fill_in "description", :with => 'Need to fly to NYC for the week'
+      end
+
     end
 
     click_button "Save"
@@ -386,5 +448,8 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_equal 3, @retainer_deliverable.overhead_budgets.count
     assert_equal [100, nil, nil], @retainer_deliverable.overhead_budgets.collect(&:hours)
     assert_equal [100, nil, nil], @retainer_deliverable.overhead_budgets.collect(&:budget)
+
+    assert_equal 3, @retainer_deliverable.fixed_budgets.count
+    assert_equal [600, nil, nil], @retainer_deliverable.fixed_budgets.collect(&:budget)
   end
 end

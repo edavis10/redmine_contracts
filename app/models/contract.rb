@@ -36,8 +36,6 @@ class Contract < ActiveRecord::Base
   named_scope :by_name, {:order => "#{Contract.table_name}.name ASC"}
   
   [:status, :contract_type,
-   :fixed_spent, :fixed_budget,
-   :markup_spent, :markup_budget,
    :discount_spent, :discount_budget
   ].each do |mthd|
     define_method(mthd) { "TODO in later release" }
@@ -96,6 +94,26 @@ class Contract < ActiveRecord::Base
   end
   alias_method :profit_spent, :profit_left
 
+  # OPTIMIZE: N+1
+  def fixed_budget
+    deliverables.inject(0) {|total, deliverable| total += deliverable.fixed_budget_total }
+  end
+
+  # OPTIMIZE: N+1
+  def fixed_spent
+    deliverables.inject(0) {|total, deliverable| total += deliverable.fixed_budget_total_spent }
+  end
+
+  # OPTIMIZE: N+1
+  def fixed_markup_budget
+    deliverables.inject(0) {|total, deliverable| total += deliverable.fixed_markup_budget_total }
+  end
+  
+  # OPTIMIZE: N+1
+  def fixed_markup_spent
+    deliverables.inject(0) {|total, deliverable| total += deliverable.fixed_markup_budget_total_spent }
+  end
+  
   def after_initialize
     self.executed = false unless self.executed.present?
   end

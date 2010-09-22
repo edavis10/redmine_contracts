@@ -247,11 +247,62 @@ class ContractTest < ActiveSupport::TestCase
       TimeEntry.generate!(:hours => 4, :issue => @issue2, :project => @project,
                           :activity => @non_billable_activity,
                           :user => @manager)
+      @deliverable_2.fixed_budgets << FixedBudget.spawn(:budget => 200, :markup => '$100', :paid => true)
 
       assert_equal 875, @deliverable_1.profit_left
-      assert_equal 1125, @deliverable_2.profit_left
-      assert_equal 2000, contract.profit_left
+      assert_equal 825, @deliverable_2.profit_left
+      assert_equal 1700, contract.profit_left
     end
 
   end
+
+  context "#fixed_budget" do
+    should "sum all fixed budget amounts on the Deliverables" do
+      contract = Contract.generate!
+      contract.deliverables << @deliverable_1 = FixedDeliverable.generate!
+      FixedBudget.generate!(:deliverable => @deliverable_1, :budget => '$1,000')
+      contract.deliverables << @deliverable_2 = HourlyDeliverable.generate!
+      FixedBudget.generate!(:deliverable => @deliverable_2, :budget => '$2,000')
+
+      assert_equal 3000, contract.fixed_budget
+    end
+  end
+
+  context "#fixed_spent" do
+    should "sum all fixed budget amounts on the Deliverables which are paid" do
+      contract = Contract.generate!
+      contract.deliverables << @deliverable_1 = FixedDeliverable.generate!
+      FixedBudget.generate!(:deliverable => @deliverable_1, :budget => '$1,000', :paid => true)
+      contract.deliverables << @deliverable_2 = HourlyDeliverable.generate!
+      FixedBudget.generate!(:deliverable => @deliverable_2, :budget => '$2,000')
+
+      assert_equal 1000, contract.fixed_spent
+    end
+  end
+
+  context "#fixed_markup_budget" do
+    should "sum all fixed budget markup values on the Deliverables" do
+      contract = Contract.generate!
+      contract.deliverables << @deliverable_1 = FixedDeliverable.generate!
+      FixedBudget.generate!(:deliverable => @deliverable_1, :budget => '$1,000', :markup => '$100')
+      contract.deliverables << @deliverable_2 = HourlyDeliverable.generate!
+      FixedBudget.generate!(:deliverable => @deliverable_2, :budget => '$2,000', :markup => '200%')
+
+      assert_equal (100) + (2.00 * 2000), contract.fixed_markup_budget
+    end
+    
+  end
+
+  context "#fixed_markup_spent" do
+    should "sum all fixed budget markup values on the Deliverables which are paid" do
+      contract = Contract.generate!
+      contract.deliverables << @deliverable_1 = FixedDeliverable.generate!
+      FixedBudget.generate!(:deliverable => @deliverable_1, :budget => '$1,000', :markup => '$100', :paid => true)
+      contract.deliverables << @deliverable_2 = HourlyDeliverable.generate!
+      FixedBudget.generate!(:deliverable => @deliverable_2, :budget => '$2,000', :markup => '200%')
+
+      assert_equal (100) + (0), contract.fixed_markup_spent
+    end
+  end
+
 end

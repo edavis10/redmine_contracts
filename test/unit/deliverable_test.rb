@@ -5,6 +5,7 @@ class DeliverableTest < ActiveSupport::TestCase
   should_belong_to :manager
   should_have_many :labor_budgets
   should_have_many :overhead_budgets
+  should_have_many :fixed_budgets
   should_have_many :issues
 
   should_validate_presence_of :title
