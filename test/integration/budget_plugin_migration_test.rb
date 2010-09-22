@@ -115,7 +115,7 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
     end
 
     should "create a new Fixed Budget record for any materials" do
-      assert_difference("FixedBudget.count", 2) do
+      assert_difference("FixedBudget.count", 3) do
         RedmineContracts::BudgetPluginMigration.migrate(@data)
       end
 
@@ -125,7 +125,7 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
     end
 
     should "create a new Fixed Budget record for any materials percent" do
-      assert_difference("FixedBudget.count", 2) do
+      assert_difference("FixedBudget.count", 3) do
         RedmineContracts::BudgetPluginMigration.migrate(@data)
       end
 
@@ -152,6 +152,16 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
 
         d = FixedDeliverable.find_by_title("Version 1.0")
         assert_equal 93_000, d.total
+      end
+
+      should "add a FixedBudget item for the total deliverable" do
+        RedmineContracts::BudgetPluginMigration.migrate(@data)
+        d = FixedDeliverable.find_by_title("Version 1.0")
+
+        assert_equal 1, d.fixed_budgets.count
+        fixed_budget_item = d.fixed_budgets.first
+        assert_equal 30_000, fixed_budget_item.budget
+        assert_equal "150%", fixed_budget_item.markup
       end
     end
 

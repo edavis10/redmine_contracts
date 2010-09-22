@@ -58,6 +58,8 @@ module RedmineContracts
           case old_deliverable['type']
           when 'FixedDeliverable'
             @total_cost = old_deliverable['fixed_cost']
+            convert_old_fixed_deliverable_to_fixed_budgets(deliverable, old_deliverable)
+            
           when 'HourlyDeliverable'
             @total_cost = old_deliverable['total_hours'].to_f * old_deliverable['cost_per_hour'].to_f
 
@@ -151,6 +153,26 @@ module RedmineContracts
                                                      :markup => 0)
 
       end
+    end
+
+    def self.convert_old_fixed_deliverable_to_fixed_budgets(deliverable, old_deliverable)
+      if old_deliverable['fixed_cost'].present?
+        budget = old_deliverable['fixed_cost']
+      else
+        budget = 0
+      end
+
+      if old_deliverable['profit'].present?
+        markup = old_deliverable['profit']
+      elsif old_deliverable['profit_percent'].present?
+        markup = old_deliverable['profit_percent'].to_s + "%"
+      else
+        markup = '0'
+      end
+      
+      deliverable.fixed_budgets << FixedBudget.new(:deliverable => deliverable,
+                                                   :budget => budget,
+                                                   :markup => markup)
     end
 
     def self.append_old_deliverable_to_notes(old_deliverable, new_deliverable)
