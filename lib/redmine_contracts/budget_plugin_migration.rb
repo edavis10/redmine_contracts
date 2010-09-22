@@ -172,7 +172,9 @@ module RedmineContracts
       
       deliverable.fixed_budgets << FixedBudget.new(:deliverable => deliverable,
                                                    :budget => budget,
-                                                   :markup => markup)
+                                                   :markup => markup,
+                                                   :title => "Converted Fixed Deliverable - #{old_deliverable['subject']}")
+      
     end
 
     def self.append_old_deliverable_to_notes(old_deliverable, new_deliverable)

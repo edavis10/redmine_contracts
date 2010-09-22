@@ -162,6 +162,7 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
         fixed_budget_item = d.fixed_budgets.first
         assert_equal 30_000, fixed_budget_item.budget
         assert_equal "150%", fixed_budget_item.markup
+        assert_equal "Converted Fixed Deliverable - Version 1.0", fixed_budget_item.title
       end
     end
 
