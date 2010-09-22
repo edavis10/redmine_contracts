@@ -247,10 +247,11 @@ class ContractTest < ActiveSupport::TestCase
       TimeEntry.generate!(:hours => 4, :issue => @issue2, :project => @project,
                           :activity => @non_billable_activity,
                           :user => @manager)
+      @deliverable_2.fixed_budgets << FixedBudget.spawn(:budget => 200, :markup => '$100', :paid => true)
 
       assert_equal 875, @deliverable_1.profit_left
-      assert_equal 1125, @deliverable_2.profit_left
-      assert_equal 2000, contract.profit_left
+      assert_equal 825, @deliverable_2.profit_left
+      assert_equal 1700, contract.profit_left
     end
 
   end
