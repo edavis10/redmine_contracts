@@ -319,40 +319,24 @@ class RetainerDeliverable < HourlyDeliverable
 
   def shrink_budgets_to_new_period
     return if beginning_date.nil? || ending_date.nil?
-    labor_budgets.all.each do |labor_budget|
-      # Purge un-dated budgets, should not be saved at all
-      labor_budget.destroy unless labor_budget.year.present?
-      labor_budget.destroy unless labor_budget.month.present?
-
-      # Purge budgets outside the new beginning/ending range
-      unless (beginning_date..ending_date).to_a.include?(Date.new(labor_budget.year, labor_budget.month, 1))
-        labor_budget.destroy
-      end
-    end
-
-    overhead_budgets.all.each do |overhead_budget|
-      # Purge un-dated budgets, should not be saved at all
-      overhead_budget.destroy unless overhead_budget.year.present?
-      overhead_budget.destroy unless overhead_budget.month.present?
-
-      # Purge budgets outside the new beginning/ending range
-      unless (beginning_date..ending_date).to_a.include?(Date.new(overhead_budget.year, overhead_budget.month, 1))
-        overhead_budget.destroy
-      end
-    end
-
-    fixed_budgets.all.each do |fixed_budget|
-      # Purge un-dated budgets, should not be saved at all
-      fixed_budget.destroy unless fixed_budget.year.present?
-      fixed_budget.destroy unless fixed_budget.month.present?
-
-      # Purge budgets outside the new beginning/ending range
-      unless (beginning_date..ending_date).to_a.include?(Date.new(fixed_budget.year, fixed_budget.month, 1))
-        fixed_budget.destroy
-      end
-    end
+    shrink_budgets(labor_budgets.all)
+    shrink_budgets(overhead_budgets.all)
+    shrink_budgets(fixed_budgets.all)
 
     true
+  end
+
+  def shrink_budgets(budget_items)
+    budget_items.each do |budget_item|
+      # Purge un-dated budgets, should not be saved at all
+      budget_item.destroy unless budget_item.year.present?
+      budget_item.destroy unless budget_item.month.present?
+
+      # Purge budgets outside the new beginning/ending range
+      unless (beginning_date..ending_date).to_a.include?(Date.new(budget_item.year, budget_item.month, 1))
+        budget_item.destroy
+      end
+    end
   end
 
   def extend_period_to_new_end_date
