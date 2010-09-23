@@ -76,6 +76,12 @@ class Deliverable < ActiveRecord::Base
     (total(date) || 0.0) - budgets
   end
 
+  # The amount of money remaining after expenses have been taken out
+  # Profit left = Total - Labor spent - Overhead spent - Fixed - Markup
+  def profit_left(date=nil)
+    total_spent(date) - labor_budget_spent(date) - overhead_spent(date) - fixed_budget_total_spent(date) - fixed_markup_budget_total_spent(date)
+  end
+  
   def labor_budget_hours(date=nil)
     labor_budgets.sum(:hours)
   end

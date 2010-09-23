@@ -20,12 +20,6 @@ class FixedDeliverable < Deliverable
     total
   end
 
-  # The amount of money remaining after expenses have been taken out
-  # Profit left = Total - Labor spent - Overhead spent - Fixed - Markup
-  def profit_left(date=nil)
-    total_spent(date) - labor_budget_spent(date) - overhead_spent(date) - fixed_budget_total_spent(date) - fixed_markup_budget_total_spent(date)
-  end
-  
   # Hardcoded value used as a wrapper for the old Budget plugin API.
   #
   # The Overhead plugin uses this in it's calcuations.

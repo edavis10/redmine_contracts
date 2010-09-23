@@ -49,10 +49,4 @@ class HourlyDeliverable < Deliverable
   def clear_total
     write_attribute(:total, nil)
   end
-
-  # The amount of money remaining after expenses have been taken out
-  # Profit left = Total - Labor spent - Overhead spent - Fixed - Markup
-  def profit_left(date=nil)
-    total_spent(date) - labor_budget_spent(date) - overhead_spent(date) - fixed_budget_total_spent(date) - fixed_markup_budget_total_spent(date)
-  end
 end
