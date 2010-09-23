@@ -182,7 +182,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
       else
 
         assert_equal 100, fixed_budget.budget
-        assert_equal '0', fixed_budget.markup
+        assert_equal '$0.00', fixed_budget.markup
 
       end
     end

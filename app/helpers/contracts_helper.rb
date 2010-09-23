@@ -84,6 +84,14 @@ module ContractsHelper
     number_with_precision(value, :precision => Deliverable::ViewPrecision, :delimiter => '')
   end
 
+  def format_deliverable_value_fields_as_dollar_or_percent(value)
+    if value.to_s.match('%')
+      h(value)
+    else # currency or straight amount
+      number_to_currency(value.to_s.gsub('$',''), :precision => Deliverable::ViewPrecision, :delimiter => '', :unit => '$')
+    end
+  end
+
   def format_value_field_for_contracts(value)
     number_with_precision(value, :precision => Contract::ViewPrecision, :delimiter => ',')
   end

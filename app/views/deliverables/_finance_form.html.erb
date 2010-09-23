@@ -77,13 +77,13 @@
           <%= fixed_budget.label(:budget, l(:field_budget), :style => 'display: none;')%> <%# Hidden label :| %>
           <%= l(:text_dollar_sign) %>
         </p>
-		    <%= fixed_budget.text_field(:budget, :class => 'financial') %>
+		    <%= fixed_budget.text_field(:budget, :value => format_deliverable_value_fields(fixed_budget.object.budget), :class => 'financial') %>
 
 		    <p class="inline-hints">
           <%= fixed_budget.label(:markup, l(:field_markup), :style => 'display: none;')%> <%# Hidden label :| %>
           <%= l(:field_discount_hint) %>
         </p>
-        <%= fixed_budget.text_field(:markup, :class => 'financial') %>
+        <%= fixed_budget.text_field(:markup, :value => format_deliverable_value_fields_as_dollar_or_percent(fixed_budget.object.markup), :class => 'financial') %>
 
         <p class="inline-hints">
           <%= fixed_budget.label(:paid, l(:field_paid), :style => 'display: none;') %><%# Hidden label :| %>
