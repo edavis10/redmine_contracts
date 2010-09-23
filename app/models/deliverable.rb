@@ -21,6 +21,8 @@ class Deliverable < ActiveRecord::Base
   validates_presence_of :manager
   
   # Accessors
+  include DollarizedAttribute
+  dollarized_attribute :total
 
   delegate :name, :to => :contract, :prefix => true, :allow_nil => true
 
@@ -51,14 +53,6 @@ class Deliverable < ActiveRecord::Base
   
   def to_underscore
     self.class.to_s.underscore
-  end
-
-  def total=(v)
-    if v.is_a? String
-      write_attribute(:total, v.gsub(/[$ ,]/, ''))
-    else
-      write_attribute(:total, v)
-    end
   end
 
   def labor_budget_total(date=nil)

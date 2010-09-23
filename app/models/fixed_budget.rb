@@ -7,13 +7,8 @@ class FixedBudget < ActiveRecord::Base
   # Validations
 
   # Accessors
-  def budget=(v)
-    if v.is_a? String
-      write_attribute(:budget, v.gsub(/[$ ,]/, ''))
-    else
-      write_attribute(:budget, v)
-    end
-  end
+  include DollarizedAttribute
+  dollarized_attribute :budget
 
   named_scope :by_period, lambda {|date|
     if date
