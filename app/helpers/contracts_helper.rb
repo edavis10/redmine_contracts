@@ -128,4 +128,19 @@ module ContractsHelper
       return period
     end
   end
+
+  # Should the markup be display?
+  # 
+  # On Contracts and Deliverables, markup is hidden if both the spent
+  # and budget is 0.
+  def show_markup_for?(object, date=nil)
+    if object.is_a?(Contract)
+      !(object.fixed_markup_spent == 0 && object.fixed_markup_budget == 0)
+    elsif object.is_a?(Deliverable)
+      !(object.fixed_markup_budget_total_spent(date) == 0 && object.fixed_markup_budget_total(date) == 0)
+    else
+      true
+    end
+    
+  end
 end

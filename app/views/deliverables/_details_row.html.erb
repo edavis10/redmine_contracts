@@ -73,12 +73,14 @@
                         </tr>
                         <% end %>
 
+                        <% if show_markup_for?(deliverable, validated_period) %>
                         <tr>
                           <td class="l"><%= l(:field_markup) %></td>
                           <td class="fixed_markup_budget_spent"><%= h(format_value_field_for_contracts(deliverable.fixed_markup_budget_total_spent(validated_period))) %></td>
                           <td class="fixed_markup_budget_total"><%= h(format_value_field_for_contracts(deliverable.fixed_markup_budget_total(validated_period))) %></td>
                           <td></td>
                         </tr>
+                        <% end %>
 
                         <tr>
                           <td class="l">Profit</td>

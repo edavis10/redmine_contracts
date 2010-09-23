@@ -52,8 +52,6 @@ class ContractsShowTest < ActionController::IntegrationTest
         assert_select '.contract-overhead .budget'
         assert_select '.contract-fixed .spent'
         assert_select '.contract-fixed .budget'
-        assert_select '.contract-markup .spent'
-        assert_select '.contract-markup .budget'
         assert_select '.contract-profit .spent'
         assert_select '.contract-profit .budget'
         assert_select '.contract-discount .spent'

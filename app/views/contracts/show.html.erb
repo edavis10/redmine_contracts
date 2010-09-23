@@ -44,7 +44,9 @@
         <%= show_budget_field(resource, :labor_spent, :labor_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-labor'}, :label_html_options => {:width => '46%'}) %>
         <%= show_budget_field(resource, :overhead_spent, :overhead_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-overhead'}) %>
         <%= show_budget_field(resource, :fixed_spent, :fixed_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-fixed'}) %>
+        <% if show_markup_for?(resource) %>
         <%= show_budget_field(resource, :fixed_markup_spent, :fixed_markup_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-markup'}) %>
+        <% end %>
         <%= show_budget_field(resource, :profit_spent, :profit_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-profit'}) %>
         <%= show_budget_field(resource, :discount_spent, :discount_budget, :format => :format_value_field_for_contracts, :html_options => {:class => 'contract-discount'}) %>
 
