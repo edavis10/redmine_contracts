@@ -37,7 +37,8 @@ class HourlyDeliverable < Deliverable
       total
     }
 
-    return hours * contract.billable_rate
+    fixed_budget_amount = fixed_budget_total_spent(date) + fixed_markup_budget_total_spent(date)
+    return (hours * contract.billable_rate) + fixed_budget_amount
   end
   
   # Block setting the total on HourlyDeliverables

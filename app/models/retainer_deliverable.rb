@@ -198,7 +198,9 @@ class RetainerDeliverable < HourlyDeliverable
         total
       }
 
-      return hours * contract.billable_rate
+      fixed_budget_amount = fixed_budget_total_spent(date) + fixed_markup_budget_total_spent(date)
+
+      return (hours * contract.billable_rate) + fixed_budget_amount
     when :out
       0
     else

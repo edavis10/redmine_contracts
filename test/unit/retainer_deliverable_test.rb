@@ -382,6 +382,10 @@ class RetainerDeliverableTest < ActiveSupport::TestCase
       @deliverable = RetainerDeliverable.generate!(:start_date => '2010-01-01', :end_date => '2010-03-31', :contract => @contract)
       @deliverable.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10)
       @deliverable.overhead_budgets << OverheadBudget.spawn(:budget => 100, :hours => 10)
+      # Only paid fixed budgets counted
+      @deliverable.fixed_budgets << FixedBudget.generate!(:budget => '$100', :markup => '50%') # $50 markup
+      @deliverable.fixed_budgets << FixedBudget.generate!(:budget => '$100', :markup => '50%', :paid => true) # $50 markup
+
       @deliverable.save!
 
       @manager = User.generate!
@@ -410,14 +414,12 @@ class RetainerDeliverableTest < ActiveSupport::TestCase
                              :amount => 100)
 
       @deliverable.issues << @issue1
-
-
     end
 
     context "with a empty period" do
       should "use all periods" do
-        # Labor used * contract rate
-        assert_equal (10+20) * 200, @deliverable.total_spent(nil)
+        # (Labor used * contract rate) + fixed
+        assert_equal ((10+20) * 200) + (150 * 3), @deliverable.total_spent(nil)
       end
     end
 
@@ -435,7 +437,7 @@ class RetainerDeliverableTest < ActiveSupport::TestCase
 
     context "with a period in the retainer range" do
       should "filter the records" do
-        assert_equal 20 * 200, @deliverable.total_spent(Date.new(2010,2,1))
+        assert_equal (20 * 200) + 150, @deliverable.total_spent(Date.new(2010,2,1))
       end
     end
   end

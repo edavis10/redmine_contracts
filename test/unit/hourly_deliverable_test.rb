@@ -32,7 +32,7 @@ class HourlyDeliverableTest < ActiveSupport::TestCase
   end
 
   context "#total_spent" do
-    should "be equal to the number of hours used multipled by the contract rate" do
+    should "be equal to the number of hours used multipled by the contract rate and adding the fixed budget and markup spent" do
       configure_overhead_plugin
 
       contract = Contract.generate!(:billable_rate => 150.0)
@@ -46,8 +46,11 @@ class HourlyDeliverableTest < ActiveSupport::TestCase
       TimeEntry.generate!(:hours => 15, :issue => @issue1, :project => @project,
                           :activity => @billable_activity,
                           :user => @developer)
+      # Only paid fixed budgets counted
+      d.fixed_budgets << FixedBudget.generate!(:budget => '$100', :markup => '50%') # $50 markup
+      d.fixed_budgets << FixedBudget.generate!(:budget => '$100', :markup => '50%', :paid => true) # $50 markup
 
-      assert_equal 2250, d.total_spent
+      assert_equal 2250 + 150, d.total_spent
     end
   end
   
