@@ -29,8 +29,25 @@ module RedmineContracts
     end
 
     # * old_data - YAML string of deliverables to migrate
+    #
+    # @param [Hash] options the options to migrate with
+    # @option options [String] :contract_rate the contract rate to use. Defaults to 150.0
+    # @option options [String] :account_executive the id or login of the user
+    #                          to use for the contract account executive
+    #                          Defaults to the first user on the project.
+    # @option options [String] :deliverable_manager the id or login of the user
+    #                          to use for the deliverables manager
+    #                          Defaults to the first user on the project.
     def self.migrate(old_data, options={})
       @contract_rate = options[:contract_rate] ? options[:contract_rate].to_f : 150.0
+      @account_executive = if options[:account_executive].present?
+                             user = User.find_by_login(options[:account_executive])
+                             user ||= User.find_by_id(options[:account_executive])
+                           end
+      @deliverable_manager = if options[:deliverable_manager].present?
+                               user = User.find_by_login(options[:deliverable_manager])
+                               user ||= User.find_by_id(options[:deliverable_manager])
+                           end
       
       @@data = YAML.load(old_data)
 
@@ -52,7 +69,7 @@ module RedmineContracts
           contract ||= create_new_contract(old_deliverable)
 
           deliverable.contract = contract
-          deliverable.manager = project.users.first          
+          deliverable.manager = @deliverable_manager || project.users.first
           deliverable.total = old_deliverable['budget']
           
           case old_deliverable['type']
@@ -109,7 +126,7 @@ module RedmineContracts
                               :start_date => old_deliverable['due'],
                               :end_date => old_deliverable['due']) do |c|
         c.project = project
-        c.account_executive = project.users.first
+        c.account_executive = @account_executive || project.users.first
         c.start_date ||= Date.today
         c.end_date ||= Date.today
         c.billable_rate = @contract_rate

@@ -19,10 +19,13 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
       Project.stubs(:find_by_id).with(1).returns(@project_one)
       Project.stubs(:find_by_id).with(2).returns(@project_one)
 
-      @manager = User.generate!
       @role = Role.generate!
+      @manager = User.generate!
       User.add_to_project(@manager, @project_one, @role)
       User.add_to_project(@manager, @project_two, @role)
+      @other_user = User.generate!
+      User.add_to_project(@other_user, @project_one, @role)
+      User.add_to_project(@other_user, @project_two, @role)
 
     end
 
@@ -67,6 +70,27 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
         assert_equal 100.5, @project_one.reload.contracts.first.billable_rate
         assert_equal 100.5, @project_two.reload.contracts.first.billable_rate
       end
+
+      should "pick the first project member as the account executive" do
+        RedmineContracts::BudgetPluginMigration.migrate(@data)
+
+        assert_equal @manager, @project_one.reload.contracts.first.account_executive
+        assert_equal @manager, @project_two.reload.contracts.first.account_executive
+      end
+
+      should "allow overriding the account executive by login" do
+        RedmineContracts::BudgetPluginMigration.migrate(@data, :account_executive => @other_user.login)
+
+        assert_equal @other_user, @project_one.reload.contracts.first.account_executive
+        assert_equal @other_user, @project_two.reload.contracts.first.account_executive
+      end
+
+      should "allow overriding the account executive by id" do
+        RedmineContracts::BudgetPluginMigration.migrate(@data, :account_executive => @other_user.id)
+
+        assert_equal @other_user, @project_one.reload.contracts.first.account_executive
+        assert_equal @other_user, @project_two.reload.contracts.first.account_executive
+      end
     end
 
     should "enable the contracts plugin for each project with a contract" do
@@ -82,6 +106,18 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
       RedmineContracts::BudgetPluginMigration.migrate(@data)
 
       assert_equal [@manager, @manager, @manager], Deliverable.all.collect(&:manager)
+    end
+
+    should "allow overriding the deliverable manager by login" do
+      RedmineContracts::BudgetPluginMigration.migrate(@data, :deliverable_manager => @other_user.login)
+
+      assert_equal [@other_user, @other_user, @other_user], Deliverable.all.collect(&:manager)
+    end
+
+    should "allow overriding the deliverable manager by id" do
+      RedmineContracts::BudgetPluginMigration.migrate(@data, :deliverable_manager => @other_user.id)
+
+      assert_equal [@other_user, @other_user, @other_user], Deliverable.all.collect(&:manager)
     end
 
     should "create a new Overhead Budget record for any overhead" do
