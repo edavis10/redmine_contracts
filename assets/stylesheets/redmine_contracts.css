@@ -47,7 +47,7 @@ padding-left: 0px; /* Don't pad submit buttons */
 
 #retainer-finances-message label { margin-left: 0px; width: 600px; text-align: left;} /* reposition the label */
 
-.deliverable_total_input input { margin-left: 5px; }
+#content .deliverable_finance_table td { padding-left: 0px; }
 
 input.financial{
 	 text-align: right;
