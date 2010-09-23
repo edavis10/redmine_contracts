@@ -50,13 +50,6 @@ class HourlyDeliverable < Deliverable
     write_attribute(:total, nil)
   end
 
-  # The amount of profit that is budgeted for this deliverable
-  # Profit = Total - ( Labor + Overhead + Fixed + Markup )
-  def profit_budget(date=nil)
-    budgets = labor_budget_total(date) + overhead_budget_total(date) + fixed_budget_total(date) + fixed_markup_budget_total(date)
-    (total(date) || 0.0) - budgets
-  end
-
   # The amount of money remaining after expenses have been taken out
   # Profit left = Total - Labor spent - Overhead spent - Fixed - Markup
   def profit_left(date=nil)

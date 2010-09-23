@@ -69,8 +69,11 @@ class Deliverable < ActiveRecord::Base
     overhead_budgets.sum(:budget)
   end
 
+  # The amount of profit that is budgeted for this deliverable.
+  # Profit = Total - ( Labor + Overhead + Fixed + Markup )
   def profit_budget(date=nil)
-    nil
+    budgets = labor_budget_total(date) + overhead_budget_total(date) + fixed_budget_total(date) + fixed_markup_budget_total(date)
+    (total(date) || 0.0) - budgets
   end
 
   def labor_budget_hours(date=nil)
