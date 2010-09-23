@@ -49,6 +49,11 @@ padding-left: 0px; /* Don't pad submit buttons */
 
 .deliverable_total_input input { margin-left: 5px; }
 
+input.financial{
+	 text-align: right;
+	 width: 65px;
+}
+
 #content .error_msg{
 	background: #ffd5d5;
 	color: #a40000;

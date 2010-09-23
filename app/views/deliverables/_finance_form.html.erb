@@ -18,11 +18,11 @@
         </td>
         <td>
           <p class="inline-hints"><%= labor_budget.label(:hours, l(:text_short_hours)) %></p>
-          <%= labor_budget.text_field(:hours, :value => format_deliverable_value_fields(labor_budget.object.hours), :size => 10) %>
+          <%= labor_budget.text_field(:hours, :value => format_deliverable_value_fields(labor_budget.object.hours), :class => 'financial') %>
         </td>
         <td>
           <p class="inline-hints"><%= labor_budget.label(:budget, l(:text_dollar_sign)) %></p>
-          <%= labor_budget.text_field(:budget, :value => format_deliverable_value_fields(labor_budget.object.budget), :size => 10) %>
+          <%= labor_budget.text_field(:budget, :value => format_deliverable_value_fields(labor_budget.object.budget), :class => 'financial') %>
         </td>
         <%# TODO: Green Add button for multiple records %>
         <td>
@@ -47,11 +47,11 @@
         </td>
         <td>
           <p class="inline-hints"><%= overhead_budget.label(:hours, l(:text_short_hours)) %></p>
-          <%= overhead_budget.text_field(:hours, :value => format_deliverable_value_fields(overhead_budget.object.hours),:size => 10) %>
+          <%= overhead_budget.text_field(:hours, :value => format_deliverable_value_fields(overhead_budget.object.hours),:class => 'financial') %>
         </td>
         <td>
           <p class="inline-hints"><%= overhead_budget.label(:budget, l(:text_dollar_sign)) %></p>
-          <%= overhead_budget.text_field(:budget, :value => format_deliverable_value_fields(overhead_budget.object.budget), :size => 10) %>
+          <%= overhead_budget.text_field(:budget, :value => format_deliverable_value_fields(overhead_budget.object.budget), :class => 'financial') %>
         </td>
         <%# TODO: Green Add button for multiple records %>
         <td>
@@ -77,13 +77,13 @@
           <%= fixed_budget.label(:budget, l(:field_budget), :style => 'display: none;')%> <%# Hidden label :| %>
           <%= l(:text_dollar_sign) %>
         </p>
-		    <%= fixed_budget.text_field(:budget) %>
+		    <%= fixed_budget.text_field(:budget, :class => 'financial') %>
 
 		    <p class="inline-hints">
           <%= fixed_budget.label(:markup, l(:field_markup), :style => 'display: none;')%> <%# Hidden label :| %>
           <%= l(:field_discount_hint) %>
         </p>
-        <%= fixed_budget.text_field(:markup) %>
+        <%= fixed_budget.text_field(:markup, :class => 'financial') %>
 
         <p class="inline-hints">
           <%= fixed_budget.label(:paid, l(:field_paid), :style => 'display: none;') %><%# Hidden label :| %>
