@@ -32,8 +32,10 @@ class FixedBudget < ActiveRecord::Base
     when percent_markup?
       percent = markup.gsub('%','').to_f
       return budget.to_f * (percent / 100)
-    when straight_markup?
+    when dollar_markup?
       markup.gsub('$','').gsub(',','').to_f
+    when straight_markup?
+      markup.to_f
     else
       0 # Invalid markup
     end
@@ -49,11 +51,15 @@ class FixedBudget < ActiveRecord::Base
   end
 
   def percent_markup?
-    markup && markup.match(/%/)
+    markup && markup.to_s.match(/%/)
+  end
+
+  def dollar_markup?
+    markup && markup.to_s.match(/[$,]+/)
   end
 
   def straight_markup?
-    markup && markup.match(/\$/)
+    markup && markup.to_s.match(/[\d.]/)
   end
 
   # Is this a blank budget item. Retainers will create blank ones when
