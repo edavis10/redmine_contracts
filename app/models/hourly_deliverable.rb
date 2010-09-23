@@ -32,10 +32,7 @@ class HourlyDeliverable < Deliverable
     return 0 unless self.issues.count > 0
 
     time_logs = self.issues.collect(&:time_entries).flatten
-    hours = time_logs.inject(0) {|total, time_entry|
-      total += time_entry.hours if time_entry.billable?
-      total
-    }
+    hours = billable_hours_on_time_entries(time_logs)
 
     fixed_budget_amount = fixed_budget_total_spent(date) + fixed_markup_budget_total_spent(date)
     return (hours * contract.billable_rate) + fixed_budget_amount
@@ -48,5 +45,14 @@ class HourlyDeliverable < Deliverable
 
   def clear_total
     write_attribute(:total, nil)
+  end
+
+  protected
+
+  def billable_hours_on_time_entries(time_entries)
+    time_entries.inject(0) {|total, time_entry|
+      total += time_entry.hours if time_entry.billable?
+      total
+    }
   end
 end

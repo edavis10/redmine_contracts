@@ -193,10 +193,7 @@ class RetainerDeliverable < HourlyDeliverable
       issue_ids = self.issues.collect(&:id)
       time_logs = time_entries_for_date_and_issue_ids(date, issue_ids)
 
-      hours = time_logs.inject(0) {|total, time_entry|
-        total += time_entry.hours if time_entry.billable?
-        total
-      }
+      hours = billable_hours_on_time_entries(time_logs)
 
       fixed_budget_amount = fixed_budget_total_spent(date) + fixed_markup_budget_total_spent(date)
 
