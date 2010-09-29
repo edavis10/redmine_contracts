@@ -159,6 +159,23 @@ class RetainerDeliverable < HourlyDeliverable
     end
   end
 
+  def hours_spent_total(date=nil)
+    case scope_date_status(date)
+    when :in
+      return 0 if issues.empty?
+      
+      TimeEntry.sum(:hours, :conditions => {
+                      :issue_id => issues.collect(&:id),
+                      :tyear => date.year,
+                      :tmonth => date.month
+                    })
+    when :out
+      0
+    else
+      super
+    end
+  end
+
   def fixed_budget_total(date=nil)
     case scope_date_status(date)
     when :in

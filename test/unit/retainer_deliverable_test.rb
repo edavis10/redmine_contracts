@@ -296,6 +296,66 @@ class RetainerDeliverableTest < ActiveSupport::TestCase
     end
   end
 
+  context "#hours_spent_total" do
+    setup do
+      @project = Project.generate!
+      @contract = Contract.generate!(:billable_rate => 100, :project => @project)
+      @deliverable = RetainerDeliverable.generate!(:start_date => '2010-01-01', :end_date => '2010-03-31', :contract => @contract)
+
+      @manager = User.generate!
+      @role = Role.generate!
+      User.add_to_project(@manager, @project, @role)
+
+      configure_overhead_plugin
+
+      @issue1 = Issue.generate_for_project!(@project)
+      @time_entry1 = TimeEntry.generate!(:issue => @issue1,
+                                         :project => @project,
+                                         :activity => @billable_activity,
+                                         :spent_on => Date.new(2010,1,2),
+                                         :hours => 10,
+                                         :user => @manager)
+      @time_entry2 = TimeEntry.generate!(:issue => @issue1,
+                                         :project => @project,
+                                         :activity => @non_billable_activity,
+                                         :spent_on => Date.new(2010,2,1),
+                                         :hours => 20,
+                                         :user => @manager)
+
+      @rate = Rate.generate!(:project => @project,
+                             :user => @manager,
+                             :date_in_effect => Date.new(2010,1,1),
+                             :amount => 100)
+
+      @deliverable.issues << @issue1
+      assert_equal 30, @deliverable.hours_spent_total
+    end
+    
+    context "with a empty period" do
+      should "use all periods" do 
+        assert_equal 30.0, @deliverable.hours_spent_total(nil)
+      end
+    end
+
+    context "with a period out of the retainer range" do
+      should "filter the records" do
+        assert_equal 0, @deliverable.hours_spent_total(Date.new(2011,1,1))
+      end
+    end
+
+    context "with an invalid period" do
+      should "return 0" do
+        assert_equal 0, @deliverable.hours_spent_total('1')
+      end
+    end
+
+    context "with a period in the retainer range" do
+      should "filter the records" do
+        assert_equal 20.0, @deliverable.hours_spent_total(Date.new(2010,2,1))
+      end
+    end
+  end
+
   context "#overhead_spent" do
     setup do
       @project = Project.generate!

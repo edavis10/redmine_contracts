@@ -85,9 +85,8 @@ class Deliverable < ActiveRecord::Base
   end
 
   # Total number of hours estimated in the Deliverable's budgets
-  def estimated_hour_budget_total
-    (labor_budgets.sum(:hours) || 0.0) +
-      (overhead_budgets.sum(:hours) || 0.0)
+  def estimated_hour_budget_total(date=nil)
+    labor_budget_hours(date) + overhead_budget_hours(date)
   end
 
   # OPTIMIZE: N+1
@@ -100,9 +99,11 @@ class Deliverable < ActiveRecord::Base
     issues.inject(0) {|total, issue| total += issue.overhead_time_spent } # From redmine_overhead
   end
 
-  # OPTIMIZE: N+1
-  def hours_spent_total
-    issues.inject(0) {|total, issue| total += issue.spent_hours }
+  def hours_spent_total(date=nil)
+    return 0 if issues.empty?
+
+    # Don't count subissues
+    TimeEntry.sum(:hours, :conditions => { :issue_id => issues.collect(&:id) })
   end
 
   def fixed_budget_total(date=nil)
