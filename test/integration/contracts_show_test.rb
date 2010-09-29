@@ -275,7 +275,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     visit_contract_page(@contract)
     assert_select "table#deliverables" do
       assert_select "#deliverable_details_#{@deliverable1.id}" do
-        assert_select 'td.fixed_markup_budget_spent', :text => '100'
+        assert_select 'td.fixed_markup_budget_spent', :text => '4,100'
         assert_select 'td.fixed_markup_budget_total', :text => '4,100'
       end
     end

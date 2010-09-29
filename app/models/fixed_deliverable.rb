@@ -20,6 +20,12 @@ class FixedDeliverable < Deliverable
     total
   end
 
+  # Fixed deliverables are always 100% spent so they markup is captured
+  # right away.
+  def fixed_markup_budget_total_spent(date=nil)
+    fixed_markup_budget_total(date)
+  end
+
   # Hardcoded value used as a wrapper for the old Budget plugin API.
   #
   # The Overhead plugin uses this in it's calcuations.

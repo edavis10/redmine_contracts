@@ -65,4 +65,15 @@ class FixedDeliverableTest < ActiveSupport::TestCase
 
     end
   end
+
+  context "#fixed_markup_budget_total_spent" do
+    should "be the total markup from fixed budgets because FixedDeliverables are considered 100% paid" do
+      @deliverable = FixedDeliverable.generate!
+      FixedBudget.generate!(:deliverable => @deliverable, :budget => '$1,000', :markup => '$100', :paid => true)
+      FixedBudget.generate!(:deliverable => @deliverable, :budget => '$1,000', :markup => '$100', :paid => false)
+
+      assert_equal 200, @deliverable.fixed_markup_budget_total_spent
+
+    end
+  end
 end
