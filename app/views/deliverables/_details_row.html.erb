@@ -114,24 +114,18 @@
                           <th colspan="2"><%= l(:label_issue_status_plural) %></th>
                         </tr>
                       </thead>
-                      <%# TODO: Release 2 Issue status counters
+                      <tbody>
+                        <% deliverable.issues_by_status.each do |status, issues| %>
                           <tr>
-                            <td>Proposed</td>
-                      <td class="number">1</td>
-                            </tr>
-                    <tr>
-                      <td>On Hold</td>
-                            <td class="number">1</td>
-                    </tr>
-                                    <tr>
-                                    <td>Complete</td>
-                      <td class="number">14</td>
-                                    </tr>
-                    <tr>
-                      <td><strong>All</strong></td>
-                      <td class="number">16</td>
-                                    </tr>
-                %>
+                            <td><%= h(status.name) %></td>
+                            <td class="number"><%= h(issues.length) %></td>
+                          </tr>
+                        <% end %>
+                        <tr>
+                          <td><strong><%= l(:label_all).capitalize %></strong></td>
+                          <td class="number"><%= deliverable.issues.count %></td>
+                        </tr>
+                      </tbody>
                     </table>
                   </div>
                   <div class="clear"></div>

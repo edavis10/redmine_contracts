@@ -128,6 +128,14 @@ class Deliverable < ActiveRecord::Base
     block.call
   end
 
+  def issues_by_status
+    issues.inject({}) {|grouped, issue|
+      grouped[issue.status] ||= []
+      grouped[issue.status] << issue
+      grouped
+    }
+  end
+
   def retainer?
     type == "RetainerDeliverable"
   end

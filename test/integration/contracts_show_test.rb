@@ -391,6 +391,41 @@ class ContractsShowTest < ActionController::IntegrationTest
     end
 
   end
+
+  should "show the count of the issues by status for the deliverable" do
+    configure_overhead_plugin
+
+    @manager = User.generate!
+
+    @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
+    @status1 = IssueStatus.generate!
+    @status2 = IssueStatus.generate!
+
+    @issue1 = Issue.generate_for_project!(@project, :status => @status1)
+    @issue2 = Issue.generate_for_project!(@project, :status => @status1)
+    @issue3 = Issue.generate_for_project!(@project, :status => @status1)
+    @issue4 = Issue.generate_for_project!(@project, :status => @status2)
+
+    @deliverable1.issues = [@issue1, @issue2, @issue3, @issue4]
+
+    assert_equal 4, @deliverable1.issues.count
+
+    visit_contract_page(@contract)
+    assert_select "table#deliverables" do
+      assert_select "tr" do
+        assert_select "td", :text => /#{@status1}/
+        assert_select "td.number", :text => /3/
+      end
+      assert_select "tr" do
+        assert_select "td", :text => /#{@status2}/
+        assert_select "td.number", :text => /1/
+      end
+      assert_select "tr" do
+        assert_select "td strong", "All"
+        assert_select "td.number", :text => /4/
+      end
+    end
+  end
   
   
   should "show the current period for a Retainer" do
