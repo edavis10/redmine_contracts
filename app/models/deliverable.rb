@@ -87,6 +87,11 @@ class Deliverable < ActiveRecord::Base
   end
 
   # OPTIMIZE: N+1
+  def labor_hours_spent_total(date=nil)
+    issues.inject(0) {|total, issue| total += issue.billable_time_spent } # From redmine_overhead
+  end
+  
+  # OPTIMIZE: N+1
   def hours_spent_total
     issues.inject(0) {|total, issue| total += issue.spent_hours }
   end
