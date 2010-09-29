@@ -315,6 +315,40 @@ class ContractsShowTest < ActionController::IntegrationTest
 
   end
   
+  should "show the overhead hours for the deliverable" do
+    configure_overhead_plugin
+
+    @manager = User.generate!
+
+    @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
+    OverheadBudget.generate!(:deliverable => @deliverable1,
+                          :hours => 100,
+                          :budget => 4000.5)
+
+    @issue1 = Issue.generate_for_project!(@project)
+    @time_entry1 = TimeEntry.generate!(:issue => @issue1,
+                                       :project => @project,
+                                       :activity => @non_billable_activity,
+                                       :spent_on => Date.today,
+                                       :hours => 5,
+                                       :user => @manager)
+
+    @rate = Rate.generate!(:project => @project,
+                           :user => @manager,
+                           :date_in_effect => Date.yesterday,
+                           :amount => 100)
+
+    @deliverable1.issues << @issue1
+
+    assert_equal 1, @deliverable1.issues.count
+
+    visit_contract_page(@contract)
+    assert_select "table#deliverables" do
+      assert_select "td.overhead_hours", :text => /5\/100/
+    end
+
+  end
+  
   should "show the current period for a Retainer" do
     today_mock = Date.new(2010,2,15)
     Date.stubs(:today).returns(today_mock)

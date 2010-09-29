@@ -146,6 +146,19 @@ class RetainerDeliverable < HourlyDeliverable
     end
   end
 
+  def overhead_hours_spent_total(date=nil)
+    case scope_date_status(date)
+    when :in
+      time_entries = issues.collect {|issue| issue.time_entries.all(:conditions => {:tyear => date.year, :tmonth => date.month}) }.flatten
+
+      nonbillable_hours_on_time_entries(time_entries)
+    when :out
+      0
+    else
+      super
+    end
+  end
+
   def fixed_budget_total(date=nil)
     case scope_date_status(date)
     when :in

@@ -62,7 +62,9 @@
                           <td class="l"><a href="#"><strong>Overhead</strong></a></td>
                           <td class="overhead_budget_spent"><%= h(format_value_field_for_contracts(deliverable.overhead_spent(validated_period))) %></td>
                           <td class="overhead_budget_total"><%= h(format_value_field_for_contracts(deliverable.overhead_budget_total(validated_period))) %></td>
-                          <td class="overhead_hours"> TODO: Release 2 / TODO hrs </td>
+                          <td class="overhead_hours">
+                            <%= h(format_value_field_for_contracts(deliverable.overhead_hours_spent_total(validated_period))) %>/<%= h(format_value_field_for_contracts(deliverable.overhead_budget_hours(validated_period))) %> <%= l(:text_short_hours) %>
+                          </td>
                         </tr>
 
                         <% deliverable.fixed_budgets.by_period(validated_period).each do |fixed_budget| %>

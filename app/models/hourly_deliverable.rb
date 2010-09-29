@@ -50,8 +50,16 @@ class HourlyDeliverable < Deliverable
   protected
 
   def billable_hours_on_time_entries(time_entries)
+    hours_on_time_entries_with_billable_option(true, time_entries)
+  end
+
+  def nonbillable_hours_on_time_entries(time_entries)
+    hours_on_time_entries_with_billable_option(false, time_entries)
+  end
+
+  def hours_on_time_entries_with_billable_option(billable, time_entries)
     time_entries.inject(0) {|total, time_entry|
-      total += time_entry.hours if time_entry.billable?
+      total += time_entry.hours if (time_entry.billable? == billable)
       total
     }
   end

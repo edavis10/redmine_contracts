@@ -80,6 +80,10 @@ class Deliverable < ActiveRecord::Base
     labor_budgets.sum(:hours)
   end
 
+  def overhead_budget_hours(date=nil)
+    overhead_budgets.sum(:hours)
+  end
+
   # Total number of hours estimated in the Deliverable's budgets
   def estimated_hour_budget_total
     (labor_budgets.sum(:hours) || 0.0) +
@@ -90,7 +94,12 @@ class Deliverable < ActiveRecord::Base
   def labor_hours_spent_total(date=nil)
     issues.inject(0) {|total, issue| total += issue.billable_time_spent } # From redmine_overhead
   end
-  
+
+  # OPTIMIZE: N+1
+  def overhead_hours_spent_total(date=nil)
+    issues.inject(0) {|total, issue| total += issue.overhead_time_spent } # From redmine_overhead
+  end
+
   # OPTIMIZE: N+1
   def hours_spent_total
     issues.inject(0) {|total, issue| total += issue.spent_hours }
