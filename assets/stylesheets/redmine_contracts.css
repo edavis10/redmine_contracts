@@ -391,6 +391,12 @@ input.financial{
 	
 		#content #deliverables .info p{
 			margin: 10px 0 10px 10px;
+    }
+    
+    #content #deliverables .info ul{
+			margin: 10px 0 10px 10px;
+      padding-left: 10px;
+      list-style: inherit;
 		}
 		#content #deliverables .info form fieldset{
 			margin-left: 10px;
