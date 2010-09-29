@@ -143,4 +143,19 @@ module ContractsHelper
     end
     
   end
+
+  def link_to_issue_list_with_filter(text, options={})
+    deliverable_id = options[:deliverable_id] || '*'
+    status_id = options[:status_id] || '*'
+    
+    link_to(h(text), {
+              :controller => 'issues',
+              :action => 'index',
+              :project_id => @project,
+              :set_filter => 't',
+              :status_id => status_id,
+              :deliverable_id => deliverable_id
+            })
+
+  end
 end

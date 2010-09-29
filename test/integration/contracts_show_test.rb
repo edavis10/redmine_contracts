@@ -413,16 +413,16 @@ class ContractsShowTest < ActionController::IntegrationTest
     visit_contract_page(@contract)
     assert_select "table#deliverables" do
       assert_select "tr" do
-        assert_select "td", :text => /#{@status1}/
-        assert_select "td.number", :text => /3/
+        assert_select "td a", :text => /#{@status1}/
+        assert_select "td.number a", :text => /3/
       end
       assert_select "tr" do
-        assert_select "td", :text => /#{@status2}/
-        assert_select "td.number", :text => /1/
+        assert_select "td a", :text => /#{@status2}/
+        assert_select "td.number a", :text => /1/
       end
       assert_select "tr" do
-        assert_select "td strong", "All"
-        assert_select "td.number", :text => /4/
+        assert_select "td strong a", "All"
+        assert_select "td.number a", :text => /4/
       end
     end
   end

@@ -117,13 +117,27 @@
                       <tbody>
                         <% deliverable.issues_by_status.each do |status, issues| %>
                           <tr>
-                            <td><%= h(status.name) %></td>
-                            <td class="number"><%= h(issues.length) %></td>
+                            <td>
+                              <%= link_to_issue_list_with_filter(status.name,
+                                                                 :deliverable_id => deliverable.id,
+                                                                 :status_id => status.id) %>
+                            </td>
+                            <td class="number">
+                              <%= link_to_issue_list_with_filter(issues.length,
+                                                                 :deliverable_id => deliverable.id,
+                                                                 :status_id => status.id) %>
+                            </td>
                           </tr>
                         <% end %>
                         <tr>
-                          <td><strong><%= l(:label_all).capitalize %></strong></td>
-                          <td class="number"><%= deliverable.issues.count %></td>
+                          <td><strong>
+                              <%= link_to_issue_list_with_filter(l(:label_all).capitalize,
+                                                                 :deliverable_id => deliverable.id) %>
+                            </strong></td>
+                          <td class="number">
+                              <%= link_to_issue_list_with_filter(deliverable.issues.count,
+                                                                 :deliverable_id => deliverable.id) %>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
