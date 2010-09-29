@@ -8,7 +8,9 @@ class ContractsController < InheritedResources::Base
   before_filter :require_admin, :only => :destroy
 
   def create
-    create! { contract_url(@project, resource) }
+    create! do |success, failure|
+      success.html { redirect_to contract_url(@project, resource) }
+    end
   end
 
   def update

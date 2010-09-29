@@ -77,6 +77,7 @@ Dispatcher.to_prepare :redmine_contracts do
 
   Formtastic::SemanticFormBuilder.all_fields_required_by_default = false
   Formtastic::SemanticFormBuilder.required_string = "<span class='required'> *</span>"
+  Formtastic::SemanticFormBuilder.inline_errors = :none
 
   require_dependency 'payment_term' # Load so Enumeration will pick up the subclass in dev
   

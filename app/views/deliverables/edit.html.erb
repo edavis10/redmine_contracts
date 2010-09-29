@@ -2,6 +2,8 @@
 
 <%= content_tag(:h2, h(l(:text_edit_deliverable_title, :title => resource.title))) %>
 
+<%= error_messages_for 'deliverable' %>
+
 <% semantic_form_for [@project, @contract, setup_nested_deliverable_records(resource)], :url => contract_deliverable_path(@project, @contract, resource), :html => {:class => 'deliverable tabular'} do |form| %>
 <%= render :partial => 'form', :object => form, :locals => {:cancel_path => contract_path(@project, @contract)} %>
 <% end %>
