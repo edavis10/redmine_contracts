@@ -63,13 +63,13 @@ input.financial{
 
 	#content .error_msg p{
 		padding: 6px;
+    color: #a40000;
 	}
+	#content .error_msg p a {
+    color: #a40000;
+    text-decoration: underline;
+  }
 	
-	#content .error_msg p span{
-		font-weight: bold;
-		text-decoration: underline;
-	}
-
 .contract .gravatar{
 	float: left;
 	border: 1px solid #b4d1d9;

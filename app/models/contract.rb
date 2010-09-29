@@ -124,6 +124,18 @@ class Contract < ActiveRecord::Base
     end
   end
 
+  def orphaned_time
+    cost_of_time_without_issue = project.time_entries.all(:conditions => {:issue_id => nil}).inject(0) do |total, time_entry|
+      total += time_entry.cost
+    end
+
+    cost_of_time_without_deliverable = project.issues.all(:include => 'time_entries', :conditions => {:deliverable_id => nil}).collect(&:time_entries).flatten.inject(0) do |total, time_entry|
+      total += time_entry.cost
+    end
+    
+    cost_of_time_without_issue + cost_of_time_without_deliverable
+  end
+
   def to_s
     name
   end

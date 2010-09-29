@@ -73,3 +73,5 @@ en:
   field_budget: Budget
   field_markup: Markup
   field_paid: Paid
+  text_error_message_orphaned_time: "There is {{amount}} worth of time clocked to issues that are not assigned to any deliverables."
+  text_error_message_update_orphaned_time: "Please update the orphaned issues."

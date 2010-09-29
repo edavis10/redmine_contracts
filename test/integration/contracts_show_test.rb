@@ -426,7 +426,59 @@ class ContractsShowTest < ActionController::IntegrationTest
       end
     end
   end
-  
+
+  should "show an alert if there is orphaned time or issues" do
+    configure_overhead_plugin
+
+    @manager = User.generate!
+
+    @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
+
+    @issue1 = Issue.generate_for_project!(@project)
+    @time_entry1 = TimeEntry.generate!(:issue => @issue1,
+                                       :project => @project,
+                                       :activity => @billable_activity,
+                                       :spent_on => Date.today,
+                                       :hours => 10,
+                                       :user => @manager)
+    @time_entry2 = TimeEntry.generate!(:issue => @issue1,
+                                       :project => @project,
+                                       :activity => @non_billable_activity,
+                                       :spent_on => Date.today,
+                                       :hours => 5,
+                                       :user => @manager)
+    @deliverable1.issues << @issue1
+
+    @orphaned_issue = Issue.generate_for_project!(@project)
+    @time_entry_on_orphaned_issue = TimeEntry.generate!(:issue => @orphaned_issue,
+                                                        :project => @project,
+                                                        :activity => @billable_activity,
+                                                        :spent_on => Date.today,
+                                                        :hours => 10,
+                                                        :user => @manager)
+
+    @time_entry_on_project = TimeEntry.generate!(:issue => nil,
+                                                 :project => @project,
+                                                 :activity => @billable_activity,
+                                                 :spent_on => Date.today,
+                                                 :hours => 10,
+                                                 :user => @manager)
+
+    @rate = Rate.generate!(:project => @project,
+                           :user => @manager,
+                           :date_in_effect => Date.yesterday,
+                           :amount => 100)
+
+
+    assert_equal 1, @deliverable1.issues.count
+
+    visit_contract_page(@contract)
+    assert_select "div.error_msg" do
+      assert_select "p", :text => /2,000/
+      assert_select "a", :text => /update/i
+    end
+    
+  end
   
   should "show the current period for a Retainer" do
     today_mock = Date.new(2010,2,15)
