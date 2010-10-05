@@ -3,7 +3,7 @@
 <% if resource.orphaned_time && resource.orphaned_time > 0 %>
   <div class="error_msg">
     <p>
-      <%= l(:text_error_message_orphaned_time, :amount => format_value_field_for_contracts(resource.orphaned_time)) %> 
+      <%= l(:text_error_message_orphaned_time, :amount => format_value_field_for_contracts(resource.orphaned_time, :unit => '$')) %> 
       <%= link_to_issue_list_with_filter(l(:text_error_message_update_orphaned_time), :deliverable_id => '!*') %>
     </p>
   </div>

@@ -92,8 +92,9 @@ module ContractsHelper
     end
   end
 
-  def format_value_field_for_contracts(value)
-    number_with_precision(value, :precision => Contract::ViewPrecision, :delimiter => ',')
+  def format_value_field_for_contracts(value, options={})
+    opt = {:unit => '', :precision => Contract::ViewPrecision, :delimiter => ','}.merge(options)
+    number_to_currency(value, opt)
   end
 
   def format_as_yes_or_no(value)
