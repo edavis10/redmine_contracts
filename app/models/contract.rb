@@ -43,75 +43,75 @@ class Contract < ActiveRecord::Base
 
   # OPTIMIZE: N+1
   def labor_budget
-    deliverables.inject(0) {|total, deliverable| total += deliverable.labor_budget_total }
+    summarize_associated_values(deliverables, :labor_budget_total)
   end
 
   # OPTIMIZE: N+1
   # OPTIMIZE: also hits redmine_overhead which is known to be slow
   def labor_spent
-    deliverables.inject(0) {|total, deliverable| total += deliverable.labor_budget_spent }
+    summarize_associated_values(deliverables, :labor_budget_spent)
   end
 
   # OPTIMIZE: N+1
   def overhead_budget
-    deliverables.inject(0) {|total, deliverable| total += deliverable.overhead_budget_total }
+    summarize_associated_values(deliverables, :overhead_budget_total)
   end
 
   # OPTIMIZE: N+1
   # OPTIMIZE: also hits redmine_overhead which is known to be slow
   def overhead_spent
-    deliverables.inject(0) {|total, deliverable| total += deliverable.overhead_spent }
+    summarize_associated_values(deliverables, :overhead_spent)
   end
 
   # OPTIMIZE: N+1
   def estimated_hour_budget
-    deliverables.inject(0) {|total, deliverable| total += deliverable.estimated_hour_budget_total }
+    summarize_associated_values(deliverables, :estimated_hour_budget_total)
   end
 
   # OPTIMIZE: N+1
   def estimated_hour_spent
-    deliverables.inject(0) {|total, deliverable| total += deliverable.hours_spent_total }
+    summarize_associated_values(deliverables, :hours_spent_total)
   end
 
   # OPTIMIZE: N+1
   def total_budget
-    deliverables.inject(0) {|total, deliverable| total += deliverable.total }
+    summarize_associated_values(deliverables, :total)
   end
 
   # OPTIMIZE: N+1
   def total_spent
-    deliverables.inject(0) {|total, deliverable| total += deliverable.total_spent }
+    summarize_associated_values(deliverables, :total_spent)
   end
 
   # OPTIMIZE: N+1
   def profit_budget
-    deliverables.inject(0) {|total, deliverable| total += deliverable.profit_budget }
+    summarize_associated_values(deliverables, :profit_budget)
   end
 
   # OPTIMIZE: N+1
   def profit_left
-    deliverables.inject(0) {|total, deliverable| total += deliverable.profit_left }
+    summarize_associated_values(deliverables, :profit_left)
   end
   alias_method :profit_spent, :profit_left
 
   # OPTIMIZE: N+1
   def fixed_budget
-    deliverables.inject(0) {|total, deliverable| total += deliverable.fixed_budget_total }
+    summarize_associated_values(deliverables, :fixed_budget_total)
   end
 
   # OPTIMIZE: N+1
   def fixed_spent
-    deliverables.inject(0) {|total, deliverable| total += deliverable.fixed_budget_total_spent }
+    summarize_associated_values(deliverables, :fixed_budget_total_spent)
   end
 
   # OPTIMIZE: N+1
   def fixed_markup_budget
-    deliverables.inject(0) {|total, deliverable| total += deliverable.fixed_markup_budget_total }
+    summarize_associated_values(deliverables, :fixed_markup_budget_total)
   end
   
   # OPTIMIZE: N+1
   def fixed_markup_spent
-    deliverables.inject(0) {|total, deliverable| total += deliverable.fixed_markup_budget_total_spent }
+    summarize_associated_values(deliverables, :fixed_markup_budget_total_spent)
   end
   
   def after_initialize
@@ -134,7 +134,7 @@ class Contract < ActiveRecord::Base
   def to_s
     name
   end
-    
+
   if Rails.env.test?
     generator_for :name, :method => :next_name
     generator_for :executed => true
@@ -148,4 +148,11 @@ class Contract < ActiveRecord::Base
 
   end
   
+  private
+
+  # This is a potential N+1 method since value_method might be calculated
+  def summarize_associated_values(records, value_method)
+    records.inject(0) {|total, record| total += record.send(value_method)}
+  end
+    
 end
