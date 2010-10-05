@@ -34,6 +34,16 @@ def User.add_to_project(user, project, role)
   Member.generate!(:principal => user, :project => project, :roles => [role])
 end
 
+def User.generate_user_with_permission_to_manage_budget(options={})
+  project = options[:project]
+  
+  user = User.generate!(:password => 'contracts', :password_confirmation => 'contracts')
+  role = Role.generate!(:permissions => [:view_issues, :edit_issues, :add_issues, :manage_budget])
+  User.add_to_project(user, project, role)
+  user
+end
+
+
 module IntegrationTestHelper
   def login_as(user="existing", password="existing")
     visit "/login"
@@ -44,6 +54,12 @@ module IntegrationTestHelper
     assert User.current.logged?
   end
 
+  def logout
+    visit '/logout'
+    assert_response :success
+    assert !User.current.logged?
+  end
+  
   def visit_project(project)
     visit '/'
     assert_response :success
@@ -82,6 +98,11 @@ module IntegrationTestHelper
   def assert_forbidden
     assert_response :forbidden
     assert_template 'common/403'
+  end
+
+  def assert_requires_login
+    assert_response :success
+    assert_template 'account/login'
   end
   
 end

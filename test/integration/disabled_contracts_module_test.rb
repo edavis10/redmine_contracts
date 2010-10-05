@@ -1,17 +1,15 @@
 require 'test_helper'
 
 class DisabledContractsModuleTest < ActionController::IntegrationTest
-  def setup
-    @user = User.generate!(:login => 'existing', :password => 'existing', :password_confirmation => 'existing', :admin => true)
-    login_as
-  end
-
   context "on a project with the Contracts module disabled" do
     setup do
       @project = Project.generate!
       @project.enabled_modules.find_by_name('contracts').destroy
       @project.reload
       assert !@project.module_enabled?(:contracts), "Contracts enabled on project"
+
+      @user = User.generate_user_with_permission_to_manage_budget(:project => @project)
+      login_as(@user.login, 'contracts')
     end
 
     should "not show the menu item" do

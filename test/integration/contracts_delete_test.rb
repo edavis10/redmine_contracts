@@ -6,6 +6,9 @@ class ContractsDeleteTest < ActionController::IntegrationTest
   def setup
     @project = Project.generate!(:identifier => 'main')
     @contract = Contract.generate!(:project => @project, :name => 'A Contract')
+    @user = User.generate_user_with_permission_to_manage_budget(:project => @project)
+    
+    login_as(@user.login, 'contracts')
   end
 
   should "allow admins to delete the contract" do
@@ -39,10 +42,7 @@ class ContractsDeleteTest < ActionController::IntegrationTest
 
     assert_select "a", :text => /Delete/, :count => 0
     delete contract_path(@project, @contract)
-    assert_response :redirect
-    follow_redirect!
-    assert_response :success
-    assert_template 'account/login' # Prompt for login
+    assert_forbidden
 
     assert Contract.find_by_id(@contract.id), "Contract deleted"
   end

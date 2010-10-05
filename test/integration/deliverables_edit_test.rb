@@ -12,9 +12,30 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     @fixed_deliverable = FixedDeliverable.generate!(:contract => @contract, :manager => @manager, :title => 'The Title')
     @hourly_deliverable = HourlyDeliverable.generate!(:contract => @contract, :manager => @manager, :title => 'An Hourly')
     
+    @user = User.generate_user_with_permission_to_manage_budget(:project => @project)
+    
+    login_as(@user.login, 'contracts')
   end
 
-  should "allow any user to edit the Fixed deliverable" do
+  should "block anonymous users from editing the deliverable" do
+    logout
+    visit "/projects/#{@project.identifier}/contracts/#{@contract.id}/deliverables/#{@fixed_deliverable.id}"
+
+    assert_requires_login
+  end
+  
+  should "block unauthorized users from editing the deliverable" do
+    logout
+
+    @user = User.generate!(:password => 'test', :password_confirmation => 'test')
+    login_as(@user.login, 'test')
+    
+    visit "/projects/#{@project.identifier}/contracts/#{@contract.id}/deliverables/#{@fixed_deliverable.id}"
+    
+    assert_forbidden
+  end
+
+  should "allow authorized users to edit the Fixed deliverable" do
     visit_contract_page(@contract)
     click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
     assert_response :success
@@ -44,7 +65,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
 
   end
 
-  should "allow any user to edit the Hourly deliverable" do
+  should "allow authorized users to edit the Hourly deliverable" do
     visit_contract_page(@contract)
     click_link_within "#deliverable_details_#{@hourly_deliverable.id}", 'Edit'
     assert_response :success

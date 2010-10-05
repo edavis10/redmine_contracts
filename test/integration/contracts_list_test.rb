@@ -16,9 +16,31 @@ class ContractsListTest < ActionController::IntegrationTest
      @contract2,
      @other_contract
     ].map {|c| c.reload }
+
+    @user = User.generate_user_with_permission_to_manage_budget(:project => @project)
+    
+    login_as(@user.login, 'contracts')
   end
 
-  should "allow any user to list the contracts on a project" do
+  should "block anonymous users from listing the contracts" do
+    logout
+    visit "/projects/#{@project.identifier}/contracts"
+
+    assert_requires_login
+  end
+  
+  should "block unauthorized users from listing contracts" do
+    logout
+
+    @user = User.generate!(:password => 'test', :password_confirmation => 'test')
+    login_as(@user.login, 'test')
+    
+    visit "/projects/#{@project.identifier}/contracts"
+
+    assert_forbidden
+  end
+
+  should "allow authorized users to list the contracts on a project" do
     visit_contracts_for_project(@project)
   end
 

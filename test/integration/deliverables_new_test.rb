@@ -6,9 +6,30 @@ class DeliverablesNewTest < ActionController::IntegrationTest
   def setup
     @project = Project.generate!(:identifier => 'main')
     @contract = Contract.generate!(:project => @project)
+    @user = User.generate_user_with_permission_to_manage_budget(:project => @project)
+    
+    login_as(@user.login, 'contracts')
   end
 
-  should "allow any user to open the new deliverable form" do
+  should "block anonymous users from opening the new deliverable form" do
+    logout
+    visit "/projects/#{@project.identifier}/contracts/#{@contract.id}/deliverables/new"
+
+    assert_requires_login
+  end
+  
+  should "block unauthorized users from opening the new deliverable form" do
+    logout
+
+    @user = User.generate!(:password => 'test', :password_confirmation => 'test')
+    login_as(@user.login, 'test')
+    
+    visit "/projects/#{@project.identifier}/contracts/#{@contract.id}/deliverables/new"
+
+    assert_forbidden
+  end
+
+  should "allow authorized users open the new deliverable form" do
     visit_contract_page(@contract)
     click_link 'Add New'
     assert_response :success

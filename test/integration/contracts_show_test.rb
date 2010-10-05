@@ -6,9 +6,30 @@ class ContractsShowTest < ActionController::IntegrationTest
   def setup
     @project = Project.generate!(:identifier => 'main').reload
     @contract = Contract.generate!(:project => @project)
+    @user = User.generate_user_with_permission_to_manage_budget(:project => @project)
+    
+    login_as(@user.login, 'contracts')
   end
 
-  should "allow any user to view the contract" do
+  should "block anonymous users from viewing the contract" do
+    logout
+    visit "/projects/#{@project.identifier}/contracts/#{@contract.id}"
+
+    assert_requires_login
+  end
+  
+  should "block unauthorized users from viewing the contract" do
+    logout
+
+    @user = User.generate!(:password => 'test', :password_confirmation => 'test')
+    login_as(@user.login, 'test')
+    
+    visit "/projects/#{@project.identifier}/contracts/#{@contract.id}"
+
+    assert_forbidden
+  end
+
+  should "allow authorized users to view the contract" do
     visit_contracts_for_project(@project)
     click_link @contract.id
     assert_response :success

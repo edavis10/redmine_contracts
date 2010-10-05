@@ -7,9 +7,30 @@ class ContractsNewTest < ActionController::IntegrationTest
     @project = Project.generate!(:identifier => 'main')
     PaymentTerm.generate!(:type => 'PaymentTerm', :name => 'Net 15')
     PaymentTerm.generate!(:type => 'PaymentTerm', :name => 'Net 30')
+    @user = User.generate_user_with_permission_to_manage_budget(:project => @project)
+    
+    login_as(@user.login, 'contracts')
   end
 
-  should "allow any user to open the new contracts form" do
+  should "block anonymous users from opening the new contract form" do
+    logout
+    visit "/projects/#{@project.identifier}/contracts/new"
+
+    assert_requires_login
+  end
+  
+  should "block unauthorized users from opening the new contract form" do
+    logout
+
+    @user = User.generate!(:password => 'test', :password_confirmation => 'test')
+    login_as(@user.login, 'test')
+    
+    visit "/projects/#{@project.identifier}/contracts/new"
+
+    assert_forbidden
+  end
+
+  should "allow authorized users to open the new contracts form" do
     visit_contracts_for_project(@project)
     click_link 'New Contract'
     assert_response :success

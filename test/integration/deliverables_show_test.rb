@@ -8,6 +8,9 @@ class DeliverablesShowTest < ActionController::IntegrationTest
     @contract = Contract.generate!(:project => @project)
     @manager = User.generate!
     @deliverable = FixedDeliverable.generate!(:contract => @contract, :manager => @manager)
+    @user = User.generate_user_with_permission_to_manage_budget(:project => @project)
+    
+    login_as(@user.login, 'contracts')
   end
 
   should "redirect to the contract page" do

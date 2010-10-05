@@ -24,7 +24,7 @@ Redmine::Plugin.register :redmine_contracts do
     permission(:manage_budget, {
                  :contracts => [:index, :new, :create, :show, :edit, :update, :destroy],
                  :deliverables => [:index, :new, :create, :show, :edit, :update, :destroy]
-               }, :public => true)
+               })
   end
 
   contract_list_submenu_items = Proc.new {|project|
