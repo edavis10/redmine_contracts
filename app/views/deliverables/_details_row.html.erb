@@ -52,18 +52,22 @@
                       <tbody>
                         <tr>
                           <td class="l"><a href="#"><strong><%= l(:field_labor) %></strong></a><%= release(3, "Deliverable lightbox") %></td>
-                          <td class="labor_budget_spent"><%= h(format_value_field_for_contracts(deliverable.labor_budget_spent(validated_period))) %></td>
+                          <td class="labor_budget_spent <%= overage_class(deliverable.labor_budget_spent(validated_period), deliverable.labor_budget_total(validated_period)) %>">
+                            <%= h(format_value_field_for_contracts(deliverable.labor_budget_spent(validated_period))) %>
+                          </td>
                           <td class="labor_budget_total"><%= h(format_value_field_for_contracts(deliverable.labor_budget_total(validated_period))) %></td>
                           <td class="labor_hours">
-                            <%= h(format_value_field_for_contracts(deliverable.labor_hours_spent_total(validated_period))) %>/<%= h(format_value_field_for_contracts(deliverable.labor_budget_hours(validated_period))) %> <%= l(:text_short_hours) %>
+                            <span class="<%= overage_class(deliverable.labor_hours_spent_total(validated_period), deliverable.labor_budget_hours(validated_period)) %>"><%= h(format_value_field_for_contracts(deliverable.labor_hours_spent_total(validated_period))) %></span>/<%= h(format_value_field_for_contracts(deliverable.labor_budget_hours(validated_period))) %> <%= l(:text_short_hours) %>
                           </td>
                         </tr>
                         <tr>
                           <td class="l"><a href="#"><strong><%= l(:field_overhead) %></strong></a><%= release(3, "Deliverable lightbox") %></td>
-                          <td class="overhead_budget_spent"><%= h(format_value_field_for_contracts(deliverable.overhead_spent(validated_period))) %></td>
+                          <td class="overhead_budget_spent <%= overage_class(deliverable.overhead_spent(validated_period), deliverable.overhead_budget_total(validated_period)) %>">
+                            <%= h(format_value_field_for_contracts(deliverable.overhead_spent(validated_period))) %>
+                          </td>
                           <td class="overhead_budget_total"><%= h(format_value_field_for_contracts(deliverable.overhead_budget_total(validated_period))) %></td>
                           <td class="overhead_hours">
-                            <%= h(format_value_field_for_contracts(deliverable.overhead_hours_spent_total(validated_period))) %>/<%= h(format_value_field_for_contracts(deliverable.overhead_budget_hours(validated_period))) %> <%= l(:text_short_hours) %>
+                            <span class="<%= overage_class(deliverable.overhead_hours_spent_total(validated_period), deliverable.overhead_budget_hours(validated_period)) %>"><%= h(format_value_field_for_contracts(deliverable.overhead_hours_spent_total(validated_period))) %></span>/<%= h(format_value_field_for_contracts(deliverable.overhead_budget_hours(validated_period))) %> <%= l(:text_short_hours) %>
                           </td>
                         </tr>
 
@@ -71,7 +75,9 @@
                         <% next if fixed_budget.blank_record? %>
                         <tr id="fixed_budget_<%= fixed_budget.id %>">
                           <td class="l fixed_title" title="<%= h(fixed_budget.description) %>"><%= h(fixed_budget.title) %></td>
-                          <td class="fixed_budget_spent"><%= h(format_value_field_for_contracts(fixed_budget.budget_spent)) %></td>
+                          <td class="fixed_budget_spent <%= overage_class(fixed_budget.budget_spent, fixed_budget.budget) %>">
+                            <%= h(format_value_field_for_contracts(fixed_budget.budget_spent)) %>
+                          </td>
                           <td class="fixed_budget_total"><%= h(format_value_field_for_contracts(fixed_budget.budget)) %></td>
                           <td></td>
                         </tr>
@@ -80,7 +86,9 @@
                         <% if show_markup_for?(deliverable, validated_period) %>
                         <tr>
                           <td class="l"><%= l(:field_markup) %></td>
-                          <td class="fixed_markup_budget_spent"><%= h(format_value_field_for_contracts(deliverable.fixed_markup_budget_total_spent(validated_period))) %></td>
+                          <td class="fixed_markup_budget_spent <%= overage_class(deliverable.fixed_markup_budget_total_spent(validated_period), deliverable.fixed_markup_budget_total(validated_period)) %>">
+                            <%= h(format_value_field_for_contracts(deliverable.fixed_markup_budget_total_spent(validated_period))) %>
+                          </td>
                           <td class="fixed_markup_budget_total"><%= h(format_value_field_for_contracts(deliverable.fixed_markup_budget_total(validated_period))) %></td>
                           <td></td>
                         </tr>
@@ -88,17 +96,24 @@
 
                         <tr>
                           <td class="l"><%= l(:field_profit) %></td>
-                          <td><%= h(format_value_field_for_contracts(deliverable.profit_left(validated_period))) %></td>
-                          <td><%= h(format_value_field_for_contracts(deliverable.profit_budget(validated_period))) %></td>
+                          <td class="profit_spent <%= overage_class(deliverable.profit_left(validated_period), deliverable.profit_budget(validated_period), :reverse => true) %>">
+                            <%= h(format_value_field_for_contracts(deliverable.profit_left(validated_period))) %>
+                          </td>
+                          <td class="profit_total"><%= h(format_value_field_for_contracts(deliverable.profit_budget(validated_period))) %></td>
                           <td></td>
                         </tr>
                         <tr class="total">
                           <td class="l"><strong><%= l(:field_total) %>:</strong></td>
-                          <td class="total_spent"><strong><%= h(format_value_field_for_contracts(deliverable.total_spent(validated_period))) %></strong></td>
+                          <td class="total_spent <%= overage_class(deliverable.total_spent(validated_period), deliverable.total(validated_period)) %>">
+                            <strong>
+                              <%= h(format_value_field_for_contracts(deliverable.total_spent(validated_period))) %>
+                            </strong>
+                          </td>
                           <td class="total"><strong><%= h(format_value_field_for_contracts(deliverable.total(validated_period))) %></strong></td>
                           <td class="total_hours">
                             <strong>
-                              <%= h(format_value_field_for_contracts(deliverable.hours_spent_total(validated_period))) %>/<%= h(format_value_field_for_contracts(deliverable.estimated_hour_budget_total(validated_period))) %> <%= l(:text_short_hours) %>
+                              <span class="<%= overage_class(deliverable.hours_spent_total(validated_period), deliverable.estimated_hour_budget_total(validated_period)) %>">
+                                <%= h(format_value_field_for_contracts(deliverable.hours_spent_total(validated_period))) %></span>/<%= h(format_value_field_for_contracts(deliverable.estimated_hour_budget_total(validated_period))) %> <%= l(:text_short_hours) %>
                             </strong>
                           </td>
                         </tr>

@@ -448,6 +448,54 @@ class ContractsShowTest < ActionController::IntegrationTest
     end
   end
 
+  should "show overages in red" do
+    configure_overhead_plugin
+
+    @manager = User.generate!
+
+    @deliverable1 = HourlyDeliverable.generate!(:contract => @contract, :manager => @manager)
+    @issue1 = Issue.generate_for_project!(@project)
+    @time_entry1 = TimeEntry.generate!(:issue => @issue1,
+                                       :project => @project,
+                                       :activity => @billable_activity,
+                                       :spent_on => Date.today,
+                                       :hours => 10,
+                                       :user => @manager)
+    @time_entry2 = TimeEntry.generate!(:issue => @issue1,
+                                       :project => @project,
+                                       :activity => @non_billable_activity,
+                                       :spent_on => Date.today,
+                                       :hours => 5,
+                                       :user => @manager)
+    @deliverable1.issues << @issue1
+    @rate = Rate.generate!(:project => @project,
+                           :user => @manager,
+                           :date_in_effect => Date.yesterday,
+                           :amount => 100)
+    
+    assert_equal 1, @deliverable1.issues.count
+
+    visit_contract_page(@contract)
+
+    # Overages on:
+    assert_select '.overage', :count => 14
+    assert_select '.contract-labor .overage', :count => 2
+    assert_select '.contract-overhead .overage', :count => 2
+    assert_select '.contract-profit .overage'
+    assert_select '.contract-estimated-hour.total .overage'
+
+    assert_select '#deliverables .spent-amount.labor.overage'
+    assert_select '#deliverables .spent-amount.overhead.overage'
+    assert_select '#deliverables .labor_budget_spent.overage'
+    assert_select '#deliverables .overhead_budget_spent.overage'
+    assert_select '#deliverables .profit_spent.overage'
+    assert_select '#deliverables .labor_hours .overage'
+    assert_select '#deliverables .overhead_hours .overage'
+    assert_select '#deliverables .total_hours .overage'
+    
+  end
+  
+
   should "show an alert if there is orphaned time or issues" do
     configure_overhead_plugin
 

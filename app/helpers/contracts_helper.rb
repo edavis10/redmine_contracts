@@ -9,10 +9,16 @@ module ContractsHelper
 
   def format_budget_for_deliverable(deliverable, spent, total, options={})
     extra_css_class = options[:class] || ''
-    
+
     if total > 0 || spent > 0
-      content_tag(:td, h(format_value_field_for_contracts(spent)), :class => 'spent-amount ' + extra_css_class) +
-        content_tag(:td, h(format_value_field_for_contracts(total)), :class => 'total-amount white ' + extra_css_class)
+      spent_css_classes = 'spent-amount'
+      spent_css_classes << " #{overage_class(spent, total)}"
+      spent_css_classes << ' ' << extra_css_class
+      total_css_classes = 'total-amount white'
+      total_css_classes << ' ' << extra_css_class
+      
+      content_tag(:td, h(format_value_field_for_contracts(spent)), :class => spent_css_classes) +
+        content_tag(:td, h(format_value_field_for_contracts(total)), :class => total_css_classes)
     else
       content_tag(:td, '----', :colspan => '2', :class => 'no-value ' + extra_css_class)
     end
@@ -61,12 +67,16 @@ module ContractsHelper
   def show_budget_field(object, spent_field, total_field, options={})
 
     formatter = options[:format] || :number_to_currency
-    spent_content = send(formatter, object.send(spent_field))
-    total_content = send(formatter, object.send(total_field))
+    spent_value = object.send(spent_field)
+    total_value = object.send(total_field)
+    spent_content = send(formatter, spent_value)
+    total_content = send(formatter, total_value)
 
+    reverse_overage = spent_field.to_s.match(/profit/i)
+    
     show_field(object, spent_field, options.merge(:raw => true, :wrap_in_td => false)) do
 
-      content_tag(:td, h(spent_content), :class => 'spent') +
+      content_tag(:td, h(spent_content), :class => "spent #{overage_class(spent_value, total_value, :reverse => reverse_overage)}") +
         content_tag(:td, h(total_content), :class => 'budget')
     end
   end
@@ -164,4 +174,27 @@ module ContractsHelper
     return '' unless (1..5).include?(version)
     image_tag("todo#{version}.png", :plugin => 'redmine_contracts', :title => "Coming in release #{version}. #{message}")
   end
+
+  # Overage occurs when spent is negative or spent is greater than budget
+  #
+  # :reverse - spent is reverse, it is overage when it's less than budget
+  def overage?(spent, budget, options={})
+    return false unless spent && budget
+    return true if spent < 0
+    
+    if options[:reverse]
+      spent.to_f < budget.to_f
+    else
+      spent.to_f > budget.to_f
+    end
+  end
+
+  def overage_class(spent, budget, options={})
+    if overage?(spent, budget, options)
+      'overage'
+    else
+      ''
+    end
+  end
+  
 end
