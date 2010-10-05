@@ -7,6 +7,7 @@ class DeliverablesController < InheritedResources::Base
   before_filter :authorize
 
   helper :contracts
+  helper :contract_formatter
   
   def index
     redirect_to contract_url(@project, @contract)
