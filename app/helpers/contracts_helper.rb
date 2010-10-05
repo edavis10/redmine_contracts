@@ -159,4 +159,9 @@ module ContractsHelper
             })
 
   end
+
+  def release(version=5, message='')
+    return '' unless (1..5).include?(version)
+    image_tag("todo#{version}.png", :plugin => 'redmine_contracts', :title => "Coming in release #{version}. #{message}")
+  end
 end

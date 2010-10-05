@@ -24,21 +24,21 @@
 
                     <table>
                       <%= show_field(deliverable, :current_period, :html_options => {:class => 'deliverable-current-period'}) if deliverable.retainer? %>
+                      <tr><td colspan="2"><%= release(5, "Retainer lightbox") %></td></tr>
                       <%= show_field(deliverable, :start_date, :format => :format_date, :html_options => {:class => 'deliverable-start-date'}) %>
                       <%= show_field(deliverable, :end_date, :format => :format_date, :html_options => {:class => 'deliverable-end-date'}) %>
                     </table>
 
                   </div>
 
-                  <%# TODO: Release 2, skinning port %>
                   <div class="finance">
                     <table>
                       <thead>
                         <tr>
                           <th> </th>
-                          <th>Spent</th>
-                          <th>Budget</th>
-                          <th>Hours</th>
+                          <th><%= l(:field_spent) %></th>
+                          <th><%= l(:field_budget) %></th>
+                          <th><%= l(:field_hours) %></th>
                         </tr>
                       </thead>
                       <tfoot>
@@ -51,7 +51,7 @@
                       </tfoot>
                       <tbody>
                         <tr>
-                          <td class="l"><a href="#"><strong>Labor</strong></a></td>
+                          <td class="l"><a href="#"><strong><%= l(:field_labor) %></strong></a><%= release(3, "Deliverable lightbox") %></td>
                           <td class="labor_budget_spent"><%= h(format_value_field_for_contracts(deliverable.labor_budget_spent(validated_period))) %></td>
                           <td class="labor_budget_total"><%= h(format_value_field_for_contracts(deliverable.labor_budget_total(validated_period))) %></td>
                           <td class="labor_hours">
@@ -59,7 +59,7 @@
                           </td>
                         </tr>
                         <tr>
-                          <td class="l"><a href="#"><strong>Overhead</strong></a></td>
+                          <td class="l"><a href="#"><strong><%= l(:field_overhead) %></strong></a><%= release(3, "Deliverable lightbox") %></td>
                           <td class="overhead_budget_spent"><%= h(format_value_field_for_contracts(deliverable.overhead_spent(validated_period))) %></td>
                           <td class="overhead_budget_total"><%= h(format_value_field_for_contracts(deliverable.overhead_budget_total(validated_period))) %></td>
                           <td class="overhead_hours">
@@ -87,13 +87,13 @@
                         <% end %>
 
                         <tr>
-                          <td class="l">Profit</td>
+                          <td class="l"><%= l(:field_profit) %></td>
                           <td><%= h(format_value_field_for_contracts(deliverable.profit_left(validated_period))) %></td>
                           <td><%= h(format_value_field_for_contracts(deliverable.profit_budget(validated_period))) %></td>
                           <td></td>
                         </tr>
                         <tr class="total">
-                          <td class="l"><strong>Total:</strong></td>
+                          <td class="l"><strong><%= l(:field_total) %>:</strong></td>
                           <td class="total_spent"><strong><%= h(format_value_field_for_contracts(deliverable.total_spent(validated_period))) %></strong></td>
                           <td class="total"><strong><%= h(format_value_field_for_contracts(deliverable.total(validated_period))) %></strong></td>
                           <td class="total_hours">

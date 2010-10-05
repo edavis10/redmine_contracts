@@ -12,9 +12,8 @@
         <%= labor_budget.hidden_field(:year) %>
         <%= labor_budget.hidden_field(:month) %>
       <tr>
-        <%# TODO: Select field for the Time Entry Activity in a td %>
         <td>
-          <select><option>TODO: Release 3</option></select>
+          <%= release(3, "Select field for the Time Entry Activity in a td") %>
         </td>
         <td>
           <p class="inline-hints"><%= labor_budget.label(:hours, l(:text_short_hours)) %></p>
@@ -24,9 +23,8 @@
           <p class="inline-hints"><%= labor_budget.label(:budget, l(:text_dollar_sign)) %></p>
           <%= labor_budget.text_field(:budget, :value => format_deliverable_value_fields(labor_budget.object.budget), :class => 'financial') %>
         </td>
-        <%# TODO: Green Add button for multiple records %>
         <td>
-          Todo: Add button (Release 3)
+          <%= release(3, "Green Add button for multiple records") %>
         </td>
       </tr>
       <% end %>
@@ -41,9 +39,8 @@
         <%= overhead_budget.hidden_field(:year) %>
         <%= overhead_budget.hidden_field(:month) %>
       <tr>
-        <%# TODO: Select field for the Time Entry Activity in a td %>
         <td>
-          <select><option>TODO: Release 3</option></select>
+          <%= release(3, "Select field for the Time Entry Activity in a td") %>
         </td>
         <td>
           <p class="inline-hints"><%= overhead_budget.label(:hours, l(:text_short_hours)) %></p>
@@ -53,9 +50,8 @@
           <p class="inline-hints"><%= overhead_budget.label(:budget, l(:text_dollar_sign)) %></p>
           <%= overhead_budget.text_field(:budget, :value => format_deliverable_value_fields(overhead_budget.object.budget), :class => 'financial') %>
         </td>
-        <%# TODO: Green Add button for multiple records %>
         <td>
-          Todo: Add button (Release 3)
+          <%= release(3, "Green Add button for multiple records") %>
         </td>
       </tr>
       <% end %>
@@ -95,7 +91,7 @@
         <%= fixed_budget.text_area(:description, :class => 'wiki-edit', :rows => '5', :id => "fixed-description#{fixed_budget.object.object_id}") %>
         <%= wikitoolbar_for "fixed-description#{fixed_budget.object.object_id}" %>
 
-        <p>Todo: Add button (Release 3)</p>
+        <p><%= release(3, "Green Add button for multiple records") %></p>
       <% end %>
 	  </div>
 	  
