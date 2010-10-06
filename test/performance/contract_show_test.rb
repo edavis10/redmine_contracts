@@ -7,20 +7,18 @@ class ContractShowTest < ActionController::PerformanceTest
   def setup
     @project = Project.generate!(:identifier => 'main').reload
     @contract = Contract.generate!(:project => @project)
-    @manager = User.generate!(:login => 'user', :password => 'password', :password_confirmation => 'password')
-    @role = Role.generate!
-    User.add_to_project(@manager, @project, @role)
+    @manager = User.generate_user_with_permission_to_manage_budget(:project => @project).reload
     @fixed_deliverable = FixedDeliverable.generate!(:contract => @contract, :manager => @manager, :title => 'The Title')
     @hourly_deliverable = HourlyDeliverable.generate!(:contract => @contract, :manager => @manager, :title => 'An Hourly')
 
     configure_overhead_plugin
-    100.times do
+    200.times do
       generate_issues_and_time_entries_for_deliverable(@hourly_deliverable, @project)
       generate_issues_and_time_entries_for_deliverable(@fixed_deliverable, @project)
     end
     
     # Load the app
-    login_as 'user', 'password'
+    login_as @manager.login, 'contracts'
     visit_contracts_for_project(@project)
   end
   
