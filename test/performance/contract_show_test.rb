@@ -11,8 +11,10 @@ class ContractShowTest < ActionController::PerformanceTest
     @fixed_deliverable = FixedDeliverable.generate!(:contract => @contract, :manager => @manager, :title => 'The Title')
     @hourly_deliverable = HourlyDeliverable.generate!(:contract => @contract, :manager => @manager, :title => 'An Hourly')
 
+    @rate = Rate.generate!(:project => @project, :user => @manager, :date_in_effect => Date.today, :amount => 100)
+    
     configure_overhead_plugin
-    200.times do
+    100.times do
       generate_issues_and_time_entries_for_deliverable(@hourly_deliverable, @project)
       generate_issues_and_time_entries_for_deliverable(@fixed_deliverable, @project)
     end
@@ -42,6 +44,7 @@ class ContractShowTest < ActionController::PerformanceTest
                                        :spent_on => Date.today,
                                        :hours => 20,
                                        :user => @manager)
+
     deliverable.issues << @issue1
 
   end
