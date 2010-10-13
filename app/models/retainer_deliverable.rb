@@ -103,7 +103,9 @@ class RetainerDeliverable < HourlyDeliverable
   def labor_budget_total(date=nil)
     case scope_date_status(date)
     when :in
-      labor_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+      memoize_by_date("@labor_budget_total", date) do
+        labor_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+      end
     when :out
       0
     else
@@ -114,7 +116,9 @@ class RetainerDeliverable < HourlyDeliverable
   def overhead_budget_total(date=nil)
     case scope_date_status(date)
     when :in
-      overhead_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+      memoize_by_date("@overhead_budget_total", date) do
+        overhead_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+      end
     when :out
       0
     else
@@ -125,7 +129,9 @@ class RetainerDeliverable < HourlyDeliverable
   def labor_budget_hours(date=nil)
     case scope_date_status(date)
     when :in
-      labor_budgets.sum(:hours, :conditions => {:year => date.year, :month => date.month})
+      memoize_by_date("@labor_budget_hours", date) do
+        labor_budgets.sum(:hours, :conditions => {:year => date.year, :month => date.month})
+      end
     when :out
       0
     else
@@ -136,9 +142,11 @@ class RetainerDeliverable < HourlyDeliverable
   def labor_hours_spent_total(date=nil)
     case scope_date_status(date)
     when :in
-      time_entries = issues.collect {|issue| issue.time_entries.all(:conditions => {:tyear => date.year, :tmonth => date.month}) }.flatten
+      memoize_by_date("@labor_hours_spent_total", date) do
+        time_entries = issues.collect {|issue| issue.time_entries.all(:conditions => {:tyear => date.year, :tmonth => date.month}) }.flatten
 
-      billable_hours_on_time_entries(time_entries)
+        billable_hours_on_time_entries(time_entries)
+      end
     when :out
       0
     else
@@ -149,9 +157,11 @@ class RetainerDeliverable < HourlyDeliverable
   def overhead_hours_spent_total(date=nil)
     case scope_date_status(date)
     when :in
-      time_entries = issues.collect {|issue| issue.time_entries.all(:conditions => {:tyear => date.year, :tmonth => date.month}) }.flatten
+      memoize_by_date("@overhead_hours_spent_total", date) do
+        time_entries = issues.collect {|issue| issue.time_entries.all(:conditions => {:tyear => date.year, :tmonth => date.month}) }.flatten
 
-      nonbillable_hours_on_time_entries(time_entries)
+        nonbillable_hours_on_time_entries(time_entries)
+      end
     when :out
       0
     else
@@ -179,7 +189,9 @@ class RetainerDeliverable < HourlyDeliverable
   def fixed_budget_total(date=nil)
     case scope_date_status(date)
     when :in
-      fixed_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+      memoize_by_date("@fixed_budget_total", date) do
+        fixed_budgets.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+      end
     when :out
       0
     else
@@ -190,7 +202,9 @@ class RetainerDeliverable < HourlyDeliverable
   def fixed_budget_total_spent(date=nil)
     case scope_date_status(date)
     when :in
-      fixed_budgets.paid.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+      memoize_by_date("@fixed_budget_total_spent", date) do
+        fixed_budgets.paid.sum(:budget, :conditions => {:year => date.year, :month => date.month})
+      end
     when :out
       0
     else
@@ -201,9 +215,11 @@ class RetainerDeliverable < HourlyDeliverable
   def fixed_markup_budget_total(date=nil)
     case scope_date_status(date)
     when :in
-      fixed_budgets.
-        all(:conditions => {:year => date.year, :month => date.month}).
-        inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
+      memoize_by_date("@fixed_markup_budget_total", date) do
+        fixed_budgets.
+          all(:conditions => {:year => date.year, :month => date.month}).
+          inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
+      end
     when :out
       0
     else
@@ -214,10 +230,12 @@ class RetainerDeliverable < HourlyDeliverable
   def fixed_markup_budget_total_spent(date=nil)
     case scope_date_status(date)
     when :in
-      fixed_budgets.
-        paid.
-        all(:conditions => {:year => date.year, :month => date.month}).
-        inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
+      memoize_by_date("@fixed_markup_budget_total_spent", date) do
+        fixed_budgets.
+          paid.
+          all(:conditions => {:year => date.year, :month => date.month}).
+          inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
+      end
     when :out
       0
     else
@@ -229,18 +247,20 @@ class RetainerDeliverable < HourlyDeliverable
     case scope_date_status(date)
     when :in
       # TODO: duplicated on HourlyDeliverable#total_spent
-      return 0 if contract.nil?
-      return 0 if contract.billable_rate.blank?
-      return 0 unless self.issues.count > 0
+      memoize_by_date("@total_spent", date) do
+        return 0 if contract.nil?
+        return 0 if contract.billable_rate.blank?
+        return 0 unless self.issues.count > 0
 
-      issue_ids = self.issues.collect(&:id)
-      time_logs = time_entries_for_date_and_issue_ids(date, issue_ids)
+        issue_ids = self.issues.collect(&:id)
+        time_logs = time_entries_for_date_and_issue_ids(date, issue_ids)
 
-      hours = billable_hours_on_time_entries(time_logs)
+        hours = billable_hours_on_time_entries(time_logs)
 
-      fixed_budget_amount = fixed_budget_total_spent(date) + fixed_markup_budget_total_spent(date)
+        fixed_budget_amount = fixed_budget_total_spent(date) + fixed_markup_budget_total_spent(date)
 
-      return (hours * contract.billable_rate) + fixed_budget_amount
+        return (hours * contract.billable_rate) + fixed_budget_amount
+      end
     when :out
       0
     else
@@ -290,9 +310,11 @@ class RetainerDeliverable < HourlyDeliverable
   def labor_budget_spent(date=nil)
     case scope_date_status(date)
     when :in
-      labor_budget_spent_with_filter do
-        issue_ids = self.issues.collect(&:id)
-        time_entries_for_date_and_issue_ids(date, issue_ids)
+      memoize_by_date("@labor_budget_spent", date) do
+        labor_budget_spent_with_filter do
+          issue_ids = self.issues.collect(&:id)
+          time_entries_for_date_and_issue_ids(date, issue_ids)
+        end
       end
     when :out
       0
@@ -304,9 +326,11 @@ class RetainerDeliverable < HourlyDeliverable
   def overhead_spent(date=nil)
     case scope_date_status(date)
     when :in
-      overhead_spent_with_filter do
-        issue_ids = self.issues.collect(&:id)
-        time_entries_for_date_and_issue_ids(date, issue_ids)
+      memoize_by_date("@overhead_spent", date) do
+        overhead_spent_with_filter do
+          issue_ids = self.issues.collect(&:id)
+          time_entries_for_date_and_issue_ids(date, issue_ids)
+        end
       end
     when :out
       0

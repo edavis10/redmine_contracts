@@ -23,7 +23,9 @@ class FixedDeliverable < Deliverable
   # Fixed deliverables are always 100% spent so they markup is captured
   # right away.
   def fixed_markup_budget_total_spent(date=nil)
-    fixed_markup_budget_total(date)
+    memoize_by_date("@fixed_markup_budget_total_spent", date) do
+      fixed_markup_budget_total(date)
+    end
   end
 
   # Hardcoded value used as a wrapper for the old Budget plugin API.
