@@ -56,47 +56,65 @@ class Deliverable < ActiveRecord::Base
   end
 
   def labor_budget_total(date=nil)
-    labor_budgets.sum(:budget)
+    memoize_by_date("@labor_budget_total", date) do
+      labor_budgets.sum(:budget)
+    end
   end
 
   def overhead_budget_total(date=nil)
-    overhead_budgets.sum(:budget)
+    memoize_by_date("@overhead_budget_total", date) do
+      overhead_budgets.sum(:budget)
+    end
   end
 
   # The amount of profit that is budgeted for this deliverable.
   # Profit = Total - ( Labor + Overhead + Fixed + Markup )
   def profit_budget(date=nil)
-    budgets = labor_budget_total(date) + overhead_budget_total(date) + fixed_budget_total(date) + fixed_markup_budget_total(date)
-    (total(date) || 0.0) - budgets
+    memoize_by_date("@profit_budget", date) do
+      budgets = labor_budget_total(date) + overhead_budget_total(date) + fixed_budget_total(date) + fixed_markup_budget_total(date)
+      (total(date) || 0.0) - budgets
+    end
   end
 
   # The amount of money remaining after expenses have been taken out
   # Profit left = Total - Labor spent - Overhead spent - Fixed - Markup
   def profit_left(date=nil)
-    total_spent(date) - labor_budget_spent(date) - overhead_spent(date) - fixed_budget_total_spent(date) - fixed_markup_budget_total_spent(date)
+    memoize_by_date("@profit_left", date) do
+      total_spent(date) - labor_budget_spent(date) - overhead_spent(date) - fixed_budget_total_spent(date) - fixed_markup_budget_total_spent(date)
+    end
   end
   
   def labor_budget_hours(date=nil)
-    labor_budgets.sum(:hours)
+    memoize_by_date("@labor_budget_hours", date) do
+      labor_budgets.sum(:hours)
+    end
   end
 
   def overhead_budget_hours(date=nil)
-    overhead_budgets.sum(:hours)
+    memoize_by_date("@overhead_budget_hours", date) do
+      overhead_budgets.sum(:hours)
+    end
   end
 
   # Total number of hours estimated in the Deliverable's budgets
   def estimated_hour_budget_total(date=nil)
-    labor_budget_hours(date) + overhead_budget_hours(date)
+    memoize_by_date("@estimated_hour_budget_total", date) do
+      labor_budget_hours(date) + overhead_budget_hours(date)
+    end
   end
 
   # OPTIMIZE: N+1
   def labor_hours_spent_total(date=nil)
-    issues.inject(0) {|total, issue| total += issue.billable_time_spent } # From redmine_overhead
+    memoize_by_date("@labor_hours_spent_total", date) do
+      issues.inject(0) {|total, issue| total += issue.billable_time_spent } # From redmine_overhead
+    end
   end
 
   # OPTIMIZE: N+1
   def overhead_hours_spent_total(date=nil)
-    issues.inject(0) {|total, issue| total += issue.overhead_time_spent } # From redmine_overhead
+    memoize_by_date("@overhead_hours_spent_total", date) do
+      issues.inject(0) {|total, issue| total += issue.overhead_time_spent } # From redmine_overhead
+    end
   end
 
   def hours_spent_total(date=nil)
@@ -107,21 +125,29 @@ class Deliverable < ActiveRecord::Base
   end
 
   def fixed_budget_total(date=nil)
-    fixed_budgets.sum(:budget)
+    memoize_by_date("@fixed_budget_total", date) do
+      fixed_budgets.sum(:budget)
+    end
   end
 
   def fixed_budget_total_spent(date=nil)
-    fixed_budgets.paid.sum(:budget)
+    memoize_by_date("@fixed_budget_total_spent", date) do
+      fixed_budgets.paid.sum(:budget)
+    end
   end
 
   # OPTIMIZE: N+1
   def fixed_markup_budget_total(date=nil)
-    fixed_budgets.inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
+    memoize_by_date("@fixed_markup_budget_total", date) do
+      fixed_budgets.inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
+    end
   end
   
   # OPTIMIZE: N+1
   def fixed_markup_budget_total_spent(date=nil)
-    fixed_budgets.paid.inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
+    memoize_by_date("@fixed_markup_budget_total_spent", date) do
+      fixed_budgets.paid.inject(0) {|total, fixed_budget| total += fixed_budget.markup_value }
+    end
   end
   
   def filter_by_date(date=nil, &block)
@@ -191,5 +217,26 @@ class Deliverable < ActiveRecord::Base
     end
 
   end
-  
+
+  private
+
+  def memoize_by_date(ivar, date, &block)
+    cache_hash  = instance_variable_get(ivar)
+    cache_hash ||= {}
+
+    if date
+      if date.is_a?(Date)
+        cache_key = "#{date.year}-#{date.month}"
+      else
+        cache_key = :invalid
+      end
+    else
+      cache_key = :all
+    end
+
+    cache_hash[cache_key] ||= block.call
+    instance_variable_set(ivar, cache_hash)
+    
+    cache_hash[cache_key]
+  end
 end
