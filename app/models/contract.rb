@@ -1,5 +1,6 @@
 class Contract < ActiveRecord::Base
   unloadable
+  extend ActiveSupport::Memoizable
 
   ViewPrecision = 0
 
@@ -45,74 +46,88 @@ class Contract < ActiveRecord::Base
   def labor_budget
     summarize_associated_values(deliverables, :labor_budget_total)
   end
+  memoize :labor_budget
 
   # OPTIMIZE: N+1
   # OPTIMIZE: also hits redmine_overhead which is known to be slow
   def labor_spent
     summarize_associated_values(deliverables, :labor_budget_spent)
   end
+  memoize :labor_spent
 
   # OPTIMIZE: N+1
   def overhead_budget
     summarize_associated_values(deliverables, :overhead_budget_total)
   end
+  memoize :overhead_budget
 
   # OPTIMIZE: N+1
   # OPTIMIZE: also hits redmine_overhead which is known to be slow
   def overhead_spent
     summarize_associated_values(deliverables, :overhead_spent)
   end
+  memoize :overhead_spent
 
   # OPTIMIZE: N+1
   def estimated_hour_budget
     summarize_associated_values(deliverables, :estimated_hour_budget_total)
   end
+  memoize :estimated_hour_budget
 
   # OPTIMIZE: N+1
   def estimated_hour_spent
     summarize_associated_values(deliverables, :hours_spent_total)
   end
+  memoize :estimated_hour_spent
 
   # OPTIMIZE: N+1
   def total_budget
     summarize_associated_values(deliverables, :total)
   end
+  memoize :total_budget
 
   # OPTIMIZE: N+1
   def total_spent
     summarize_associated_values(deliverables, :total_spent)
   end
+  memoize :total_spent
 
   # OPTIMIZE: N+1
   def profit_budget
     summarize_associated_values(deliverables, :profit_budget)
   end
+  memoize :profit_budget
 
   # OPTIMIZE: N+1
   def profit_left
     summarize_associated_values(deliverables, :profit_left)
   end
   alias_method :profit_spent, :profit_left
+  memoize :profit_left
 
   # OPTIMIZE: N+1
   def fixed_budget
     summarize_associated_values(deliverables, :fixed_budget_total)
   end
+  memoize :fixed_budget
 
   # OPTIMIZE: N+1
   def fixed_spent
     summarize_associated_values(deliverables, :fixed_budget_total_spent)
   end
+  memoize :fixed_spent
 
   # OPTIMIZE: N+1
   def fixed_markup_budget
     summarize_associated_values(deliverables, :fixed_markup_budget_total)
   end
+  memoize :fixed_markup_budget
   
   # OPTIMIZE: N+1
   def fixed_markup_spent
     summarize_associated_values(deliverables, :fixed_markup_budget_total_spent)
   end
+  memoize :fixed_markup_spent
   
   def after_initialize
     self.executed = false unless self.executed.present?
@@ -149,7 +164,7 @@ class Contract < ActiveRecord::Base
   end
   
   private
-
+  
   # This is a potential N+1 method since value_method might be calculated
   def summarize_associated_values(records, value_method)
     records.inject(0) {|total, record| total += record.send(value_method)}
