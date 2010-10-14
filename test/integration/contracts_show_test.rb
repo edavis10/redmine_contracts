@@ -331,7 +331,8 @@ class ContractsShowTest < ActionController::IntegrationTest
 
     visit_contract_page(@contract)
     assert_select "table#deliverables" do
-      assert_select "td.labor_hours", :text => /10\/100/
+      assert_select "td.labor_hours_spent", :text => /10/
+      assert_select "td.labor_hours", :text => /100/
     end
 
   end
@@ -365,7 +366,8 @@ class ContractsShowTest < ActionController::IntegrationTest
 
     visit_contract_page(@contract)
     assert_select "table#deliverables" do
-      assert_select "td.overhead_hours", :text => /5\/100/
+      assert_select "td.overhead_hours_spent", :text => /5/
+      assert_select "td.overhead_hours", :text => /100/
     end
 
   end
@@ -408,7 +410,8 @@ class ContractsShowTest < ActionController::IntegrationTest
 
     visit_contract_page(@contract)
     assert_select "table#deliverables" do
-      assert_select "td.total_hours", :text => /15\/200/
+      assert_select "td.total_hours_spent", :text => /15/
+      assert_select "td.total_hours", :text => /200/
     end
 
   end
@@ -489,9 +492,9 @@ class ContractsShowTest < ActionController::IntegrationTest
     assert_select '#deliverables .labor_budget_spent.overage'
     assert_select '#deliverables .overhead_budget_spent.overage'
     assert_select '#deliverables .profit_spent.overage'
-    assert_select '#deliverables .labor_hours .overage'
-    assert_select '#deliverables .overhead_hours .overage'
-    assert_select '#deliverables .total_hours .overage'
+    assert_select '#deliverables .labor_hours_spent .overage'
+    assert_select '#deliverables .overhead_hours_spent .overage'
+    assert_select '#deliverables .total_hours_spent .overage'
     
   end
   
