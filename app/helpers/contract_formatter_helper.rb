@@ -30,7 +30,10 @@ module ContractFormatterHelper
   end
 
   def format_deliverable_value_fields_as_dollar_or_percent(value)
-    if value.to_s.match('%')
+    case
+    when value.blank? || value.to_s.delete('$%').blank?
+      ''
+    when value.to_s.match('%')
       h(value)
     else # currency or straight amount
       number_to_currency(value.to_s.gsub('$',''), :precision => Deliverable::ViewPrecision, :delimiter => '', :unit => '$')
