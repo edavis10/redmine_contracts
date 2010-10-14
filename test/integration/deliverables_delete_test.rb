@@ -39,6 +39,9 @@ class DeliverablesDeleteTest < ActionController::IntegrationTest
     assert_response :success
     assert_template 'contracts/show'
 
+    assert_select '.flash.notice', /successfully deleted/
+
+
     assert_nil Deliverable.find_by_id(@deliverable.id), "Deliverable not deleted"
   end
 end

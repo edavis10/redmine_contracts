@@ -37,7 +37,7 @@ class DeliverablesController < InheritedResources::Base
   end
 
   def destroy
-    destroy!(:notice => l(:text_flash_deliverable_destroyed, :name => resource.title)) { contract_url(@project, @contract) }
+    destroy!(:notice => l(:text_flash_deliverable_deleted, :name => resource.title)) { contract_url(@project, @contract) }
   end
 
   protected

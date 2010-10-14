@@ -69,7 +69,7 @@ en:
   text_retainer_monthly_message: "Enter budget for a representative month. Any overrides to individual months can be done via the editor after saving."
   text_flash_deliverable_created: "Deliverable: {{name}} was successfully created."
   text_flash_deliverable_updated: "Deliverable: {{name}} was successfully updated."
-  text_flash_deliverable_destroyed: "Deliverable: {{name}} was successfully destroyed."
+  text_flash_deliverable_deleted: "Deliverable: {{name}} was successfully deleted."
   field_budget: Budget
   field_markup: Markup
   field_paid: Paid
