@@ -107,7 +107,7 @@
 
                         <tr>
                           <td class="l"><%= l(:field_profit) %></td>
-                          <td class="profit_spent <%= overage_class(deliverable.profit_left(validated_period), deliverable.profit_budget(validated_period), :reverse => true) %>">
+                          <td class="profit_spent">
                             <%= h(format_value_field_for_contracts(deliverable.profit_left(validated_period))) %>
                           </td>
                           <td class="profit_total"><%= h(format_value_field_for_contracts(deliverable.profit_budget(validated_period))) %></td>

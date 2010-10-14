@@ -55,11 +55,12 @@ module ContractsHelper
     spent_content = send(formatter, spent_value)
     total_content = send(formatter, total_value)
 
-    reverse_overage = spent_field.to_s.match(/profit/i)
+    # Show overages except for profit fields
+    overage_css_class = overage_class(spent_value, total_value) unless spent_field.to_s.match(/profit/i)
     
     show_field(object, spent_field, options.merge(:raw => true, :wrap_in_td => false)) do
 
-      content_tag(:td, h(spent_content), :class => "spent #{overage_class(spent_value, total_value, :reverse => reverse_overage)}") +
+      content_tag(:td, h(spent_content), :class => "spent #{overage_css_class}") +
         content_tag(:td, h(total_content), :class => 'budget')
     end
   end
@@ -125,17 +126,11 @@ module ContractsHelper
   end
 
   # Overage occurs when spent is negative or spent is greater than budget
-  #
-  # :reverse - spent is reverse, it is overage when it's less than budget
   def overage?(spent, budget, options={})
     return false unless spent && budget
     return true if spent < 0
     
-    if options[:reverse]
-      spent.to_f < budget.to_f
-    else
-      spent.to_f > budget.to_f
-    end
+    spent.to_f > budget.to_f
   end
 
   def overage_class(spent, budget, options={})

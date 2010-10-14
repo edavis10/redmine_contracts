@@ -481,17 +481,15 @@ class ContractsShowTest < ActionController::IntegrationTest
     visit_contract_page(@contract)
 
     # Overages on:
-    assert_select '.overage', :count => 14
+    assert_select '.overage', :count => 12
     assert_select '.contract-labor .overage', :count => 2
     assert_select '.contract-overhead .overage', :count => 2
-    assert_select '.contract-profit .overage'
     assert_select '.contract-estimated-hour.total .overage'
 
     assert_select '#deliverables .spent-amount.labor.overage'
     assert_select '#deliverables .spent-amount.overhead.overage'
     assert_select '#deliverables .labor_budget_spent.overage'
     assert_select '#deliverables .overhead_budget_spent.overage'
-    assert_select '#deliverables .profit_spent.overage'
     assert_select '#deliverables .labor_hours_spent .overage'
     assert_select '#deliverables .overhead_hours_spent .overage'
     assert_select '#deliverables .total_hours_spent .overage'
