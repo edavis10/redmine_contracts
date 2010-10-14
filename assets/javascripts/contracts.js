@@ -22,6 +22,9 @@ jQuery(function($) {
 	$('#expand_terms').click( function(){
 		$(this).next().slideToggle();
 		$(this).toggleClass('alt');
+
+		var new_height = $('#contract-terms .info').height() - $('#contract-terms .finance').height() + 30;
+		$('#contract-terms .stretch').css('height', new_height);
 	}); 
 
   showDeliverableTotal = function() {

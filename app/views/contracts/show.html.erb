@@ -79,7 +79,11 @@
         <%= show_budget_field(resource, :billable_rate, 'nil?', :format => :format_hourly_rate, :html_options => {:class => 'contract-billable-rate total'}) %>
 
         <%= show_budget_field(resource, :estimated_hour_spent, :estimated_hour_budget, :format => :l_hours, :html_options => {:class => 'contract-estimated-hour total'}) %>
-
+        <tr>
+          <td class="stretch" colspan="3">
+            <!-- Stretch table height -->
+          </td>
+        </tr>
       </table>
       <div class="clear"></div>
     </div>
