@@ -120,36 +120,58 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
       assert_equal [@other_user, @other_user, @other_user], Deliverable.all.collect(&:manager)
     end
 
-    should "create a new Overhead Budget record for any overhead" do
-      assert_difference("OverheadBudget.count", 3) do
-        RedmineContracts::BudgetPluginMigration.migrate(@data)
+    context "Overhead Budgets" do
+      should "create a new Overhead Budget record for any overhead" do
+        assert_difference("OverheadBudget.count", 3) do
+          RedmineContracts::BudgetPluginMigration.migrate(@data)
+        end
+
+        d = Deliverable.find_by_title("Deliverable One")
+        assert_equal 1, d.overhead_budgets.count
+        assert_equal 200, d.overhead_budget_total
+
+        overhead = d.overhead_budgets.first
+        assert overhead
+        assert_equal 200, overhead.budget
+        assert_equal 0, overhead.hours
       end
 
-      d = Deliverable.find_by_title("Deliverable One")
-      assert_equal 1, d.overhead_budgets.count
-      assert_equal 200, d.overhead_budget_total
+      should "create a new Overhead Budget record for any overhead percent" do
+        assert_difference("OverheadBudget.count", 3) do
+          RedmineContracts::BudgetPluginMigration.migrate(@data)
+        end
 
-      overhead = d.overhead_budgets.first
-      assert overhead
-      assert_equal 200, overhead.budget
-      assert_equal 0, overhead.hours
-    end
+        d = Deliverable.find_by_title("Deliverable 2")
+        assert_equal 1, d.overhead_budgets.count
 
-    should "create a new Overhead Budget record for any overhead percent" do
-      assert_difference("OverheadBudget.count", 3) do
-        RedmineContracts::BudgetPluginMigration.migrate(@data)
+        overhead = d.overhead_budgets.first
+        assert overhead
+        assert_equal 12 * 25 * 1.5, overhead.budget
+        assert_equal 0, overhead.hours
+
       end
 
-      d = Deliverable.find_by_title("Deliverable 2")
-      assert_equal 1, d.overhead_budgets.count
+      should "allow setting an overhead rate to compute the overhead hours" do
+        RedmineContracts::BudgetPluginMigration.migrate(@data, :overhead_rate => 100.0)
 
-      overhead = d.overhead_budgets.first
-      assert overhead
-      assert_equal 12 * 25 * 1.5, overhead.budget
-      assert_equal 0, overhead.hours
+        d1 = Deliverable.find_by_title("Deliverable One")
+        assert_equal 1, d1.overhead_budgets.count
+        assert_equal 200, d1.overhead_budget_total
 
+        overhead = d1.overhead_budgets.first
+        assert overhead
+        assert_equal 2, overhead.hours
+
+        d2 = Deliverable.find_by_title("Deliverable 2")
+        assert_equal 1, d2.overhead_budgets.count
+
+        overhead = d2.overhead_budgets.first
+        assert overhead
+        assert_equal 4.5, overhead.hours
+        
+      end
     end
-
+    
     should "create a new Fixed Budget record for any materials" do
       assert_difference("FixedBudget.count", 3) do
         RedmineContracts::BudgetPluginMigration.migrate(@data)

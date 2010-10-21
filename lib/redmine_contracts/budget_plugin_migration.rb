@@ -41,6 +41,8 @@ module RedmineContracts
     # @option options [boolean] :append_object_notes show the old Budget data be
     #                           added to the Deliverable notes (for debugging)
     #                           Defaults to true (will append)
+    # @option options [float] :overhead_rate the overhead rate to use when calculating hours.
+    #                         Defaults to 0
     def self.migrate(old_data, options={})
       @contract_rate = options[:contract_rate] ? options[:contract_rate].to_f : 150.0
       @account_executive = if options[:account_executive].present?
@@ -53,6 +55,7 @@ module RedmineContracts
                              end
 
       @append_object_notes = options[:append_object_notes].nil? ? true : options[:append_object_notes]
+      @overhead_rate = options[:overhead_rate].nil? ? 0 : options[:overhead_rate].to_f
       
       @@data = YAML.load(old_data)
 
@@ -148,14 +151,26 @@ module RedmineContracts
       total ||= 0
       
       if old_deliverable['overhead'].present?
+        if @overhead_rate != 0
+          hours = old_deliverable['overhead'] / @overhead_rate
+        else
+          hours = 0
+        end
+        
         deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
                                                            :budget => old_deliverable['overhead'],
-                                                           :hours => 0)
+                                                           :hours => hours)
       elsif old_deliverable['overhead_percent'].present?
         overhead = total * (old_deliverable['overhead_percent'].to_f / 100)
+        if @overhead_rate != 0
+          hours = overhead / @overhead_rate
+        else
+          hours = 0
+        end
+          
         deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
                                                            :budget => overhead,
-                                                           :hours => 0)
+                                                           :hours => hours)
 
       end
     end
