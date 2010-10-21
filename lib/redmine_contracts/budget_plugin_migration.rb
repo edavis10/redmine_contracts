@@ -161,7 +161,6 @@ module RedmineContracts
 
     def self.convert_overhead(deliverable, old_deliverable, total)
       total ||= 0
-      
       if old_deliverable['overhead'].present?
         if @overhead_rate != 0
           hours = old_deliverable['overhead'] / @overhead_rate
@@ -171,7 +170,7 @@ module RedmineContracts
         
         deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
                                                            :budget => old_deliverable['overhead'],
-                                                           :hours => hours)
+                                                           :hours => hours.to_f.round(2))
       elsif old_deliverable['overhead_percent'].present?
         overhead = total * (old_deliverable['overhead_percent'].to_f / 100)
         if @overhead_rate != 0
@@ -182,7 +181,7 @@ module RedmineContracts
           
         deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
                                                            :budget => overhead,
-                                                           :hours => hours)
+                                                           :hours => hours.to_f.round(2))
 
       end
     end
