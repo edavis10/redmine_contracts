@@ -54,7 +54,19 @@ module RedmineContracts
                                user ||= User.find_by_id(options[:deliverable_manager])
                              end
 
-      @append_object_notes = options[:append_object_notes].nil? ? true : options[:append_object_notes]
+      @append_object_notes = if options[:append_object_notes].nil?
+                               true
+                             else
+                               # Simple option parsing
+                               if options[:append_object_notes] == false ||
+                                   options[:append_object_notes] == 'false' ||
+                                   options[:append_object_notes] == 0 ||
+                                   options[:append_object_notes] == '0'
+                                 false
+                               else
+                                 true
+                               end
+                             end
       @overhead_rate = options[:overhead_rate].nil? ? 0 : options[:overhead_rate].to_f
       
       @@data = YAML.load(old_data)
