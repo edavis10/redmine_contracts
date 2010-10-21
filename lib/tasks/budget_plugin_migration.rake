@@ -5,6 +5,7 @@ namespace :redmine_contracts do
     options[:contract_rate] = ENV['contract_rate']
     options[:account_executive] = ENV['account_executive']
     options[:deliverable_manager] = ENV['deliverable_manager']
+    options[:append_object_notes] = ENV['append_object_notes']
     
     RedmineContracts::BudgetPluginMigration.check_for_installed_budget_plugin
     data = RedmineContracts::BudgetPluginMigration.export_data

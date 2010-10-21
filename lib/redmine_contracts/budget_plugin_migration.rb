@@ -38,6 +38,9 @@ module RedmineContracts
     # @option options [String] :deliverable_manager the id or login of the user
     #                          to use for the deliverables manager
     #                          Defaults to the first user on the project.
+    # @option options [boolean] :append_object_notes show the old Budget data be
+    #                           added to the Deliverable notes (for debugging)
+    #                           Defaults to true (will append)
     def self.migrate(old_data, options={})
       @contract_rate = options[:contract_rate] ? options[:contract_rate].to_f : 150.0
       @account_executive = if options[:account_executive].present?
@@ -47,7 +50,9 @@ module RedmineContracts
       @deliverable_manager = if options[:deliverable_manager].present?
                                user = User.find_by_login(options[:deliverable_manager])
                                user ||= User.find_by_id(options[:deliverable_manager])
-                           end
+                             end
+
+      @append_object_notes = options[:append_object_notes].nil? ? true : options[:append_object_notes]
       
       @@data = YAML.load(old_data)
 
@@ -91,7 +96,7 @@ module RedmineContracts
 
           convert_overhead(deliverable, old_deliverable, @total_cost)
           convert_materials(deliverable, old_deliverable, @total_cost)
-          append_old_deliverable_to_notes(old_deliverable, deliverable)
+          append_old_deliverable_to_notes(old_deliverable, deliverable) if @append_object_notes
           
           deliverable.save!
           

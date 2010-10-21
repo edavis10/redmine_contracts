@@ -174,12 +174,23 @@ class BudgetPluginMigrationTest < ActionController::IntegrationTest
 
     end
 
-    should "append the YAML dump of the old object to the notes" do
-      RedmineContracts::BudgetPluginMigration.migrate(@data)
-      d = Deliverable.find_by_title("Deliverable One")
+    context "YAML dumping of the old object to notes" do
+      should "be appended by default" do
+        RedmineContracts::BudgetPluginMigration.migrate(@data)
+        d = Deliverable.find_by_title("Deliverable One")
 
-      assert_match /Converted data/, d.notes
-      assert_match /"profit"=>200.0/, d.notes
+        assert_match /Converted data/, d.notes
+        assert_match /"profit"=>200.0/, d.notes
+      end
+
+      should "be have an option to be turned off" do
+        RedmineContracts::BudgetPluginMigration.migrate(@data, :append_object_notes => false)
+        d = Deliverable.find_by_title("Deliverable One")
+
+        assert_equal nil, d.notes.match(/Converted data/)
+        assert_equal nil, d.notes.match(/"profit"=>200.0/)
+      end
+
     end
 
     context "converting Fixed Deliverables" do
