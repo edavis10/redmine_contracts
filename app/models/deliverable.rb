@@ -9,7 +9,7 @@ class Deliverable < ActiveRecord::Base
   has_many :labor_budgets
   has_many :overhead_budgets
   has_many :fixed_budgets
-  has_many :issues
+  has_many :issues, :dependent => :nullify
 
   accepts_nested_attributes_for :labor_budgets
   accepts_nested_attributes_for :overhead_budgets
