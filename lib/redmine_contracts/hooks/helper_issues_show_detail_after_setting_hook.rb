@@ -10,6 +10,8 @@ module RedmineContracts
       def helper_issues_show_detail_after_setting(context = { })
         # TODO Later: Overwritting the caller is bad juju
         if context[:detail].prop_key == 'deliverable_id'
+          context[:detail].reload
+          
           d = Deliverable.find_by_id(context[:detail].value)
           context[:detail].value = d.title if d.present? && d.title.present?
 
