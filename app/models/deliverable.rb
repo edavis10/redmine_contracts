@@ -42,6 +42,10 @@ class Deliverable < ActiveRecord::Base
     ''
   end
 
+  def humanize_type
+    type.to_s.sub('Deliverable','')
+  end
+
   # Deliverable's aren't dated. Subclasses may override this for period behavior.
   def current_date
     nil

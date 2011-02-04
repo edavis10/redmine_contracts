@@ -13,6 +13,10 @@
       <%= form.select(:type, Deliverable.valid_types_to_select, {:include_blank => false}, {:class => 'type'}) %>
     </li>
   <% else %>
+    <li class="string" id="deliverable_type_input">
+      <%= form.label(:type, l(:field_type)) %>
+      <span style="padding:3px"><%= h(resource.humanize_type) %></span>
+    </li>
     <%= form.input :type, :as => :hidden, :class => 'type' %>
   <% end %>
   <%= form.input :manager, :required => true, :collection => @project.users.sort %>
