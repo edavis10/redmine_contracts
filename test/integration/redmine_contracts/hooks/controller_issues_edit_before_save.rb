@@ -11,8 +11,8 @@ class RedmineContracts::Hooks::ControllerIssuesEditBeforeSaveTest < ActionContro
       @contract1 = Contract.generate!(:project => @project)
       @contract2 = Contract.generate!(:project => @project)
       
-      @manager = User.generate!(:login => 'manager', :password => 'existing', :password_confirmation => 'existing', :admin => true)
-      @role = Role.generate!(:permissions => [:view_issues, :add_issues, :edit_issues])
+      @manager = User.generate!(:login => 'manager', :password => 'existing', :password_confirmation => 'existing', :admin => false)
+      @role = Role.generate!(:permissions => [:view_issues, :add_issues, :edit_issues, :assign_deliverable_to_issue])
       User.add_to_project(@manager, @project, @role)
       @deliverable1 = FixedDeliverable.generate!(:contract => @contract1, :manager => @manager, :title => 'The Title for 1')
       @deliverable2 = FixedDeliverable.generate!(:contract => @contract2, :manager => @manager, :title => 'The Title for 2')
@@ -37,6 +37,20 @@ class RedmineContracts::Hooks::ControllerIssuesEditBeforeSaveTest < ActionContro
         assert_equal @deliverable2, Issue.last.deliverable
 
       end
+
+      context "with no permission to Assign Deliverable" do
+        should "not allow setting the Deliverable (force HTTP request)" do
+          @role.permissions.delete(:assign_deliverable_to_issue)
+          @role.save!
+
+          assert_difference('Issue.count', 1) do
+            post "/projects/#{@project.identifier}/issues", :issue => {:subject => 'Force', :deliverable_id => @deliverable1.id, :priority_id => IssuePriority.first.id}
+          end
+
+          assert_equal nil, Issue.last.deliverable
+        end
+      end
+      
     end
 
     context "for an existing issue" do
@@ -54,6 +68,20 @@ class RedmineContracts::Hooks::ControllerIssuesEditBeforeSaveTest < ActionContro
         assert_equal @deliverable2, @issue.deliverable
 
       end
+
+      context "with no permission to Assign Deliverable" do
+        should "not allow setting the Deliverable (force HTTP request)" do
+          @role.permissions.delete(:assign_deliverable_to_issue)
+          @role.save!
+
+          assert_difference('Journal.count', 1) do
+            put "/issues/#{@issue.id}", :issue => {:subject => 'Force', :deliverable_id => @deliverable1.id}
+          end
+
+          assert_equal nil, @issue.reload.deliverable
+        end
+      end
+
     end
   end
 end
