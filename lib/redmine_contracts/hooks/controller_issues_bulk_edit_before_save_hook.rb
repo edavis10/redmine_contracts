@@ -6,6 +6,8 @@ module RedmineContracts
       # * :params => HTML parameters
       #
       def controller_issues_bulk_edit_before_save(context={})
+        return '' unless User.current.allowed_to?(:assign_deliverable_to_issue, context[:issue].project)
+        
         case
         when context[:params][:deliverable_id].blank?
           # Do nothing
