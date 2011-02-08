@@ -21,6 +21,10 @@ Redmine::Plugin.register :redmine_contracts do
                })
   end
 
+  project_module :issue_tracking do
+    permission(:assign_deliverable_to_issue, {})
+  end
+
   contract_list_submenu_items = Proc.new {|project|
     if project && project.module_enabled?(:contracts)
 
