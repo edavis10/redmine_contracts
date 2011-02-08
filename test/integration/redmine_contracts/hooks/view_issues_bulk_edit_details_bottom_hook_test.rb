@@ -23,22 +23,39 @@ class RedmineContracts::Hooks::ViewIssuesBulkEditDetailsBottomHookTest < ActionC
     end
 
     context "with Contracts Enabled" do
-      setup do
-        visit_issue_bulk_edit_page([@issue, @issue2, @issue3])
-      end
-      
-      should "render the a select field for the deliverables with all of the deliverables grouped by contract" do
+      context "with permission to Assign Deliverable" do
+        setup do
+          @role.permissions << :assign_deliverable_to_issue
+          @role.save!
+          visit_issue_bulk_edit_page([@issue, @issue2, @issue3])
+        end
 
-        assert_select "select#deliverable_id" do
-          assert_select "optgroup[label=?]", @contract1.name do
-            assert_select "option", :text => /#{@deliverable1.title}/
-          end
+        should "render the a select field for the deliverables with all of the deliverables grouped by contract" do
 
-          assert_select "optgroup[label=?]", @contract2.name do
-            assert_select "option", :text => /#{@deliverable2.title}/
+          assert_select "select#deliverable_id" do
+            assert_select "optgroup[label=?]", @contract1.name do
+              assert_select "option", :text => /#{@deliverable1.title}/
+            end
+
+            assert_select "optgroup[label=?]", @contract2.name do
+              assert_select "option", :text => /#{@deliverable2.title}/
+            end
           end
         end
       end
+
+      context "with no permission to Assign Deliverable" do
+        setup do
+          @role.permissions.delete(:assign_deliverable_to_issue)
+          @role.save!
+          visit_issue_bulk_edit_page([@issue, @issue2, @issue3])
+        end
+
+        should "not render the deliverable select field" do
+          assert_select 'select#deliverable_id', :count => 0
+        end
+      end
+
     end
 
     context "with Contracts Disabled" do

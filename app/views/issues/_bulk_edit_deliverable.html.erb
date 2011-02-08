@@ -1,4 +1,4 @@
-<% if project.module_enabled?(:contracts) %>
+<% if project.module_enabled?(:contracts) && User.current.allowed_to?(:assign_deliverable_to_issue, project) %>
   <p>
     <%= label_tag(:deliverable_id, l(:field_deliverable)) %>
     <% options = project.contracts.inject([]) {|data, contract|
