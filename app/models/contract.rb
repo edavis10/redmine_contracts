@@ -56,6 +56,19 @@ class Contract < ActiveRecord::Base
   memoize :labor_spent
 
   # OPTIMIZE: N+1
+  def labor_hour_budget
+    summarize_associated_values(deliverables, :labor_budget_hours)
+  end
+  memoize :labor_hour_budget
+
+  # OPTIMIZE: N+1
+  # OPTIMIZE: also hits redmine_overhead which is known to be slow
+  def labor_hour_spent
+    summarize_associated_values(deliverables, :labor_hours_spent_total)
+  end
+  memoize :labor_hour_spent
+
+  # OPTIMIZE: N+1
   def overhead_budget
     summarize_associated_values(deliverables, :overhead_budget_total)
   end
@@ -67,6 +80,19 @@ class Contract < ActiveRecord::Base
     summarize_associated_values(deliverables, :overhead_spent)
   end
   memoize :overhead_spent
+
+  # OPTIMIZE: N+1
+  def overhead_hour_budget
+    summarize_associated_values(deliverables, :overhead_budget_hours)
+  end
+  memoize :overhead_hour_budget
+
+  # OPTIMIZE: N+1
+  # OPTIMIZE: also hits redmine_overhead which is known to be slow
+  def overhead_hour_spent
+    summarize_associated_values(deliverables, :overhead_hours_spent_total)
+  end
+  memoize :overhead_hour_spent
 
   # OPTIMIZE: N+1
   def estimated_hour_budget

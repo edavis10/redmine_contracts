@@ -34,8 +34,11 @@ en:
   field_client_point_of_contact: "Point of Contact"
   field_discount_budget: "Discount"
   field_discount_spent: "Discount"
-  field_estimated_hour_budget: "Est. Hours"
-  field_estimated_hour_spent: "Est. Hours"
+  field_estimated_hour_budget: "Total Hours"
+  field_estimated_hour_spent: "Total Hours"
+  field_labor_hour_spent: "Labor Hours"
+  field_overhead_hour_spent: "Overhead Hours"
+  field_total_hours: "Total Hours"
   field_fixed_budget: "Fixed"
   field_fixed_spent: "Fixed"
   field_labor_budget: "Labor"
@@ -78,3 +81,4 @@ en:
   text_error_message_orphaned_time: "There is {{amount}} worth of time clocked to issues that are not assigned to any deliverables."
   text_error_message_update_orphaned_time: "Please update the orphaned issues."
   field_estimated: Estimated
+  
