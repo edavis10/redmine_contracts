@@ -42,12 +42,18 @@ class Contract < ActiveRecord::Base
     define_method(mthd) { "TODO in later release" }
   end
 
+  # Currency value that is budgeted for the contract for labor
+  # ie. estimated billable amount
+  #
   # OPTIMIZE: N+1
   def labor_budget
     summarize_associated_values(deliverables, :labor_budget_total)
   end
   memoize :labor_budget
 
+  # Currency value that is spent for the contract on labor
+  # ie. actual billable cost
+  #
   # OPTIMIZE: N+1
   # OPTIMIZE: also hits redmine_overhead which is known to be slow
   def labor_spent
@@ -55,12 +61,18 @@ class Contract < ActiveRecord::Base
   end
   memoize :labor_spent
 
+  # Hours budgeted for the contract for labor
+  # ie. estimated billable hours
+  #
   # OPTIMIZE: N+1
   def labor_hour_budget
     summarize_associated_values(deliverables, :labor_budget_hours)
   end
   memoize :labor_hour_budget
 
+  # Hours spent for the contract on labor
+  # ie. actual billable time worked
+  #
   # OPTIMIZE: N+1
   # OPTIMIZE: also hits redmine_overhead which is known to be slow
   def labor_hour_spent
@@ -68,12 +80,18 @@ class Contract < ActiveRecord::Base
   end
   memoize :labor_hour_spent
 
+  # Currency value budgeted for the contract on overhead
+  # ie. estimated non-billable amount
+  #
   # OPTIMIZE: N+1
   def overhead_budget
     summarize_associated_values(deliverables, :overhead_budget_total)
   end
   memoize :overhead_budget
 
+  # Currency value spent for the contract on overhead work
+  # ie. actual non-billable used
+  #
   # OPTIMIZE: N+1
   # OPTIMIZE: also hits redmine_overhead which is known to be slow
   def overhead_spent
@@ -81,12 +99,18 @@ class Contract < ActiveRecord::Base
   end
   memoize :overhead_spent
 
+  # Hours budgeted for the contract for overhead
+  # ie. estimated non-billable time
+  #
   # OPTIMIZE: N+1
   def overhead_hour_budget
     summarize_associated_values(deliverables, :overhead_budget_hours)
   end
   memoize :overhead_hour_budget
 
+  # Hours used for the contract on overhead
+  # ie. actual time spent on non-billable work
+  #
   # OPTIMIZE: N+1
   # OPTIMIZE: also hits redmine_overhead which is known to be slow
   def overhead_hour_spent
@@ -94,36 +118,53 @@ class Contract < ActiveRecord::Base
   end
   memoize :overhead_hour_spent
 
+  # Total hours budgeted for the contract
+  # ie. total time estimated
+  #
   # OPTIMIZE: N+1
   def estimated_hour_budget
     summarize_associated_values(deliverables, :estimated_hour_budget_total)
   end
   memoize :estimated_hour_budget
 
+  # Total hours spent on the contract
+  # ie. hours used
+  #
   # OPTIMIZE: N+1
   def estimated_hour_spent
     summarize_associated_values(deliverables, :hours_spent_total)
   end
   memoize :estimated_hour_spent
 
+  # Currency amount budgeted for the contract
+  # ie. estimated budget
+  #
   # OPTIMIZE: N+1
   def total_budget
     summarize_associated_values(deliverables, :total)
   end
   memoize :total_budget
 
+  # Currency amount spent on the contract
+  # ie. amount spent already
+  #
   # OPTIMIZE: N+1
   def total_spent
     summarize_associated_values(deliverables, :total_spent)
   end
   memoize :total_spent
 
+  # Estimated currency amount of profit
+  # ie. profit estimate
+  #
   # OPTIMIZE: N+1
   def profit_budget
     summarize_associated_values(deliverables, :profit_budget)
   end
   memoize :profit_budget
 
+  # Amount of the profit that is left in the contract
+  #
   # OPTIMIZE: N+1
   def profit_left
     summarize_associated_values(deliverables, :profit_left)
@@ -131,24 +172,33 @@ class Contract < ActiveRecord::Base
   alias_method :profit_spent, :profit_left
   memoize :profit_left
 
+  # Currency amount of estimated fixed expenses
+  #
   # OPTIMIZE: N+1
   def fixed_budget
     summarize_associated_values(deliverables, :fixed_budget_total)
   end
   memoize :fixed_budget
 
+  # Currency amount of spent fixed expenses
+  #
   # OPTIMIZE: N+1
   def fixed_spent
     summarize_associated_values(deliverables, :fixed_budget_total_spent)
   end
   memoize :fixed_spent
 
+  # Currency amount of estimated fixed expense markups
+  # ie. estimated fixed expense markups
+  #
   # OPTIMIZE: N+1
   def fixed_markup_budget
     summarize_associated_values(deliverables, :fixed_markup_budget_total)
   end
   memoize :fixed_markup_budget
-  
+
+  # Currency amount of fixed expenses spent
+  #
   # OPTIMIZE: N+1
   def fixed_markup_spent
     summarize_associated_values(deliverables, :fixed_markup_budget_total_spent)
@@ -159,12 +209,15 @@ class Contract < ActiveRecord::Base
     self.executed = false unless self.executed.present?
   end
 
+  # Are the start_date and end_date valid?
   def start_and_end_date_are_valid
     if start_date && end_date && end_date < start_date
       errors.add :end_date, :greater_than_start_date
     end
   end
 
+  # Currency amount of time that is logged to the project or to issues
+  # that are not assigned to a Deliverable
   def orphaned_time
     @orphaned_time ||= project.time_entries.all(:include => [:issue => :deliverable],
                                                 :conditions => "#{Issue.table_name}.deliverable_id IS NULL OR #{TimeEntry.table_name}.issue_id IS NULL").inject(0) do |total, time_entry|
