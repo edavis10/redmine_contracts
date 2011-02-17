@@ -42,6 +42,10 @@ class Contract < ActiveRecord::Base
     define_method(mthd) { "TODO in later release" }
   end
 
+  # ------------------------------------------------------------
+  # Labor Methods
+  # ------------------------------------------------------------
+
   # Currency value that is budgeted for the contract for labor
   # ie. estimated billable amount
   #
@@ -79,6 +83,10 @@ class Contract < ActiveRecord::Base
     summarize_associated_values(deliverables, :labor_hours_spent_total)
   end
   memoize :labor_hour_spent
+
+  # ------------------------------------------------------------
+  # Overhead Methods
+  # ------------------------------------------------------------
 
   # Currency value budgeted for the contract on overhead
   # ie. estimated non-billable amount
@@ -118,6 +126,10 @@ class Contract < ActiveRecord::Base
   end
   memoize :overhead_hour_spent
 
+  # ------------------------------------------------------------
+  # Total Methods (labor + overhead)
+  # ------------------------------------------------------------
+
   # Total hours budgeted for the contract
   # ie. total time estimated
   #
@@ -154,6 +166,10 @@ class Contract < ActiveRecord::Base
   end
   memoize :total_spent
 
+  # ------------------------------------------------------------
+  # Profit Methods
+  # ------------------------------------------------------------
+
   # Estimated currency amount of profit
   # ie. profit estimate
   #
@@ -171,6 +187,10 @@ class Contract < ActiveRecord::Base
   end
   alias_method :profit_spent, :profit_left
   memoize :profit_left
+
+  # ------------------------------------------------------------
+  # Fixed Budget Methods
+  # ------------------------------------------------------------
 
   # Currency amount of estimated fixed expenses
   #
@@ -204,7 +224,9 @@ class Contract < ActiveRecord::Base
     summarize_associated_values(deliverables, :fixed_markup_budget_total_spent)
   end
   memoize :fixed_markup_spent
-  
+
+  # ------------------------------------------------------------
+
   def after_initialize
     self.executed = false unless self.executed.present?
   end
