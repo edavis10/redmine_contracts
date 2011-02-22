@@ -29,7 +29,7 @@ class IssueFilteringTest < ActionController::IntegrationTest
     select "Deliverable", :from => 'group_by'
 
     # Apply link is behind a JavaScript form
-    visit "/projects/#{@project.identifier}/issues/?set_filter&group_by=deliverable_title"
+    visit "/projects/#{@project.identifier}/issues/?set_filter&group_by=deliverable"
     assert_response :success
 
     assert_select "tr.group" do

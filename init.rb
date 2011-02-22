@@ -88,8 +88,8 @@ Dispatcher.to_prepare :redmine_contracts do
     Query.send(:include, RedmineContracts::Patches::QueryPatch)
   end
 
-  unless Query.available_columns.collect(&:name).include?(:deliverable_title)
-    Query.add_available_column(QueryColumn.new(:deliverable_title, :sortable => "#{Deliverable.table_name}.title", :groupable => 'deliverable'))
+  unless Query.available_columns.collect(&:name).include?(:deliverable)
+    Query.add_available_column(QueryColumn.new(:deliverable, :sortable => "#{Deliverable.table_name}.title", :groupable => 'deliverable'))
   end
 
   unless Query.available_columns.collect(&:name).include?(:contract_name)
