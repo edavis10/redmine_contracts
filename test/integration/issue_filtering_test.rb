@@ -33,11 +33,15 @@ class IssueFilteringTest < ActionController::IntegrationTest
     assert_response :success
 
     assert_select "tr.group" do
-      assert_select "td", :text => /None/
+      assert_select "td", :text => /None/ do
+        assert_select "span.count", "(1)"
+      end
     end
 
     assert_select "tr.group" do
-      assert_select "td", :text => Regexp.new(@deliverable.title)
+      assert_select "td", :text => Regexp.new(@deliverable.title) do
+        assert_select "span.count", "(1)"
+      end
     end
 
   end
@@ -57,11 +61,15 @@ class IssueFilteringTest < ActionController::IntegrationTest
     assert_response :success
 
     assert_select "tr.group" do
-      assert_select "td", :text => /None/
+      assert_select "td", :text => /None/ do
+        assert_select "span.count", "(1)"
+      end
     end
 
     assert_select "tr.group" do
-      assert_select "td", :text => Regexp.new(@contract.name)
+      assert_select "td", :text => Regexp.new(@contract.name) do
+        assert_select "span.count", "()"
+      end
     end
 
   end
