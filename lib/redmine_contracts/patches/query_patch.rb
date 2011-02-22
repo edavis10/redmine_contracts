@@ -12,6 +12,8 @@ module RedmineContracts
           alias_method_chain :available_filters, :contract
 
           alias_method_chain :sql_for_field, :contract
+
+          alias_method_chain :issues, :deliverable
         end
       end
 
@@ -82,6 +84,19 @@ module RedmineContracts
             return sql
           end
         end
+
+        # Add the deliverables into the includes
+        #
+        # Used with grouping
+        def issues_with_deliverable(options={})
+          options[:include] ||= []
+          options[:include] << :deliverable
+
+          issues_without_deliverable(options)
+        end
+
+        # TODO: core bug: Query#issue_count_by_group doesn't allow setting
+        # options like Query#issue does.
 
       end
     end
