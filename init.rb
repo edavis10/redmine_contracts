@@ -93,7 +93,7 @@ Dispatcher.to_prepare :redmine_contracts do
   end
 
   unless Query.available_columns.collect(&:name).include?(:contract_name)
-    Query.add_available_column(QueryColumn.new(:contract_name, :sortable => "#{Contract.table_name}.name"))
+    Query.add_available_column(QueryColumn.new(:contract_name, :sortable => "#{Contract.table_name}.name", :groupable => 'contract_id'))
   end
 end
 

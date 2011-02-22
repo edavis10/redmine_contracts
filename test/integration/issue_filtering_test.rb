@@ -42,4 +42,28 @@ class IssueFilteringTest < ActionController::IntegrationTest
 
   end
   
+  should "allow grouping issues by contract" do
+    visit_project(@project)
+    click_link "Issues"
+
+    assert_select '#group_by' do
+      assert_select 'option', "Contract"
+    end
+
+    select "Contract", :from => 'group_by'
+
+    # Apply link is behind a JavaScript form
+    visit "/projects/#{@project.identifier}/issues/?set_filter&group_by=contract_name"
+    assert_response :success
+
+    assert_select "tr.group" do
+      assert_select "td", :text => /None/
+    end
+
+    assert_select "tr.group" do
+      assert_select "td", :text => Regexp.new(@contract.name)
+    end
+
+  end
+  
 end
