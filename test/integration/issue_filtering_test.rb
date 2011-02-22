@@ -62,7 +62,7 @@ class IssueFilteringTest < ActionController::IntegrationTest
         assert_select "span.count", "(1)"
       end
       assert_select "td", :text => Regexp.new(@contract.name) do
-        assert_select "span.count", "()"
+        assert_select "span.count", "(1)"
       end
     end
 

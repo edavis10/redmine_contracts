@@ -92,8 +92,12 @@ Dispatcher.to_prepare :redmine_contracts do
     Query.add_available_column(QueryColumn.new(:deliverable, :sortable => "#{Deliverable.table_name}.title", :groupable => 'deliverable'))
   end
 
+  # Hack in order to get the associated contract to be grouped by name
+  # * Proxy method Issue#contract_name
+  # * Naming Query column contract_name
+  # * Grouping by 'contracts.name'
   unless Query.available_columns.collect(&:name).include?(:contract_name)
-    Query.add_available_column(QueryColumn.new(:contract_name, :sortable => "#{Contract.table_name}.name", :groupable => 'contract_id'))
+    Query.add_available_column(QueryColumn.new(:contract_name, :sortable => "#{Contract.table_name}.name", :groupable => 'contracts.name'))
   end
 end
 
