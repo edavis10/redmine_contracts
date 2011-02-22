@@ -10,7 +10,11 @@ module RedmineContracts
           belongs_to :deliverable
 
           delegate :title, :to => :deliverable, :prefix => true, :allow_nil => true
-          delegate :contract_name, :to => :deliverable, :allow_nil => true
+          delegate :contract, :to => :deliverable, :allow_nil => true
+
+          def contract_name
+            contract.try(:name)
+          end
         end
       end
 
