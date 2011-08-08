@@ -1,10 +1,9 @@
 module ContractsHelper
   def setup_nested_deliverable_records(deliverable)
-    returning(deliverable) do |d|
-      d.labor_budgets.build if d.labor_budgets.empty?
-      d.overhead_budgets.build if d.overhead_budgets.empty?
-      d.fixed_budgets.build if d.fixed_budgets.empty?
-    end
+    deliverable.labor_budgets.build if deliverable.labor_budgets.empty?
+    deliverable.overhead_budgets.build if deliverable.overhead_budgets.empty?
+    deliverable.fixed_budgets.build if deliverable.fixed_budgets.empty?
+    deliverable
   end
 
   # Simple helper to show the values of a field on an object in a standard format

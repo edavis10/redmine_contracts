@@ -19,15 +19,15 @@ class RedmineContracts::Hooks::HelperIssuesShowDetailAfterSettingHookTest < Acti
       # Set first
       @issue.init_journal(@manager)
       @issue.deliverable = @deliverable1
-      @issue.save!
+      @issue.save! && @issue.reload
       # Change
       @issue.init_journal(@manager)
       @issue.deliverable = @deliverable2
-      @issue.save!
+      @issue.save! && @issue.reload
       # Unset
       @issue.init_journal(@manager)
       @issue.deliverable = nil
-      @issue.save!
+      @issue.save! && @issue.reload
       
       login_as('manager', 'existing')
 
