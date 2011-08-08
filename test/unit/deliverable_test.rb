@@ -12,6 +12,13 @@ class DeliverableTest < ActiveSupport::TestCase
   should_validate_presence_of :type
   should_validate_presence_of :manager
 
+  should_allow_values_for :status, "", nil, 'open', 'locked', 'closed'
+  should_not_allow_values_for :status, "other", "things", "1"
+
+  should "default status to open" do
+    assert_equal "open", Deliverable.new.status
+  end
+
   context "#total=" do
     should "strip dollar signs when writing" do
       d = Deliverable.new

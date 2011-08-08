@@ -19,6 +19,7 @@
     </li>
     <%= form.input :type, :as => :hidden, :class => 'type' %>
   <% end %>
+  <%= form.input :status, :required => true, :collection => [["Open","open"],["Locked","locked"],["Closed","closed"]] %>
   <%= form.input :manager, :required => true, :collection => @project.users.sort %>
 
   <%= form.input :start_date, :as => :string, :input_html => {:size => 10, :class => 'start-date', :id => 'deliverable_start_date'}, :hint => calendar_for('deliverable_start_date') %>

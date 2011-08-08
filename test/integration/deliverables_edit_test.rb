@@ -49,6 +49,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
 
     within("#deliverable-details") do
       fill_in "Title", :with => 'An updated title'
+      select "Locked", :from => "Status"
       check "Feature Sign Off"
       check "Warranty Sign Off"
     end
@@ -61,6 +62,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_equal "FixedDeliverable", @fixed_deliverable.reload.type
     assert @fixed_deliverable.reload.warranty_sign_off?
     assert @fixed_deliverable.reload.feature_sign_off?
+    assert_equal "locked", @fixed_deliverable.reload.status
 
   end
 
@@ -78,6 +80,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     
     within("#deliverable-details") do
       fill_in "Title", :with => 'An updated title'
+      select "Locked", :from => "Status"
       check "Feature Sign Off"
       check "Warranty Sign Off"
     end
@@ -101,6 +104,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_equal "HourlyDeliverable", @hourly_deliverable.reload.type
     assert @hourly_deliverable.reload.warranty_sign_off?
     assert @hourly_deliverable.reload.feature_sign_off?
+    assert_equal "locked", @hourly_deliverable.reload.status
 
     assert_equal 1, @hourly_deliverable.labor_budgets.count
     @labor_budget = @hourly_deliverable.labor_budgets.first

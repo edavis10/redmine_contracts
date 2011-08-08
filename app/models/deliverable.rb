@@ -19,6 +19,7 @@ class Deliverable < ActiveRecord::Base
   validates_presence_of :title
   validates_presence_of :type
   validates_presence_of :manager
+  validates_inclusion_of :status, :in => ["open","locked","closed"], :allow_blank => true, :allow_nil => true
   
   # Accessors
   include DollarizedAttribute
@@ -27,7 +28,10 @@ class Deliverable < ActiveRecord::Base
   delegate :name, :to => :contract, :prefix => true, :allow_nil => true
 
   # Callbacks
-
+  def after_initialize
+    self.status = "open" unless self.status.present?
+  end
+  
   # Register callbacks here, on new records the class isn't set so class-specific
   # callbacks don't fire.
   def after_save
