@@ -15,10 +15,7 @@
 
   <div class="c_overview">
     <table class="left">
-      <tr class="contract-status">
-        <%# show_field(resource, :status, :html_options => {:class => 'contract-status'}) %>
-        <td colspan="2"><%= release(5, "Contract status") %></td>
-      </tr>
+      <%= show_field(resource, :status, :html_options => {:class => 'contract-status'}) %>
       <%= show_field(resource, :account_executive, :html_options => {:class => 'contract-account-manager'}) %>
       <tr class="contract-type">
         <%# show_field(resource, :contract_type, :html_options => {:class => 'contract-type'}) %>

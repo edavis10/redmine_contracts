@@ -5,8 +5,10 @@ class ContractsListTest < ActionController::IntegrationTest
   
   def setup
     @project = Project.generate!(:identifier => 'main')
-    @contract = Contract.generate!(:project => @project)
-    @contract2 = Contract.generate!(:project => @project)
+    @contract = Contract.generate!(:project => @project, :name => 'Contract1').reload
+    @contract2 = Contract.generate!(:project => @project, :name => 'Contract2').reload
+    @contract_locked = Contract.generate!(:project => @project, :status => 'locked', :name => 'LockedContract').reload
+    @contract_closed = Contract.generate!(:project => @project, :status => 'closed', :name => 'ClosedContract').reload
 
     @other_project = Project.generate!(:identifier => 'other')
     @other_contract = Contract.generate!(:project => @other_project)
@@ -44,10 +46,10 @@ class ContractsListTest < ActionController::IntegrationTest
     visit_contracts_for_project(@project)
   end
 
-  should "list all contracts for the project" do
+  should "list all contracts for the project grouped by status" do
     visit_contracts_for_project(@project)
 
-    assert_select "table#contracts" do
+    assert_select "table#contracts.open" do
       [@contract, @contract2].each do |contract|
         assert_select "td.id", :text => /#{contract.id}/
         assert_select "td.name", :text => /#{contract.name}/
@@ -56,7 +58,23 @@ class ContractsListTest < ActionController::IntegrationTest
         assert_select "td.total-budget"
       end
     end
-    
+
+    assert_select "table#contracts.locked" do
+      assert_select "td.id", :text => /#{@contract_locked.id}/
+      assert_select "td.name", :text => /#{@contract_locked.name}/
+      assert_select "td.account-executive", :text => /#{@contract_locked.account_executive.name}/
+      assert_select "td.end-date", :text => /#{format_date(@contract_locked.end_date)}/
+      assert_select "td.total-budget"
+    end
+
+    assert_select "table#contracts.closed" do
+      assert_select "td.id", :text => /#{@contract_closed.id}/
+      assert_select "td.name", :text => /#{@contract_closed.name}/
+      assert_select "td.account-executive", :text => /#{@contract_closed.account_executive.name}/
+      assert_select "td.end-date", :text => /#{format_date(@contract_closed.end_date)}/
+      assert_select "td.total-budget"
+    end
+
   end
 
   should "not list contracts from other projects" do

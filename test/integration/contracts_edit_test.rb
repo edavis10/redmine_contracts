@@ -48,12 +48,13 @@ class ContractsEditTest < ActionController::IntegrationTest
     end
 
     fill_in "Name", :with => 'An updated name'
+    select "Locked", :from => "Status"
     click_button "Save Contract"
 
     assert_response :success
     assert_template 'contracts/show'
 
     assert_equal "An updated name", @contract.reload.name
-
+    assert_equal "locked", @contract.reload.status
   end
 end

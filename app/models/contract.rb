@@ -17,6 +17,7 @@ class Contract < ActiveRecord::Base
   validates_presence_of :start_date
   validates_presence_of :end_date
   validates_inclusion_of :discount_type, :in => %w($ %), :allow_blank => true, :allow_nil => true
+  validates_inclusion_of :status, :in => ["open","locked","closed"], :allow_blank => true, :allow_nil => true
   validate :start_and_end_date_are_valid
 
   # Accessors
@@ -33,13 +34,18 @@ class Contract < ActiveRecord::Base
   attr_accessible :po_number
   attr_accessible :client_point_of_contact
   attr_accessible :details
+  attr_accessible :status
 
   named_scope :by_name, {:order => "#{Contract.table_name}.name ASC"}
   
-  [:status, :contract_type,
+  [:contract_type,
    :discount_spent, :discount_budget
   ].each do |mthd|
     define_method(mthd) { "TODO in later release" }
+  end
+
+  def status
+    read_attribute(:status) || "open"
   end
 
   # ------------------------------------------------------------
@@ -229,6 +235,7 @@ class Contract < ActiveRecord::Base
 
   def after_initialize
     self.executed = false unless self.executed.present?
+    self.status = "open" unless self.status.present?
   end
 
   # Are the start_date and end_date valid?
@@ -270,5 +277,5 @@ class Contract < ActiveRecord::Base
   def summarize_associated_values(records, value_method)
     records.inject(0) {|total, record| total += record.send(value_method)}
   end
-    
+
 end

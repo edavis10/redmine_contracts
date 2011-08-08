@@ -12,10 +12,10 @@
 
   </div>
 
-  <% if collection.empty? %>
+  <% if group_contracts_by_status(collection)["open"].empty? %>
     <p class="nodata"><%= l(:label_no_data) %></p>
   <% else %>
-    <table class="list" cellspacing="0" border="0" cellpadding="0" id="contracts">
+    <table class="list open" cellspacing="0" border="0" cellpadding="0" id="contracts">
       <thead>
         <th><%= l(:field_id) %></th>
         <th><%= l(:field_name) %></th>
@@ -26,11 +26,11 @@
         <th><%= l(:field_end_date) %></th>
       </thead>
       <tbody>
-        <% collection.each do |contract| %>
+        <% group_contracts_by_status(collection)["open"].each do |contract| %>
           <% content_tag_for(:tr, contract, :class => cycle('','odd')) do %>
             <td class="id"><%= link_to(h(contract.id), contract_path(@project, contract)) %></td>
             <td class="name"><%= link_to(h(contract.name), contract_path(@project, contract)) %></td>
-            <td><%= release(5, "Contract Status") %></td>
+            <td class="status"><%= h(contract.status) %></td>
             <td><%= release(5, "Contract Type") %></td>
             <td class="account-executive"><%= h contract.account_executive.name %></td>
             <td class="total-budget"><%= h(format_value_field_for_contracts(contract.total_budget)) %></td>
@@ -42,11 +42,71 @@
   <% end %>
 
   <div class="title-bar">
-    <h2>Inactive Contracts</h2>
+    <h2>Locked Contracts</h2>
   </div>
 
-  <p class="nodata"><%= l(:label_no_data) %></p>
-  <p><%= release(5, "Contract Status. Split contracts by active and inactive") %></p>
+  <% if group_contracts_by_status(collection)["locked"].empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <table class="list locked" cellspacing="0" border="0" cellpadding="0" id="contracts">
+      <thead>
+        <th><%= l(:field_id) %></th>
+        <th><%= l(:field_name) %></th>
+        <th><%= l(:field_status) %></th>
+        <th><%= l(:field_type) %></th>
+        <th><%= l(:field_account_executive_short) %></th>
+        <th><%= l(:field_total_budget) %></th>
+        <th><%= l(:field_end_date) %></th>
+      </thead>
+      <tbody>
+        <% group_contracts_by_status(collection)["locked"].each do |contract| %>
+          <% content_tag_for(:tr, contract, :class => cycle('','odd')) do %>
+            <td class="id"><%= link_to(h(contract.id), contract_path(@project, contract)) %></td>
+            <td class="name"><%= link_to(h(contract.name), contract_path(@project, contract)) %></td>
+            <td class="status"><%= h(contract.status) %></td>
+            <td><%= release(5, "Contract Type") %></td>
+            <td class="account-executive"><%= h contract.account_executive.name %></td>
+            <td class="total-budget"><%= h(format_value_field_for_contracts(contract.total_budget)) %></td>
+            <td class="end-date"><%= h format_date(contract.end_date) %></td>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+
+  <div class="title-bar">
+    <h2>Closed Contracts</h2>
+  </div>
+
+  <% if group_contracts_by_status(collection)["closed"].empty? %>
+    <p class="nodata"><%= l(:label_no_data) %></p>
+  <% else %>
+    <table class="list closed" cellspacing="0" border="0" cellpadding="0" id="contracts">
+      <thead>
+        <th><%= l(:field_id) %></th>
+        <th><%= l(:field_name) %></th>
+        <th><%= l(:field_status) %></th>
+        <th><%= l(:field_type) %></th>
+        <th><%= l(:field_account_executive_short) %></th>
+        <th><%= l(:field_total_budget) %></th>
+        <th><%= l(:field_end_date) %></th>
+      </thead>
+      <tbody>
+        <% group_contracts_by_status(collection)["closed"].each do |contract| %>
+          <% content_tag_for(:tr, contract, :class => cycle('','odd')) do %>
+            <td class="id"><%= link_to(h(contract.id), contract_path(@project, contract)) %></td>
+            <td class="name"><%= link_to(h(contract.name), contract_path(@project, contract)) %></td>
+            <td class="status"><%= h(contract.status) %></td>
+            <td><%= release(5, "Contract Type") %></td>
+            <td class="account-executive"><%= h contract.account_executive.name %></td>
+            <td class="total-budget"><%= h(format_value_field_for_contracts(contract.total_budget)) %></td>
+            <td class="end-date"><%= h format_date(contract.end_date) %></td>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+
 
 </div>
 

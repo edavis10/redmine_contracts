@@ -6,6 +6,18 @@ module ContractsHelper
     deliverable
   end
 
+  def group_contracts_by_status(contracts)
+    grouped_contracts = contracts.inject({}) do |grouped, contract|
+      grouped[contract.status] ||= []
+      grouped[contract.status] << contract
+      grouped
+    end
+    grouped_contracts["open"] ||= []
+    grouped_contracts["locked"] ||= []
+    grouped_contracts["closed"] ||= []
+    grouped_contracts
+  end
+  
   # Simple helper to show the values of a field on an object in a standard format
   #
   # <p>
