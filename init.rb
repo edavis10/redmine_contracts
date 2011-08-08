@@ -102,6 +102,9 @@ Dispatcher.to_prepare :redmine_contracts do
   unless Query.available_columns.collect(&:name).include?(:contract_name)
     Query.add_available_column(QueryColumn.new(:contract_name, :sortable => "#{Contract.table_name}.name", :groupable => 'contracts.name'))
   end
+
+  require_dependency 'application_controller'
+  ApplicationController.send(:helper, :contracts)
 end
 
 require 'redmine_contracts/hooks/view_layouts_base_html_head_hook'

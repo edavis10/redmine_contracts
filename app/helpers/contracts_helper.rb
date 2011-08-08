@@ -17,6 +17,16 @@ module ContractsHelper
     grouped_contracts["closed"] ||= []
     grouped_contracts
   end
+
+  def deliverable_options(project)
+    project.contracts.inject([]) do |data, contract|
+      data << [contract.name, deliverable_options_for_contract(contract)]
+    end
+  end
+
+  def deliverable_options_for_contract(contract)
+    contract.deliverables.collect {|d| [d.title, d.id]}
+  end
   
   # Simple helper to show the values of a field on an object in a standard format
   #
