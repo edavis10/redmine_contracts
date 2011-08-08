@@ -55,6 +55,22 @@ class Deliverable < ActiveRecord::Base
     nil
   end
 
+  def lock!
+    update_attribute(:status, "locked")
+  end
+
+  def close!
+    update_attribute(:status, "closed")
+  end
+
+  def locked?
+    self.status == "locked"
+  end
+
+  def closed?
+    self.status == "closed"
+  end
+
   def to_s
     title
   end

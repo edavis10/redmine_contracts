@@ -62,6 +62,9 @@ end
 
 require 'dispatcher'
 Dispatcher.to_prepare :redmine_contracts do
+
+  require_dependency 'time_entry'
+  TimeEntry.send(:include, RedmineContracts::Patches::TimeEntryPatch)
   gem 'inherited_resources', :version => '1.0.6'
   require_dependency 'inherited_resources'
   require_dependency 'inherited_resources/base'

@@ -1,4 +1,10 @@
 en:
+  activerecord:
+    errors:
+      messages:
+        cant_to_closed_deliverable: "Can't create a time entry on a closed deliverable"
+        cant_to_closed_contract: "Can't create a time entry on a closed contract"
+
   field_end_date: End Date
   field_executed: Executed
   text_contracts: Contracts
