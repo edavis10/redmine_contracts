@@ -20,6 +20,7 @@ class Deliverable < ActiveRecord::Base
   validates_presence_of :type
   validates_presence_of :manager
   validates_inclusion_of :status, :in => ["open","locked","closed"], :allow_blank => true, :allow_nil => true
+  validate :validate_update_allowed
   
   # Accessors
   include DollarizedAttribute
@@ -63,12 +64,38 @@ class Deliverable < ActiveRecord::Base
     update_attribute(:status, "closed")
   end
 
+  def open?
+    self.status == "open"
+  end
+
   def locked?
     self.status == "locked"
   end
 
   def closed?
     self.status == "closed"
+  end
+
+  def editable?
+    (new_record? || open?)
+  end
+
+  def validate_update_allowed
+    unless new_record?
+      if changes.keys == ["status"]
+        noop("Allow changes to the status only")
+      elsif changes["status"].present? && changes["status"].second == "open"
+        noop("Allow any changes when going to 'open'")
+      elsif changes["status"].present?
+        errors.add_to_base(:cant_update_locked_deliverable) if locked?
+        errors.add_to_base(:cant_update_closed_deliverable) if closed?
+      end
+    end
+  end
+
+  # No operation method, useful to clean up logic with an optional message
+  # for documentation
+  def noop(message="")
   end
 
   def to_s

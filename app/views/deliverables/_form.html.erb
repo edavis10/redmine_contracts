@@ -2,6 +2,12 @@
 <%= javascript_tag("var i18nEndDateEmpty = '#{l(:text_end_date_empty)}'") %>
 <%= javascript_tag("var i18nChangedPeriodMessage = '#{l(:text_changed_period_message)}'") %>
 
+<% if resource.locked? || resource.closed? %>
+  <div class="error_msg">
+    <p><%= resource.locked? ? l(:text_deliverable_locked_warning) : l(:text_deliverable_closed_warning) %></p>
+  </div>
+<% end %>
+
 <div class="box tabular">
 <% form.inputs :name => l(:text_deliverable_details_legend), :id => 'deliverable-details' do %>
   <%# Used by jquery to check if this is a new or existing record %>
