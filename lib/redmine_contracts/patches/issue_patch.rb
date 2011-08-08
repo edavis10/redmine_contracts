@@ -15,6 +15,16 @@ module RedmineContracts
           def contract_name
             contract.try(:name)
           end
+
+          validate :validate_deliverable_status
+
+          def validate_deliverable_status
+            if deliverable.present? && changes["deliverable_id"].present?
+              errors.add_to_base(:cant_assign_to_closed_deliverable) if deliverable.closed?
+              errors.add_to_base(:cant_assign_to_locked_deliverable) if deliverable.locked?
+            end
+          end
+
         end
       end
 

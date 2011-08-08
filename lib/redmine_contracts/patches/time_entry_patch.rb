@@ -13,13 +13,13 @@ module RedmineContracts
 
           def validate_deliverable_status
             if issue.present? && issue.deliverable.present?
-              errors.add_to_base(:cant_to_closed_deliverable) if issue.deliverable.closed?
+              errors.add_to_base(:cant_create_time_on_closed_deliverable) if issue.deliverable.closed?
             end
           end
 
           def validate_contract_status
             if issue.present? && issue.deliverable.present? && issue.deliverable.contract.present?
-              errors.add_to_base(:cant_to_closed_contract) if issue.deliverable.contract.closed?
+              errors.add_to_base(:cant_create_time_on_closed_contract) if issue.deliverable.contract.closed?
             end
           end
           
