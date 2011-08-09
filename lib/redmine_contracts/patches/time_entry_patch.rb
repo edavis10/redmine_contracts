@@ -13,15 +13,15 @@ module RedmineContracts
 
           def validate_deliverable_status
             if issue.present? && issue.deliverable.present?
-              errors.add_to_base(:cant_create_time_on_locked_deliverable) if issue.deliverable.locked?
-              errors.add_to_base(:cant_create_time_on_closed_deliverable) if issue.deliverable.closed?
+              errors.add_to_base("#{l(:"activerecord.errors.messages.cant_create_time_on_object", :reason => 'locked', :thing => 'deliverable')}") if issue.deliverable.locked?
+              errors.add_to_base("#{l(:"activerecord.errors.messages.cant_create_time_on_object", :reason => 'closed', :thing => 'deliverable')}") if issue.deliverable.closed?
             end
           end
 
           def validate_contract_status
             if issue.present? && issue.deliverable.present? && issue.deliverable.contract.present?
-              errors.add_to_base(:cant_create_time_on_locked_contract) if issue.deliverable.contract.locked?
-              errors.add_to_base(:cant_create_time_on_closed_contract) if issue.deliverable.contract.closed?
+              errors.add_to_base("#{l(:"activerecord.errors.messages.cant_create_time_on_object", :reason => 'locked', :thing => 'contract')}") if issue.deliverable.contract.locked?
+              errors.add_to_base("#{l(:"activerecord.errors.messages.cant_create_time_on_object", :reason => 'closed', :thing => 'contract')}") if issue.deliverable.contract.closed?
             end
           end
           
