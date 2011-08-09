@@ -80,17 +80,27 @@ class Deliverable < ActiveRecord::Base
     (new_record? || open?)
   end
 
+  def valid_status_change?
+    change_to_status_only? || changing_to_the_open_status? || changing_from_the_open_status?
+  end
+
+  def change_to_status_only?
+    ["status"] == changes.keys
+  end
+
+  def changing_to_the_open_status?
+    changes["status"].present? && "open" == changes["status"].second
+  end
+
+  def changing_from_the_open_status?
+    changes["status"].present? && "open" == changes["status"].first
+  end
+
   def validate_status_changes
-    if changes.keys == ["status"]
-      noop("Allow changes to the status only")
-    elsif changes["status"].present? && changes["status"].second == "open"
-      noop("Allow any changes when going to 'open'")
-    elsif changes["status"].present? && changes["status"].first == "open"
-      noop("Allow any changes when going from 'open' to another status")
-    else
-      errors.add_to_base(:cant_update_locked_deliverable) if locked?
-      errors.add_to_base(:cant_update_closed_deliverable) if closed?
-    end
+    return if valid_status_change?
+
+    errors.add_to_base(:cant_update_locked_deliverable) if locked?
+    errors.add_to_base(:cant_update_closed_deliverable) if closed?
   end
 
   # No operation method, useful to clean up logic with an optional message
