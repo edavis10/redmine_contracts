@@ -518,8 +518,6 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     end
     
     should "be allowed to change the status on a locked deliverables to open" do
-      assert @fixed_deliverable.lock!
-      
       visit_contract_page(@contract)
       click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
       assert_response :success
@@ -537,8 +535,6 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     end
 
     should "be allowed to change the status on a locked deliverables to closed" do
-      assert @fixed_deliverable.lock!
-      
       visit_contract_page(@contract)
       click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
       assert_response :success
@@ -599,8 +595,6 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     end
 
     should "be allowed to change the status on a closed deliverables to open" do
-      assert @fixed_deliverable.close!
-      
       visit_contract_page(@contract)
       click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
       assert_response :success
