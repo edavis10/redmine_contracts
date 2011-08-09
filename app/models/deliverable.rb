@@ -86,7 +86,9 @@ class Deliverable < ActiveRecord::Base
         noop("Allow changes to the status only")
       elsif changes["status"].present? && changes["status"].second == "open"
         noop("Allow any changes when going to 'open'")
-      elsif changes["status"].present?
+      elsif changes["status"].present? && changes["status"].first == "open"
+        noop("Allow any changes when going from 'open' to another status")
+      else
         errors.add_to_base(:cant_update_locked_deliverable) if locked?
         errors.add_to_base(:cant_update_closed_deliverable) if closed?
       end

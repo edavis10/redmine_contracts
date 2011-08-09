@@ -618,8 +618,6 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     end
 
     should "be allowed to change the status on a closed deliverables to Locked" do
-      assert @fixed_deliverable.lock!
-      
       visit_contract_page(@contract)
       click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
       assert_response :success
