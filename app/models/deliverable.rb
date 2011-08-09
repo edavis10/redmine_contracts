@@ -20,7 +20,7 @@ class Deliverable < ActiveRecord::Base
   validates_presence_of :type
   validates_presence_of :manager
   validates_inclusion_of :status, :in => ["open","locked","closed"], :allow_blank => true, :allow_nil => true
-  validate :validate_update_allowed
+  validate_on_update :validate_status_changes
   
   # Accessors
   include DollarizedAttribute
@@ -80,18 +80,16 @@ class Deliverable < ActiveRecord::Base
     (new_record? || open?)
   end
 
-  def validate_update_allowed
-    unless new_record?
-      if changes.keys == ["status"]
-        noop("Allow changes to the status only")
-      elsif changes["status"].present? && changes["status"].second == "open"
-        noop("Allow any changes when going to 'open'")
-      elsif changes["status"].present? && changes["status"].first == "open"
-        noop("Allow any changes when going from 'open' to another status")
-      else
-        errors.add_to_base(:cant_update_locked_deliverable) if locked?
-        errors.add_to_base(:cant_update_closed_deliverable) if closed?
-      end
+  def validate_status_changes
+    if changes.keys == ["status"]
+      noop("Allow changes to the status only")
+    elsif changes["status"].present? && changes["status"].second == "open"
+      noop("Allow any changes when going to 'open'")
+    elsif changes["status"].present? && changes["status"].first == "open"
+      noop("Allow any changes when going from 'open' to another status")
+    else
+      errors.add_to_base(:cant_update_locked_deliverable) if locked?
+      errors.add_to_base(:cant_update_closed_deliverable) if closed?
     end
   end
 
