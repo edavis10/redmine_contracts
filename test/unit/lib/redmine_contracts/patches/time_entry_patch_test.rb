@@ -24,6 +24,14 @@ class RedmineContracts::Patches::TimeEntryTest < ActionController::TestCase
                                    :user => @user)
   end
 
+  def assert_error_about_locked_deliverable(time_entry)
+    assert_equal "Can't create a time entry on a locked deliverable", time_entry.errors.on_base
+  end
+
+  def assert_error_about_locked_contract(time_entry)
+    assert_equal "Can't create a time entry on a locked contract", time_entry.errors.on_base
+  end
+
   def assert_error_about_closed_deliverable(time_entry)
     assert_equal "Can't create a time entry on a closed deliverable", time_entry.errors.on_base
   end
@@ -36,27 +44,31 @@ class RedmineContracts::Patches::TimeEntryTest < ActionController::TestCase
     assert_difference("TimeEntry.count") { create_time_entry }
   end
 
-  should "allow logging time to an issue on a locked deliverable, open contract" do
+  should "block logging time to an issue on a locked deliverable, open contract" do
     assert @deliverable.lock!
     assert @deliverable.locked?
     
-    assert_difference("TimeEntry.count") { create_time_entry }
+    assert_no_difference("TimeEntry.count") { create_time_entry }
+    assert_error_about_locked_deliverable(@time_entry)
   end
 
-  should "allow logging time to an issue on an open deliverable, locked contract" do
+  should "block logging time to an issue on an open deliverable, locked contract" do
     assert @contract.lock!
     assert @contract.locked?
 
-    assert_difference("TimeEntry.count") { create_time_entry }
+    assert_no_difference("TimeEntry.count") { create_time_entry }
+    assert_error_about_locked_contract(@time_entry)
   end
   
-  should "allow logging time to an issue on a locked deliverable, locked contract" do
+  should "block logging time to an issue on a locked deliverable, locked contract" do
     assert @deliverable.lock!
     assert @deliverable.locked?
     assert @contract.lock!
     assert @contract.locked?
 
-    assert_difference("TimeEntry.count") { create_time_entry }
+    assert_no_difference("TimeEntry.count") { create_time_entry }
+    assert @time_entry.errors.on_base.include?("Can't create a time entry on a locked deliverable")
+    assert @time_entry.errors.on_base.include?("Can't create a time entry on a locked contract")
   end
 
   should "block logging time to an issue on a closed deliverable, open contract" do
@@ -74,7 +86,8 @@ class RedmineContracts::Patches::TimeEntryTest < ActionController::TestCase
     assert @contract.locked?
     
     assert_no_difference("TimeEntry.count") { create_time_entry }
-    assert_error_about_closed_deliverable(@time_entry)
+    assert @time_entry.errors.on_base.include?("Can't create a time entry on a closed deliverable")
+    assert @time_entry.errors.on_base.include?("Can't create a time entry on a locked contract")
   end
 
   should "block logging time to an issue on an open deliverable, closed contract" do
@@ -92,7 +105,8 @@ class RedmineContracts::Patches::TimeEntryTest < ActionController::TestCase
     assert @contract.closed?
     
     assert_no_difference("TimeEntry.count") { create_time_entry }
-    assert_error_about_closed_contract(@time_entry)
+    assert @time_entry.errors.on_base.include?("Can't create a time entry on a locked deliverable")
+    assert @time_entry.errors.on_base.include?("Can't create a time entry on a closed contract")
   end
   
   should "block logging time to an issue on a closed deliverable, closed contract" do

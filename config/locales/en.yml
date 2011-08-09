@@ -4,6 +4,8 @@ en:
       messages:
         cant_create_time_on_closed_deliverable: "Can't create a time entry on a closed deliverable"
         cant_create_time_on_closed_contract: "Can't create a time entry on a closed contract"
+        cant_create_time_on_locked_deliverable: "Can't create a time entry on a locked deliverable"
+        cant_create_time_on_locked_contract: "Can't create a time entry on a locked contract"
         cant_assign_to_closed_deliverable: "Can't assign issue to a closed deliverable"
         cant_assign_to_locked_deliverable: "Can't assign issue to a locked deliverable"
         cant_update_locked_deliverable: "Can't update a locked deliverable"
