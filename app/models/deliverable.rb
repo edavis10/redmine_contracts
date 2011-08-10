@@ -96,6 +96,7 @@ class Deliverable < ActiveRecord::Base
     changes["status"].present? && "open" == changes["status"].first
   end
 
+  # TODO: duplicated on Contract, refactor after one more duplication
   def validate_status_changes
     return if valid_status_change?
 

@@ -48,13 +48,139 @@ class ContractsEditTest < ActionController::IntegrationTest
     end
 
     fill_in "Name", :with => 'An updated name'
-    select "Locked", :from => "Status"
     click_button "Save Contract"
 
     assert_response :success
     assert_template 'contracts/show'
 
     assert_equal "An updated name", @contract.reload.name
-    assert_equal "locked", @contract.reload.status
+  end
+
+  context "locked contract" do
+    setup do
+      assert @contract.lock!
+    end
+    
+    should "block edits" do
+      visit_contract_page(@contract)
+      click_link 'Update'
+      assert_response :success
+
+      fill_in "Name", :with => 'An updated name'
+      click_button 'Save Contract'
+      
+      assert_response :success
+      assert_template 'contracts/edit'
+
+      assert_not_equal "An updated name", @contract.reload.name
+    end
+    
+    should "block edits even when the status is changed to closed" do
+      visit_contract_page(@contract)
+      click_link 'Update'
+      assert_response :success
+
+      fill_in "Name", :with => 'An updated name'
+      select "Closed", :from => "Status"
+      click_button 'Save Contract'
+      
+      assert_response :success
+      assert_template 'contracts/edit'
+
+      assert_not_equal "An updated name", @contract.reload.name
+      assert @contract.reload.locked?
+    end
+    
+    should "be allowed to change the status from locked to open" do
+      visit_contract_page(@contract)
+      click_link 'Update'
+      assert_response :success
+
+      select "Open", :from => "Status"
+      click_button 'Save Contract'
+      
+      assert_response :success
+      assert_template 'contracts/show'
+
+      assert @contract.reload.open?
+    end
+
+    should "be allowed to change the status from locked to closed" do
+      visit_contract_page(@contract)
+      click_link 'Update'
+      assert_response :success
+
+      select "Closed", :from => "Status"
+      click_button 'Save Contract'
+      
+      assert_response :success
+      assert_template 'contracts/show'
+
+      assert @contract.reload.closed?
+    end
+  end
+
+  context "closed contract" do
+    setup do
+      assert @contract.close!
+    end
+    
+    should "block edits" do
+      visit_contract_page(@contract)
+      click_link 'Update'
+      assert_response :success
+
+      fill_in "Name", :with => 'An updated name'
+      click_button 'Save Contract'
+      
+      assert_response :success
+      assert_template 'contracts/edit'
+
+      assert_not_equal "An updated name", @contract.reload.name
+    end
+    
+    should "block edits weven when the status is changed to locked" do
+      visit_contract_page(@contract)
+      click_link 'Update'
+      assert_response :success
+
+      fill_in "Name", :with => 'An updated name'
+      select "Locked", :from => "Status"
+      click_button 'Save Contract'
+      
+      assert_response :success
+      assert_template 'contracts/edit'
+
+      assert_not_equal "An updated name", @contract.reload.name
+      assert @contract.reload.closed?
+    end
+    
+    should "be allowed to change the status from closed to open" do
+      visit_contract_page(@contract)
+      click_link 'Update'
+      assert_response :success
+
+      select "Open", :from => "Status"
+      click_button 'Save Contract'
+      
+      assert_response :success
+      assert_template 'contracts/show'
+
+      assert @contract.reload.open?
+    end
+    
+    should "be allowed to change the status from closed to locked" do
+      visit_contract_page(@contract)
+      click_link 'Update'
+      assert_response :success
+
+      select "Locked", :from => "Status"
+      click_button 'Save Contract'
+      
+      assert_response :success
+      assert_template 'contracts/show'
+
+      assert @contract.reload.locked?
+    end
   end
 end

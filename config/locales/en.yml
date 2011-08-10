@@ -7,6 +7,8 @@ en:
         cant_assign_to_locked_deliverable: "Can't assign issue to a locked deliverable"
         cant_update_locked_deliverable: "Can't update a locked deliverable"
         cant_update_closed_deliverable: "Can't update a closed deliverable"
+        cant_update_locked_contract: "Can't update a locked contract"
+        cant_update_closed_contract: "Can't update a closed contract"
 
   field_end_date: End Date
   field_executed: Executed
@@ -92,3 +94,5 @@ en:
   field_estimated: Estimated
   text_deliverable_locked_warning: "This deliverable is locked and cannot be saved without changing it's status to Open."
   text_deliverable_closed_warning: "This deliverable is closed and cannot be saved without changing it's status to Open."
+  text_contract_locked_warning: "This contract is locked and cannot be saved without changing it's status to Open."
+  text_contract_closed_warning: "This contract is closed and cannot be saved without changing it's status to Open."

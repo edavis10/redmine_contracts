@@ -19,6 +19,7 @@ class Contract < ActiveRecord::Base
   validates_inclusion_of :discount_type, :in => %w($ %), :allow_blank => true, :allow_nil => true
   validates_inclusion_of :status, :in => ["open","locked","closed"], :allow_blank => true, :allow_nil => true
   validate :start_and_end_date_are_valid
+  validate_on_update :validate_status_changes
 
   # Accessors
   attr_accessible :name
@@ -56,6 +57,10 @@ class Contract < ActiveRecord::Base
     update_attribute(:status, "closed")
   end
 
+  def open?
+    self.status == "open"
+  end
+  
   def locked?
     self.status == "locked"
   end
@@ -261,6 +266,30 @@ class Contract < ActiveRecord::Base
     end
   end
 
+  def valid_status_change?
+    change_to_status_only? || changing_to_the_open_status? || changing_from_the_open_status?
+  end
+
+  def change_to_status_only?
+    ["status"] == changes.keys
+  end
+
+  def changing_to_the_open_status?
+    changes["status"].present? && "open" == changes["status"].second
+  end
+
+  def changing_from_the_open_status?
+    changes["status"].present? && "open" == changes["status"].first
+  end
+
+  # TODO: duplicated on Deliverable, refactor after one more duplication
+  def validate_status_changes
+    return if valid_status_change?
+
+    errors.add_to_base(:cant_update_locked_contract) if locked?
+    errors.add_to_base(:cant_update_closed_contract) if closed?
+  end
+
   # Currency amount of time that is logged to the project or to issues
   # that are not assigned to a Deliverable
   def orphaned_time
@@ -279,6 +308,12 @@ class Contract < ActiveRecord::Base
     generator_for :executed => true
     generator_for(:start_date) { Date.yesterday }
     generator_for(:end_date) { Date.tomorrow }
+    generator_for :discount, ''
+    generator_for :details, ''
+    generator_for :discount_note, ''
+    generator_for :client_point_of_contact, ''
+    generator_for :client_ap_contact_information, ''
+    generator_for :po_number, ''
 
     def self.next_name
       @last_name ||= 'Contract 0000'

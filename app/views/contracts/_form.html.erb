@@ -1,3 +1,9 @@
+<% if resource.locked? || resource.closed? %>
+  <div class="error_msg">
+    <p><%= resource.locked? ? l(:text_contract_locked_warning) : l(:text_contract_closed_warning) %></p>
+  </div>
+<% end %>
+
 <div class="box tabular">
 <% form.inputs :name => l(:text_general_legend) do %>
   <%= form.input :name, :required => true %>
