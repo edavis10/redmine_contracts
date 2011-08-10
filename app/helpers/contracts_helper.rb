@@ -26,7 +26,7 @@ module ContractsHelper
 
   def grouped_deliverable_options_for_select(project, selected_key=nil)
     project.contracts.all(:include => :deliverables).inject([]) do |html, contract|
-      if contract.closed? && !contract.deliverable_ids.include?(selected_key.to_i)
+      if contract.closed? && !contract.includes_deliverable_id?(selected_key)
         # skip
       else
         options = contract.deliverables.collect do |deliverable|

@@ -74,6 +74,10 @@ class Contract < ActiveRecord::Base
     self.status == "closed"
   end
 
+  def includes_deliverable_id?(deliverable_id)
+    deliverable_ids.include?(deliverable_id.to_i)
+  end
+  
   # ------------------------------------------------------------
   # Labor Methods
   # ------------------------------------------------------------
