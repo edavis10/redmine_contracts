@@ -25,17 +25,24 @@ module ContractsHelper
   end
 
   def grouped_deliverable_options_for_select(project, selected_key=nil)
-    project.contracts.with_status(["open","locked"]).inject([]) do |html, contract|
-      options = contract.deliverables.with_status(["open","locked"]).collect do |deliverable|
-        option_attributes = {}
-        option_attributes[:value] = h(deliverable.id)
-        option_attributes[:selected] = "selected" if selected_key.to_i == deliverable.id
-        option_attributes[:disabled] = "disabled" if deliverable.locked? || contract.locked?
-          
-        content_tag(:option, h(deliverable.title), option_attributes)
-      end
+    project.contracts.all(:include => :deliverables).inject([]) do |html, contract|
+      if contract.closed? && !contract.deliverable_ids.include?(selected_key.to_i)
+        # skip
+      else
+        options = contract.deliverables.collect do |deliverable|
+          option_attributes = {}
+          option_attributes[:value] = h(deliverable.id)
+          option_attributes[:selected] = "selected" if selected_key.to_i == deliverable.id
+          option_attributes[:disabled] = "disabled" if (deliverable.locked? || contract.locked?) && selected_key.to_i != deliverable.id
 
-      html << content_tag(:optgroup, options.join("\n"), :label => h(contract.name))
+          next if deliverable.closed? && option_attributes[:selected].blank? # Skip unselected, closed
+          
+          content_tag(:option, h(deliverable.title), option_attributes)
+        end
+
+        html << content_tag(:optgroup, options.join("\n"), :label => h(contract.name))
+      end
+      html
     end.join('\n')
   end
 

@@ -289,7 +289,8 @@ class Deliverable < ActiveRecord::Base
 
   if Rails.env.test?
     generator_for :title, :method => :next_title
-
+    generator_for :status, 'open'
+    
     def self.next_title
       @last_title ||= 'Deliverable 0000'
       @last_title.succ!

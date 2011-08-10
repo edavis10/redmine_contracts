@@ -15,14 +15,15 @@ class RedmineContracts::Hooks::ViewIssuesFormDetailsBottomTest < ActionControlle
       @manager = User.generate!(:login => 'manager', :password => 'existing', :password_confirmation => 'existing')
       @role = Role.generate!(:permissions => [:view_issues, :edit_issues])
       User.add_to_project(@manager, @project, @role)
-      @deliverable1 = FixedDeliverable.generate!(:contract => @contract1, :manager => @manager, :title => 'The Title')
-      @deliverable2 = FixedDeliverable.generate!(:contract => @contract2, :manager => @manager, :title => 'The Title')
+      @deliverable1 = FixedDeliverable.generate!(:contract => @contract1, :manager => @manager, :title => 'Deliverable1')
+      @deliverable2 = FixedDeliverable.generate!(:contract => @contract2, :manager => @manager, :title => 'Deliverable2')
       @locked_deliverable = FixedDeliverable.generate!(:contract => @contract1, :manager => @manager, :title => 'Locked Deliverable', :status => 'locked')
       @closed_deliverable = FixedDeliverable.generate!(:contract => @contract1, :manager => @manager, :title => 'Closed Deliverable', :status => 'closed')
       @deliverable1_on_locked_contract = FixedDeliverable.generate!(:contract => @locked_contract, :manager => @manager, :title => 'Deliverable 1 on locked contract')
       @deliverable2_on_locked_contract = FixedDeliverable.generate!(:contract => @locked_contract, :manager => @manager, :title => 'Deliverable 2 on locked contract')
       @deliverable_on_closed_contract = FixedDeliverable.generate!(:contract => @closed_contract, :manager => @manager, :title => 'Deliverable on closed contract')
       @issue.deliverable = @deliverable1
+      assert @issue.save
 
       login_as('manager', 'existing')
     end
@@ -74,7 +75,50 @@ class RedmineContracts::Hooks::ViewIssuesFormDetailsBottomTest < ActionControlle
             assert_select "option", :text => /#{@deliverable_on_closed_contract.title}/, :count => 0
           end
         end
-        
+
+        should "show the assigned deliverable as an option, even if it's locked" do
+          @deliverable1.lock!
+          visit_issue_page(@issue)
+
+          assert_select "select#issue_deliverable_id" do
+            assert_select "option[disabled=disabled]", :text => /#{@deliverable1.title}/, :count => 0 # Not disabled
+            assert_select "option", :text => /#{@deliverable1.title}/, :count => 1 # Present
+          end
+
+        end
+
+        should "show the assigned deliverable as an option, even if it's closed" do
+          @deliverable1.close!
+          visit_issue_page(@issue)
+
+          assert_select "select#issue_deliverable_id" do
+            assert_select "option[disabled=disabled]", :text => /#{@deliverable1.title}/, :count => 0 # Not disabled
+            assert_select "option", :text => /#{@deliverable1.title}/, :count => 1 # Present
+          end
+
+        end
+
+        should "show the assigned deliverable as an option, even if it's contract is locked" do
+          @contract1.lock!
+          visit_issue_page(@issue)
+
+          assert_select "select#issue_deliverable_id" do
+            assert_select "option[disabled=disabled]", :text => /#{@deliverable1.title}/, :count => 0 # Not disabled
+            assert_select "option", :text => /#{@deliverable1.title}/, :count => 1 # Present
+          end
+
+        end
+
+        should "show the assigned deliverable as an option, even if it's contract is closed" do
+          @contract1.close!
+          visit_issue_page(@issue)
+
+          assert_select "select#issue_deliverable_id" do
+            assert_select "option[disabled=disabled]", :text => /#{@deliverable1.title}/, :count => 0 # Not disabled
+            assert_select "option", :text => /#{@deliverable1.title}/, :count => 1 # Present
+          end
+
+        end
       end
       
       context "with no permission to Assign Deliverable" do
