@@ -21,7 +21,7 @@ class Deliverable < ActiveRecord::Base
   validates_presence_of :manager
   validates_inclusion_of :status, :in => ["open","locked","closed"], :allow_blank => true, :allow_nil => true
   validate_on_update :validate_status_changes
-  validate_on_update :validate_contract_status
+  validate :validate_contract_status
   
   # Accessors
   include DollarizedAttribute
@@ -117,8 +117,21 @@ class Deliverable < ActiveRecord::Base
     return if contract_open?
     return if change_to_status_only?
 
-    errors.add_to_base(:cant_update_locked_contract) if contract_locked?
-    errors.add_to_base(:cant_update_closed_contract) if contract_closed?
+    if contract_locked?
+      if new_record?
+        errors.add_to_base(:cant_create_deliverable_on_locked_contract)
+      else
+        errors.add_to_base(:cant_update_locked_contract)
+      end
+    end
+
+    if contract_closed?
+      if new_record?
+        errors.add_to_base(:cant_create_deliverable_on_closed_contract)
+      else
+        errors.add_to_base(:cant_update_closed_contract)
+      end
+    end
   end
 
   # No operation method, useful to clean up logic with an optional message

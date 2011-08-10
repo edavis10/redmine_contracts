@@ -11,8 +11,8 @@ class RedmineContracts::Hooks::ViewIssuesBulkEditDetailsBottomHookTest < ActionC
       @issue3 = Issue.generate_for_project!(@project)
       @contract1 = Contract.generate!(:project => @project)
       @contract2 = Contract.generate!(:project => @project)
-      @locked_contract = Contract.generate!(:project => @project, :status => 'locked')
-      @closed_contract = Contract.generate!(:project => @project, :status => 'closed')
+      @locked_contract = Contract.generate!(:project => @project)
+      @closed_contract = Contract.generate!(:project => @project)
       
       @manager = User.generate!(:login => 'manager', :password => 'existing', :password_confirmation => 'existing')
       @role = Role.generate!(:permissions => [:view_issues, :edit_issues])
@@ -25,6 +25,10 @@ class RedmineContracts::Hooks::ViewIssuesBulkEditDetailsBottomHookTest < ActionC
       @deliverable2_on_locked_contract = FixedDeliverable.generate!(:contract => @locked_contract, :manager => @manager, :title => 'Deliverable 2 on locked contract')
       @deliverable_on_closed_contract = FixedDeliverable.generate!(:contract => @closed_contract, :manager => @manager, :title => 'Deliverable on closed contract')
       @issue.deliverable = @deliverable1
+
+      # Set contract statuses now that all deliverables are created
+      assert @locked_contract.lock!
+      assert @closed_contract.close!
 
       login_as('manager', 'existing')
     end

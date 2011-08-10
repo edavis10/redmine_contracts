@@ -11,6 +11,8 @@ en:
         cant_update_closed_deliverable: "Can't update a closed deliverable"
         cant_update_locked_contract: "Can't update a locked contract"
         cant_update_closed_contract: "Can't update a closed contract"
+        cant_create_deliverable_on_locked_contract: "Can't create a deliverable on a locked contract"
+        cant_create_deliverable_on_closed_contract: "Can't create a deliverable on a closed contract"
 
   field_end_date: End Date
   field_executed: Executed

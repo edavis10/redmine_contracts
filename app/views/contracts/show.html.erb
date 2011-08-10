@@ -102,7 +102,7 @@
     <div class="actions">
       <a href="#TODO-release-2"><%= release(2, "CSV") %></a>
       <a href="#TODO-release?"><%= release(5, "View All/Pagination") %></a>
-      <%= link_to(l(:button_add_new), new_contract_deliverable_path(@project, resource), :id => 'new-deliverable') %>
+      <%= link_to(l(:button_add_new), new_contract_deliverable_path(@project, resource), :id => 'new-deliverable') if resource.open? %>
     </div>
 
     <div class="clear"></div>

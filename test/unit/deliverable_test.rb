@@ -42,4 +42,23 @@ class DeliverableTest < ActiveSupport::TestCase
     end
   end
 
+  context "with a locked contract" do
+    should "block creating a new deliverable" do
+      contract = Contract.generate!(:status => "locked")
+      deliverable = FixedDeliverable.spawn(:contract => contract)
+
+      assert !deliverable.valid?
+      assert deliverable.errors.on_base.include?("Can't create a deliverable on a locked contract")
+    end
+  end
+
+  context "with a closed contract" do
+    should "block creating a new deliverable" do
+      contract = Contract.generate!(:status => "closed")
+      deliverable = FixedDeliverable.spawn(:contract => contract)
+
+      assert !deliverable.valid?
+      assert deliverable.errors.on_base.include?("Can't create a deliverable on a closed contract")
+    end
+  end
 end
