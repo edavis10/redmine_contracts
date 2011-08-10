@@ -30,20 +30,24 @@ module ContractsHelper
         # skip
       else
         options = contract.deliverables.collect do |deliverable|
-          option_attributes = {}
-          option_attributes[:value] = h(deliverable.id)
-          option_attributes[:selected] = "selected" if selected_key.to_i == deliverable.id
-          option_attributes[:disabled] = "disabled" if (deliverable.locked? || contract.locked?) && selected_key.to_i != deliverable.id
-
-          next if deliverable.closed? && option_attributes[:selected].blank? # Skip unselected, closed
-          
-          content_tag(:option, h(deliverable.title), option_attributes)
+          deliverable_option(deliverable, contract, selected_key)
         end
 
         html << content_tag(:optgroup, options.join("\n"), :label => h(contract.name))
       end
       html
     end.join('\n')
+  end
+
+  def deliverable_option(deliverable, contract, selected_key)
+    option_attributes = {}
+    option_attributes[:value] = h(deliverable.id)
+    option_attributes[:selected] = "selected" if selected_key.to_i == deliverable.id
+    option_attributes[:disabled] = "disabled" if (deliverable.locked? || contract.locked?) && selected_key.to_i != deliverable.id
+
+    return "" if deliverable.closed? && option_attributes[:selected].blank? # Skip unselected, closed
+      
+    content_tag(:option, h(deliverable.title), option_attributes)
   end
 
   def deliverable_options_for_contract(contract)
