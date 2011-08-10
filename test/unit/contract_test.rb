@@ -17,6 +17,9 @@ class ContractTest < ActiveSupport::TestCase
   should_allow_values_for :discount_type, "$", "%", nil, ''
   should_not_allow_values_for :discount_type, ["amount", "percent", "bar"]
 
+  should_allow_values_for :status, "", nil, 'open', 'locked', 'closed'
+  should_not_allow_values_for :status, "other", "things", "1"
+
   context "end_date" do
     should "be after start_date" do
       @contract = Contract.new(:start_date => Date.today, :end_date => Date.yesterday)
@@ -30,6 +33,12 @@ class ContractTest < ActiveSupport::TestCase
     @contract = Contract.new
     
     assert_equal false, @contract.executed
+  end
+
+  should "default status to open" do
+    @contract = Contract.new
+    
+    assert_equal "open", @contract.status
   end
 
   context "#labor_budget" do

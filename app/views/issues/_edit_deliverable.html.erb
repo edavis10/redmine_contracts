@@ -1,9 +1,6 @@
 <% if project.module_enabled?(:contracts) && User.current.allowed_to?(:assign_deliverable_to_issue, project) %>
   <p>
-    <% options = project.contracts.inject([]) {|data, contract|
-         data << [contract.name, contract.deliverables.collect {|d| [d.title, d.id]} ]
-       } %>
-    <%= form.select(:deliverable_id, grouped_options_for_select(options, issue.deliverable_id), {:include_blank => true}) %>
+    <%= form.select(:deliverable_id, grouped_deliverable_options_for_select(project, issue.deliverable_id), {:include_blank => true}) %>
   </p>
 <% end %>
 

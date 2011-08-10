@@ -9,7 +9,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     @manager = User.generate!
     @role = Role.generate!
     User.add_to_project(@manager, @project, @role)
-    @fixed_deliverable = FixedDeliverable.generate!(:contract => @contract, :manager => @manager, :title => 'The Title')
+    @fixed_deliverable = FixedDeliverable.generate!(:contract => @contract, :manager => @manager, :title => 'The Title', :notes => "", :feature_sign_off => false, :warranty_sign_off => false)
     @hourly_deliverable = HourlyDeliverable.generate!(:contract => @contract, :manager => @manager, :title => 'An Hourly')
     
     @user = User.generate_user_with_permission_to_manage_budget(:project => @project)
@@ -49,6 +49,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
 
     within("#deliverable-details") do
       fill_in "Title", :with => 'An updated title'
+      select "Locked", :from => "Status"
       check "Feature Sign Off"
       check "Warranty Sign Off"
     end
@@ -61,6 +62,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_equal "FixedDeliverable", @fixed_deliverable.reload.type
     assert @fixed_deliverable.reload.warranty_sign_off?
     assert @fixed_deliverable.reload.feature_sign_off?
+    assert_equal "locked", @fixed_deliverable.reload.status
 
   end
 
@@ -78,6 +80,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     
     within("#deliverable-details") do
       fill_in "Title", :with => 'An updated title'
+      select "Locked", :from => "Status"
       check "Feature Sign Off"
       check "Warranty Sign Off"
     end
@@ -101,6 +104,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_equal "HourlyDeliverable", @hourly_deliverable.reload.type
     assert @hourly_deliverable.reload.warranty_sign_off?
     assert @hourly_deliverable.reload.feature_sign_off?
+    assert_equal "locked", @hourly_deliverable.reload.status
 
     assert_equal 1, @hourly_deliverable.labor_budgets.count
     @labor_budget = @hourly_deliverable.labor_budgets.first
@@ -471,4 +475,240 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_equal 3, @retainer_deliverable.fixed_budgets.count
     assert_equal [600, nil, nil], @retainer_deliverable.fixed_budgets.collect(&:budget)
   end
+
+  context "locked deliverable" do
+    setup do
+      assert @fixed_deliverable.lock!
+    end
+    
+    should "block edits to locked deliverables" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        fill_in "Title", :with => 'An updated title'
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'deliverables/edit'
+
+      assert_not_equal "An updated title", @fixed_deliverable.reload.title
+    end
+
+    should "block edits to locked deliverables even when status changes to closed" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        fill_in "Title", :with => 'An updated title'
+        select "Closed", :from => "Status"
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'deliverables/edit'
+
+      assert_not_equal "An updated title", @fixed_deliverable.reload.title
+      assert @fixed_deliverable.reload.locked?
+    end
+    
+    should "be allowed to change the status on a locked deliverables to open" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        select "Open", :from => "Status"
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'contracts/show'
+
+      assert @fixed_deliverable.reload.open?
+    end
+
+    should "be allowed to change the status on a locked deliverables to closed" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        select "Closed", :from => "Status"
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'contracts/show'
+
+      assert @fixed_deliverable.reload.closed?
+    end
+    
+  end
+
+  context "closed deliverable" do
+    setup do
+      assert @fixed_deliverable.close!
+    end
+    
+    should "block edits to closed deliverables" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        fill_in "Title", :with => 'An updated title'
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'deliverables/edit'
+
+      assert_not_equal "An updated title", @fixed_deliverable.reload.title
+    end
+
+    should "block edits to closed deliverables even when the status is changed to locked" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        fill_in "Title", :with => 'An updated title'
+        select "Locked", :from => "Status"
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'deliverables/edit'
+
+      assert_not_equal "An updated title", @fixed_deliverable.reload.title
+      assert @fixed_deliverable.reload.closed?
+    end
+
+    should "be allowed to change the status on a closed deliverables to open" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        select "Open", :from => "Status"
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'contracts/show'
+
+      assert @fixed_deliverable.reload.open?
+    end
+
+    should "be allowed to change the status on a closed deliverables to Locked" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        select "Locked", :from => "Status"
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'contracts/show'
+
+      assert @fixed_deliverable.reload.locked?
+    end
+  end
+  
+  context "a Deliverable on a locked Contract" do
+    setup do
+      assert @contract.lock!
+    end
+    
+    should "be blocked from editing" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        fill_in "Title", :with => 'An updated title'
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'deliverables/edit'
+
+      assert_not_equal "An updated title", @fixed_deliverable.reload.title
+    end
+    
+    should "allow status only changes" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        select "Locked", :from => "Status"
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'contracts/show'
+
+      assert @fixed_deliverable.reload.locked?
+    end
+    
+  end
+  
+  context "a Deliverable on a closed Contract" do
+    setup do
+      assert @contract.close!
+    end
+    
+    should "be blocked from editing" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        fill_in "Title", :with => 'An updated title'
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'deliverables/edit'
+
+      assert_not_equal "An updated title", @fixed_deliverable.reload.title
+    end
+    
+    should "allow status only changes" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        select "Locked", :from => "Status"
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'contracts/show'
+
+      assert @fixed_deliverable.reload.locked?
+    end
+    
+  end
+
 end

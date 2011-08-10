@@ -52,6 +52,7 @@ class ContractsNewTest < ActionController::IntegrationTest
     fill_in "Start", :with => '2010-01-01'
     fill_in "End Date", :with => '2010-12-31'
     select "Net 30", :from => "Payment Terms"
+    select "Locked", :from => "Status"
 
     click_button "Save Contract"
 
@@ -64,6 +65,7 @@ class ContractsNewTest < ActionController::IntegrationTest
     assert_equal '2010-01-01', @contract.start_date.to_s
     assert_equal '2010-12-31', @contract.end_date.to_s
     assert_equal 'Net 30', @contract.payment_term.name
+    assert_equal "locked", @contract.status
     
   end
 end

@@ -19,6 +19,9 @@ class RedmineContracts::Hooks::ViewIssuesShowDetailsBottomTest < ActionControlle
     @controller ||= ApplicationController.new
     @controller.class.send(:include, ::Redmine::I18n)
     @controller.response ||= ActionController::TestResponse.new
+    def @controller.api_request?
+      false
+    end
     # Hack to support render_on
     @controller.instance_variable_set('@template', template)
     @controller.response = response

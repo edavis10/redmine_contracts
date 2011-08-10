@@ -19,15 +19,27 @@ class Deliverable < ActiveRecord::Base
   validates_presence_of :title
   validates_presence_of :type
   validates_presence_of :manager
+  validates_inclusion_of :status, :in => ["open","locked","closed"], :allow_blank => true, :allow_nil => true
+  validate_on_update :validate_status_changes
+  validate :validate_contract_status
   
   # Accessors
   include DollarizedAttribute
   dollarized_attribute :total
 
   delegate :name, :to => :contract, :prefix => true, :allow_nil => true
+  delegate "open?", :to => :contract, :prefix => true, :allow_nil => true
+  delegate "closed?", :to => :contract, :prefix => true, :allow_nil => true
+  delegate "locked?", :to => :contract, :prefix => true, :allow_nil => true
 
   # Callbacks
-
+  before_destroy :block_on_locked_contracts
+  before_destroy :block_on_closed_contracts
+  
+  def after_initialize
+    self.status = "open" unless self.status.present?
+  end
+  
   # Register callbacks here, on new records the class isn't set so class-specific
   # callbacks don't fire.
   def after_save
@@ -37,6 +49,11 @@ class Deliverable < ActiveRecord::Base
   end
   
   named_scope :by_title, {:order => "#{Deliverable.table_name}.title ASC"}
+  named_scope :with_status, lambda {|statuses|
+    {
+      :conditions => ["#{Deliverable.table_name}.status IN (?)", statuses]
+    }
+  }
   
   def short_type
     ''
@@ -49,6 +66,88 @@ class Deliverable < ActiveRecord::Base
   # Deliverable's aren't dated. Subclasses may override this for period behavior.
   def current_date
     nil
+  end
+
+  def lock!
+    update_attribute(:status, "locked")
+  end
+
+  def close!
+    update_attribute(:status, "closed")
+  end
+
+  def open?
+    self.status == "open"
+  end
+
+  def locked?
+    self.status == "locked"
+  end
+
+  def closed?
+    self.status == "closed"
+  end
+
+  def editable?
+    (new_record? || open?)
+  end
+
+  def valid_status_change?
+    change_to_status_only? || changing_to_the_open_status? || changing_from_the_open_status?
+  end
+
+  def change_to_status_only?
+    ["status"] == changes.keys
+  end
+
+  def changing_to_the_open_status?
+    changes["status"].present? && "open" == changes["status"].second
+  end
+
+  def changing_from_the_open_status?
+    changes["status"].present? && "open" == changes["status"].first
+  end
+
+  # TODO: duplicated on Contract, refactor after one more duplication
+  def validate_status_changes
+    return if valid_status_change?
+
+    errors.add_to_base(:cant_update_locked_deliverable) if locked?
+    errors.add_to_base(:cant_update_closed_deliverable) if closed?
+  end
+
+  def validate_contract_status
+    return if contract_open?
+    return if change_to_status_only?
+
+    if contract_locked?
+      if new_record?
+        errors.add_to_base(:cant_create_deliverable_on_locked_contract)
+      else
+        errors.add_to_base(:cant_update_locked_contract)
+      end
+    end
+
+    if contract_closed?
+      if new_record?
+        errors.add_to_base(:cant_create_deliverable_on_closed_contract)
+      else
+        errors.add_to_base(:cant_update_closed_contract)
+      end
+    end
+  end
+
+  # No operation method, useful to clean up logic with an optional message
+  # for documentation
+  def noop(message="")
+  end
+
+  def block_on_locked_contracts
+    !contract_locked?
+  end
+
+  def block_on_closed_contracts
+    !contract_closed?
   end
 
   def to_s
@@ -214,7 +313,8 @@ class Deliverable < ActiveRecord::Base
 
   if Rails.env.test?
     generator_for :title, :method => :next_title
-
+    generator_for :status, 'open'
+    
     def self.next_title
       @last_title ||= 'Deliverable 0000'
       @last_title.succ!

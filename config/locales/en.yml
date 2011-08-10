@@ -1,4 +1,19 @@
 en:
+  activerecord:
+    errors:
+      messages:
+        cant_create_time_on_object: "Can't create a time entry on a %{reason} %{thing}"
+        cant_assign_to_closed_deliverable: "Can't assign issue to a closed deliverable"
+        cant_assign_to_locked_deliverable: "Can't assign issue to a locked deliverable"
+        cant_assign_to_closed_contract: "Can't assign issue to a closed contract"
+        cant_assign_to_locked_contract: "Can't assign issue to a locked contract"
+        cant_update_locked_deliverable: "Can't update a locked deliverable"
+        cant_update_closed_deliverable: "Can't update a closed deliverable"
+        cant_update_locked_contract: "Can't update a locked contract"
+        cant_update_closed_contract: "Can't update a closed contract"
+        cant_create_deliverable_on_locked_contract: "Can't create a deliverable on a locked contract"
+        cant_create_deliverable_on_closed_contract: "Can't create a deliverable on a closed contract"
+
   field_end_date: End Date
   field_executed: Executed
   text_contracts: Contracts
@@ -81,4 +96,7 @@ en:
   text_error_message_orphaned_time: "There is {{amount}} worth of time clocked to issues that are not assigned to any deliverables."
   text_error_message_update_orphaned_time: "Please update the orphaned issues."
   field_estimated: Estimated
-  
+  text_deliverable_locked_warning: "This deliverable is locked and cannot be saved without changing it's status to Open."
+  text_deliverable_closed_warning: "This deliverable is closed and cannot be saved without changing it's status to Open."
+  text_contract_locked_warning: "This contract is locked and cannot be saved without changing it's status to Open."
+  text_contract_closed_warning: "This contract is closed and cannot be saved without changing it's status to Open."

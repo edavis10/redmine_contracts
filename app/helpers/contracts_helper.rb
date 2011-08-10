@@ -1,12 +1,52 @@
 module ContractsHelper
   def setup_nested_deliverable_records(deliverable)
-    returning(deliverable) do |d|
-      d.labor_budgets.build if d.labor_budgets.empty?
-      d.overhead_budgets.build if d.overhead_budgets.empty?
-      d.fixed_budgets.build if d.fixed_budgets.empty?
+    deliverable.labor_budgets.build if deliverable.labor_budgets.empty?
+    deliverable.overhead_budgets.build if deliverable.overhead_budgets.empty?
+    deliverable.fixed_budgets.build if deliverable.fixed_budgets.empty?
+    deliverable
+  end
+
+  def group_contracts_by_status(contracts)
+    grouped_contracts = contracts.inject({}) do |grouped, contract|
+      grouped[contract.status] ||= []
+      grouped[contract.status] << contract
+      grouped
+    end
+    grouped_contracts["open"] ||= []
+    grouped_contracts["locked"] ||= []
+    grouped_contracts["closed"] ||= []
+    grouped_contracts
+  end
+
+  def grouped_deliverable_options_for_select(project, selected_key=nil)
+    project.contracts.all(:include => :deliverables).inject("") do |html, contract|
+      if contract.closed? && !contract.includes_deliverable_id?(selected_key)
+        html
+      else
+        html << content_tag(:optgroup,
+                            deliverable_options_for_contract(contract, selected_key).join("\n"),
+                            :label => h(contract.name))
+      end
     end
   end
 
+  def deliverable_options_for_contract(contract, selected_key)
+    contract.deliverables.collect do |deliverable|
+      deliverable_option(deliverable, selected_key)
+    end
+  end
+
+  def deliverable_option(deliverable, selected_key)
+    option_attributes = {}
+    option_attributes[:value] = h(deliverable.id)
+    option_attributes[:selected] = "selected" if selected_key.to_i == deliverable.id
+    option_attributes[:disabled] = "disabled" if (deliverable.locked? || deliverable.contract_locked?) && selected_key.to_i != deliverable.id
+
+    return "" if deliverable.closed? && option_attributes[:selected].blank? # Skip unselected, closed
+      
+    content_tag(:option, h(deliverable.title), option_attributes)
+  end
+  
   # Simple helper to show the values of a field on an object in a standard format
   #
   # <p>

@@ -17,7 +17,9 @@ class Contract < ActiveRecord::Base
   validates_presence_of :start_date
   validates_presence_of :end_date
   validates_inclusion_of :discount_type, :in => %w($ %), :allow_blank => true, :allow_nil => true
+  validates_inclusion_of :status, :in => ["open","locked","closed"], :allow_blank => true, :allow_nil => true
   validate :start_and_end_date_are_valid
+  validate_on_update :validate_status_changes
 
   # Accessors
   attr_accessible :name
@@ -33,15 +35,49 @@ class Contract < ActiveRecord::Base
   attr_accessible :po_number
   attr_accessible :client_point_of_contact
   attr_accessible :details
+  attr_accessible :status
 
   named_scope :by_name, {:order => "#{Contract.table_name}.name ASC"}
-  
-  [:status, :contract_type,
+  named_scope :with_status, lambda {|statuses|
+    {
+      :conditions => ["#{Contract.table_name}.status IN (?)", statuses]
+    }
+  }
+
+  [:contract_type,
    :discount_spent, :discount_budget
   ].each do |mthd|
     define_method(mthd) { "TODO in later release" }
   end
 
+  def status
+    read_attribute(:status) || "open"
+  end
+
+  def lock!
+    update_attribute(:status, "locked")
+  end
+
+  def close!
+    update_attribute(:status, "closed")
+  end
+
+  def open?
+    self.status == "open"
+  end
+  
+  def locked?
+    self.status == "locked"
+  end
+
+  def closed?
+    self.status == "closed"
+  end
+
+  def includes_deliverable_id?(deliverable_id)
+    deliverable_ids.include?(deliverable_id.to_i)
+  end
+  
   # ------------------------------------------------------------
   # Labor Methods
   # ------------------------------------------------------------
@@ -229,6 +265,7 @@ class Contract < ActiveRecord::Base
 
   def after_initialize
     self.executed = false unless self.executed.present?
+    self.status = "open" unless self.status.present?
   end
 
   # Are the start_date and end_date valid?
@@ -236,6 +273,30 @@ class Contract < ActiveRecord::Base
     if start_date && end_date && end_date < start_date
       errors.add :end_date, :greater_than_start_date
     end
+  end
+
+  def valid_status_change?
+    change_to_status_only? || changing_to_the_open_status? || changing_from_the_open_status?
+  end
+
+  def change_to_status_only?
+    ["status"] == changes.keys
+  end
+
+  def changing_to_the_open_status?
+    changes["status"].present? && "open" == changes["status"].second
+  end
+
+  def changing_from_the_open_status?
+    changes["status"].present? && "open" == changes["status"].first
+  end
+
+  # TODO: duplicated on Deliverable, refactor after one more duplication
+  def validate_status_changes
+    return if valid_status_change?
+
+    errors.add_to_base(:cant_update_locked_contract) if locked?
+    errors.add_to_base(:cant_update_closed_contract) if closed?
   end
 
   # Currency amount of time that is logged to the project or to issues
@@ -252,15 +313,17 @@ class Contract < ActiveRecord::Base
   end
 
   if Rails.env.test?
-    generator_for :name, :method => :next_name
+    generator_for :name, :start => "Contract 0000"
     generator_for :executed => true
     generator_for(:start_date) { Date.yesterday }
     generator_for(:end_date) { Date.tomorrow }
-
-    def self.next_name
-      @last_name ||= 'Contract 0000'
-      @last_name.succ!
-    end
+    generator_for :discount, ''
+    generator_for :details, ''
+    generator_for :discount_note, ''
+    generator_for :client_point_of_contact, ''
+    generator_for :client_ap_contact_information, ''
+    generator_for :po_number, ''
+    generator_for :status, 'open'
 
   end
   
@@ -270,5 +333,5 @@ class Contract < ActiveRecord::Base
   def summarize_associated_values(records, value_method)
     records.inject(0) {|total, record| total += record.send(value_method)}
   end
-    
+
 end

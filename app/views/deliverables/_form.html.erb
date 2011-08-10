@@ -2,6 +2,17 @@
 <%= javascript_tag("var i18nEndDateEmpty = '#{l(:text_end_date_empty)}'") %>
 <%= javascript_tag("var i18nChangedPeriodMessage = '#{l(:text_changed_period_message)}'") %>
 
+<% if resource.locked? || resource.closed? || resource.contract_locked? || resource.contract_closed? %>
+  <div class="error_msg">
+    <% if resource.contract_locked? || resource.contract_closed? %>
+    <p><%= resource.contract_locked? ? l(:text_contract_locked_warning) : l(:text_contract_closed_warning) %></p>
+    <% end %>
+    <% if resource.locked? || resource.closed? %>
+    <p><%= resource.locked? ? l(:text_deliverable_locked_warning) : l(:text_deliverable_closed_warning) %></p>
+    <% end %>
+  </div>
+<% end %>
+
 <div class="box tabular">
 <% form.inputs :name => l(:text_deliverable_details_legend), :id => 'deliverable-details' do %>
   <%# Used by jquery to check if this is a new or existing record %>
@@ -19,6 +30,7 @@
     </li>
     <%= form.input :type, :as => :hidden, :class => 'type' %>
   <% end %>
+  <%= form.input :status, :required => true, :collection => [["Open","open"],["Locked","locked"],["Closed","closed"]] %>
   <%= form.input :manager, :required => true, :collection => @project.users.sort %>
 
   <%= form.input :start_date, :as => :string, :input_html => {:size => 10, :class => 'start-date', :id => 'deliverable_start_date'}, :hint => calendar_for('deliverable_start_date') %>

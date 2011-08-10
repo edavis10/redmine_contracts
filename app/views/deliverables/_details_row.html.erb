@@ -7,7 +7,7 @@
                   <div class="info">
                     <div class="title">
                       <%= link_to(l(:button_edit), edit_contract_deliverable_path(@project, contract, deliverable), :class => 'icon icon-edit') %>
-                      <%= link_to(l(:button_delete), contract_deliverable_path(@project, contract, deliverable), :method => :delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del') %>
+                      <%= link_to(l(:button_delete), contract_deliverable_path(@project, contract, deliverable), :method => :delete, :confirm => l(:text_are_you_sure), :class => 'icon icon-del') if contract.open? %>
                     </div>
                     
                     <%= textilizable(deliverable, :notes) %>

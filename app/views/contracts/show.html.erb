@@ -15,10 +15,7 @@
 
   <div class="c_overview">
     <table class="left">
-      <tr class="contract-status">
-        <%# show_field(resource, :status, :html_options => {:class => 'contract-status'}) %>
-        <td colspan="2"><%= release(5, "Contract status") %></td>
-      </tr>
+      <%= show_field(resource, :status, :html_options => {:class => 'contract-status'}) %>
       <%= show_field(resource, :account_executive, :html_options => {:class => 'contract-account-manager'}) %>
       <tr class="contract-type">
         <%# show_field(resource, :contract_type, :html_options => {:class => 'contract-type'}) %>
@@ -105,7 +102,7 @@
     <div class="actions">
       <a href="#TODO-release-2"><%= release(2, "CSV") %></a>
       <a href="#TODO-release?"><%= release(5, "View All/Pagination") %></a>
-      <%= link_to(l(:button_add_new), new_contract_deliverable_path(@project, resource), :id => 'new-deliverable') %>
+      <%= link_to(l(:button_add_new), new_contract_deliverable_path(@project, resource), :id => 'new-deliverable') if resource.open? %>
     </div>
 
     <div class="clear"></div>
@@ -133,7 +130,7 @@
               <td width="10%" class="arrow end-date"><span><%= h format_date(deliverable.end_date) %></span></td>
               <td width="2%" class="type"><%= h deliverable.short_type %></td>
               <td width="25%" class="title"><%= h deliverable.title %></td>
-              <td width="15%"><%= release(5, "Deliverable status") %></td>
+              <td width="15%" class="status"><%= h deliverable.status %></td>
               <td width="15%" class="manager"><%= h deliverable.manager.try(:name) %></td>
               <%= format_budget_for_deliverable(deliverable, deliverable.labor_budget_spent, deliverable.labor_budget_total, :class => 'labor') %>
               <%= format_budget_for_deliverable(deliverable, deliverable.overhead_spent, deliverable.overhead_budget_total, :class => 'overhead') %>

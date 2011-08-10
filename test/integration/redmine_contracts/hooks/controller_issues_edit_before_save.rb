@@ -24,10 +24,10 @@ class RedmineContracts::Hooks::ControllerIssuesEditBeforeSaveTest < ActionContro
     context "for a new issue" do
       setup do
         visit_project(@project)
-        click_link "New issue"
       end
       
       should "set the issue's deliverable" do
+        click_link "New issue"
         fill_in "Subject", :with => 'Hook test'
         select @deliverable2.title, :from => "Deliverable"
         click_button "Create"
@@ -36,6 +36,70 @@ class RedmineContracts::Hooks::ControllerIssuesEditBeforeSaveTest < ActionContro
 
         assert_equal @deliverable2, Issue.last.deliverable
 
+      end
+
+      should "not allow setting a locked Deliverable" do
+        assert @deliverable2.lock!
+        click_link "New issue"
+
+        fill_in "Subject", :with => 'Hook test'
+        select @deliverable2.title, :from => "Deliverable"
+        assert_no_difference("Issue.count") do
+          click_button "Create"
+
+          assert_response :success
+        end
+        
+        assert_equal nil, Issue.last.deliverable
+        
+      end
+
+      should "not allow setting a closed Deliverable" do
+        assert @deliverable2.close!
+        click_link "New issue"
+
+        fill_in "Subject", :with => 'Hook test'
+        select @deliverable2.title, :from => "Deliverable"
+        assert_no_difference("Issue.count") do
+          click_button "Create"
+
+          assert_response :success
+        end
+        
+        assert_equal nil, Issue.last.deliverable
+        
+      end
+
+      should "not allow setting a Deliverable on a locked Contract" do
+        assert @contract2.lock!
+        click_link "New issue"
+
+        fill_in "Subject", :with => 'Hook test'
+        select @deliverable2.title, :from => "Deliverable"
+        assert_no_difference("Issue.count") do
+          click_button "Create"
+
+          assert_response :success
+        end
+        
+        assert_equal nil, Issue.last.deliverable
+        
+      end
+
+      should "not allow setting a Deliverable on a closed Contract" do
+        assert @contract2.close!
+        click_link "New issue"
+
+        fill_in "Subject", :with => 'Hook test'
+        select @deliverable2.title, :from => "Deliverable"
+        assert_no_difference("Issue.count") do
+          click_button "Create"
+
+          assert_response :success
+        end
+        
+        assert_equal nil, Issue.last.deliverable
+        
       end
 
       context "with no permission to Assign Deliverable" do
@@ -67,6 +131,75 @@ class RedmineContracts::Hooks::ControllerIssuesEditBeforeSaveTest < ActionContro
         @issue.reload
         assert_equal @deliverable2, @issue.deliverable
 
+      end
+
+      should "not allow updating to a locked deliverable" do
+        assert @deliverable2.lock!
+        select @deliverable2.title, :from => "Deliverable"
+        click_button "Submit"
+
+        assert_response :success
+
+        @issue.reload
+        assert_equal nil, @issue.deliverable
+
+      end
+
+      should "not allow updating to a closed deliverable" do
+        assert @deliverable2.close!
+        select @deliverable2.title, :from => "Deliverable"
+        click_button "Submit"
+
+        assert_response :success
+
+        @issue.reload
+        assert_equal nil, @issue.deliverable
+
+      end
+
+      should "not allow updating to a deliverable on a locked contract" do
+        assert @contract2.lock!
+        select @deliverable2.title, :from => "Deliverable"
+        click_button "Submit"
+
+        assert_response :success
+
+        @issue.reload
+        assert_equal nil, @issue.deliverable
+
+      end
+
+      should "not allow updating to a deliverable on a closed contract" do
+        assert @contract2.close!
+        select @deliverable2.title, :from => "Deliverable"
+        click_button "Submit"
+
+        assert_response :success
+
+        @issue.reload
+        assert_equal nil, @issue.deliverable
+
+      end
+
+      should "allow updating an issue, even if the deliverable is locked as long as the deliverable isn't changed" do
+        select @deliverable2.title, :from => "Deliverable"
+        click_button "Submit"
+
+        assert_response :success
+
+        @issue.reload
+        assert_equal @deliverable2, @issue.deliverable
+
+        # Now normal update after locking
+        assert @deliverable2.lock!
+        fill_in "Subject", :with => 'Change subject'
+        click_button "Submit"
+
+        assert_response :success
+        @issue.reload
+        assert_equal "Change subject", @issue.subject
+        assert_equal @deliverable2, @issue.deliverable        
+        
       end
 
       context "with no permission to Assign Deliverable" do
