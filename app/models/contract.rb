@@ -38,7 +38,12 @@ class Contract < ActiveRecord::Base
   attr_accessible :status
 
   named_scope :by_name, {:order => "#{Contract.table_name}.name ASC"}
-  
+  named_scope :with_status, lambda {|statuses|
+    {
+      :conditions => ["#{Contract.table_name}.status IN (?)", statuses]
+    }
+  }
+
   [:contract_type,
    :discount_spent, :discount_budget
   ].each do |mthd|
@@ -304,7 +309,7 @@ class Contract < ActiveRecord::Base
   end
 
   if Rails.env.test?
-    generator_for :name, :method => :next_name
+    generator_for :name, :start => "Contract 0000"
     generator_for :executed => true
     generator_for(:start_date) { Date.yesterday }
     generator_for(:end_date) { Date.tomorrow }
@@ -314,11 +319,7 @@ class Contract < ActiveRecord::Base
     generator_for :client_point_of_contact, ''
     generator_for :client_ap_contact_information, ''
     generator_for :po_number, ''
-
-    def self.next_name
-      @last_name ||= 'Contract 0000'
-      @last_name.succ!
-    end
+    generator_for :status, 'open'
 
   end
   

@@ -46,6 +46,11 @@ class Deliverable < ActiveRecord::Base
   end
   
   named_scope :by_title, {:order => "#{Deliverable.table_name}.title ASC"}
+  named_scope :with_status, lambda {|statuses|
+    {
+      :conditions => ["#{Deliverable.table_name}.status IN (?)", statuses]
+    }
+  }
   
   def short_type
     ''

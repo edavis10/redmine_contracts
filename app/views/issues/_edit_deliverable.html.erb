@@ -1,6 +1,6 @@
 <% if project.module_enabled?(:contracts) && User.current.allowed_to?(:assign_deliverable_to_issue, project) %>
   <p>
-    <%= form.select(:deliverable_id, grouped_options_for_select(deliverable_options(project), issue.deliverable_id), {:include_blank => true}) %>
+    <%= form.select(:deliverable_id, grouped_deliverable_options_for_select(project, issue.deliverable_id), {:include_blank => true}) %>
   </p>
 <% end %>
 

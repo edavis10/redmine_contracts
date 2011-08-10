@@ -24,6 +24,21 @@ module ContractsHelper
     end
   end
 
+  def grouped_deliverable_options_for_select(project, selected_key=nil)
+    project.contracts.with_status(["open","locked"]).inject([]) do |html, contract|
+      options = contract.deliverables.with_status(["open","locked"]).collect do |deliverable|
+        option_attributes = {}
+        option_attributes[:value] = h(deliverable.id)
+        option_attributes[:selected] = "selected" if selected_key.to_i == deliverable.id
+        option_attributes[:disabled] = "disabled" if deliverable.locked? || contract.locked?
+          
+        content_tag(:option, h(deliverable.title), option_attributes)
+      end
+
+      html << content_tag(:optgroup, options.join("\n"), :label => h(contract.name))
+    end.join('\n')
+  end
+
   def deliverable_options_for_contract(contract)
     contract.deliverables.collect {|d| [d.title, d.id]}
   end

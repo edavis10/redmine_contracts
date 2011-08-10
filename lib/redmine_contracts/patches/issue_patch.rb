@@ -27,7 +27,7 @@ module RedmineContracts
           end
 
           def validate_contract_status
-            if deliverable.present? && changes["deliverable_id"].present?
+            if deliverable.present? && changes["deliverable_id"].present? && contract.present?
               errors.add_to_base(:cant_assign_to_closed_contract) if contract.closed?
               errors.add_to_base(:cant_assign_to_locked_contract) if contract.locked?
             end
