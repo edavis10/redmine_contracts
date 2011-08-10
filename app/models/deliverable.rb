@@ -33,6 +33,9 @@ class Deliverable < ActiveRecord::Base
   delegate "locked?", :to => :contract, :prefix => true, :allow_nil => true
 
   # Callbacks
+  before_destroy :block_on_locked_contracts
+  before_destroy :block_on_closed_contracts
+  
   def after_initialize
     self.status = "open" unless self.status.present?
   end
@@ -137,6 +140,14 @@ class Deliverable < ActiveRecord::Base
   # No operation method, useful to clean up logic with an optional message
   # for documentation
   def noop(message="")
+  end
+
+  def block_on_locked_contracts
+    !contract_locked?
+  end
+
+  def block_on_closed_contracts
+    !contract_closed?
   end
 
   def to_s

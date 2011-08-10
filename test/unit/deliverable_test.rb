@@ -50,6 +50,17 @@ class DeliverableTest < ActiveSupport::TestCase
       assert !deliverable.valid?
       assert deliverable.errors.on_base.include?("Can't create a deliverable on a locked contract")
     end
+
+    should "block deleting a deliverable" do
+      contract = Contract.generate!
+      deliverable = FixedDeliverable.generate!(:contract => contract).reload
+      assert contract.lock!
+
+      assert_no_difference("Deliverable.count") do
+        deliverable.destroy
+      end
+      
+    end
   end
 
   context "with a closed contract" do
@@ -59,6 +70,17 @@ class DeliverableTest < ActiveSupport::TestCase
 
       assert !deliverable.valid?
       assert deliverable.errors.on_base.include?("Can't create a deliverable on a closed contract")
+    end
+
+    should "block deleting a deliverable" do
+      contract = Contract.generate!
+      deliverable = FixedDeliverable.generate!(:contract => contract).reload
+      assert contract.close!
+
+      assert_no_difference("Deliverable.count") do
+        deliverable.destroy
+      end
+      
     end
   end
 end
