@@ -18,12 +18,6 @@ module ContractsHelper
     grouped_contracts
   end
 
-  def deliverable_options(project)
-    project.contracts.inject([]) do |data, contract|
-      data << [contract.name, deliverable_options_for_contract(contract)]
-    end
-  end
-
   def grouped_deliverable_options_for_select(project, selected_key=nil)
     project.contracts.all(:include => :deliverables).inject("") do |html, contract|
       if contract.closed? && !contract.includes_deliverable_id?(selected_key)
@@ -47,10 +41,6 @@ module ContractsHelper
     return "" if deliverable.closed? && option_attributes[:selected].blank? # Skip unselected, closed
       
     content_tag(:option, h(deliverable.title), option_attributes)
-  end
-
-  def deliverable_options_for_contract(contract)
-    contract.deliverables.collect {|d| [d.title, d.id]}
   end
   
   # Simple helper to show the values of a field on an object in a standard format
