@@ -23,12 +23,16 @@ module ContractsHelper
       if contract.closed? && !contract.includes_deliverable_id?(selected_key)
         html
       else
-        options = contract.deliverables.collect do |deliverable|
-          deliverable_option(deliverable, selected_key)
-        end
-
-        html << content_tag(:optgroup, options.join("\n"), :label => h(contract.name))
+        html << content_tag(:optgroup,
+                            deliverable_options_for_contract(contract, selected_key).join("\n"),
+                            :label => h(contract.name))
       end
+    end
+  end
+
+  def deliverable_options_for_contract(contract, selected_key)
+    contract.deliverables.collect do |deliverable|
+      deliverable_option(deliverable, selected_key)
     end
   end
 
