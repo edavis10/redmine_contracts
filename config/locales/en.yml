@@ -5,6 +5,8 @@ en:
         cant_create_time_on_object: "Can't create a time entry on a %{reason} %{thing}"
         cant_assign_to_closed_deliverable: "Can't assign issue to a closed deliverable"
         cant_assign_to_locked_deliverable: "Can't assign issue to a locked deliverable"
+        cant_assign_to_closed_contract: "Can't assign issue to a closed contract"
+        cant_assign_to_locked_contract: "Can't assign issue to a locked contract"
         cant_update_locked_deliverable: "Can't update a locked deliverable"
         cant_update_closed_deliverable: "Can't update a closed deliverable"
         cant_update_locked_contract: "Can't update a locked contract"

@@ -70,6 +70,38 @@ class RedmineContracts::Hooks::ControllerIssuesEditBeforeSaveTest < ActionContro
         
       end
 
+      should "not allow setting a Deliverable on a locked Contract" do
+        assert @contract2.lock!
+        click_link "New issue"
+
+        fill_in "Subject", :with => 'Hook test'
+        select @deliverable2.title, :from => "Deliverable"
+        assert_no_difference("Issue.count") do
+          click_button "Create"
+
+          assert_response :success
+        end
+        
+        assert_equal nil, Issue.last.deliverable
+        
+      end
+
+      should "not allow setting a Deliverable on a closed Contract" do
+        assert @contract2.close!
+        click_link "New issue"
+
+        fill_in "Subject", :with => 'Hook test'
+        select @deliverable2.title, :from => "Deliverable"
+        assert_no_difference("Issue.count") do
+          click_button "Create"
+
+          assert_response :success
+        end
+        
+        assert_equal nil, Issue.last.deliverable
+        
+      end
+
       context "with no permission to Assign Deliverable" do
         should "not allow setting the Deliverable (force HTTP request)" do
           @role.permissions.delete(:assign_deliverable_to_issue)
@@ -115,6 +147,30 @@ class RedmineContracts::Hooks::ControllerIssuesEditBeforeSaveTest < ActionContro
 
       should "not allow updating to a closed deliverable" do
         assert @deliverable2.close!
+        select @deliverable2.title, :from => "Deliverable"
+        click_button "Submit"
+
+        assert_response :success
+
+        @issue.reload
+        assert_equal nil, @issue.deliverable
+
+      end
+
+      should "not allow updating to a deliverable on a locked contract" do
+        assert @contract2.lock!
+        select @deliverable2.title, :from => "Deliverable"
+        click_button "Submit"
+
+        assert_response :success
+
+        @issue.reload
+        assert_equal nil, @issue.deliverable
+
+      end
+
+      should "not allow updating to a deliverable on a closed contract" do
+        assert @contract2.close!
         select @deliverable2.title, :from => "Deliverable"
         click_button "Submit"
 
