@@ -25,9 +25,9 @@ module ContractsHelper
   end
 
   def grouped_deliverable_options_for_select(project, selected_key=nil)
-    project.contracts.all(:include => :deliverables).inject([]) do |html, contract|
+    project.contracts.all(:include => :deliverables).inject("") do |html, contract|
       if contract.closed? && !contract.includes_deliverable_id?(selected_key)
-        # skip
+        html
       else
         options = contract.deliverables.collect do |deliverable|
           deliverable_option(deliverable, selected_key)
@@ -35,8 +35,7 @@ module ContractsHelper
 
         html << content_tag(:optgroup, options.join("\n"), :label => h(contract.name))
       end
-      html
-    end.join('\n')
+    end
   end
 
   def deliverable_option(deliverable, selected_key)
