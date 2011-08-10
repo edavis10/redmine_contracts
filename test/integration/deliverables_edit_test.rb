@@ -629,6 +629,86 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     end
   end
   
+  context "a Deliverable on a locked Contract" do
+    setup do
+      assert @contract.lock!
+    end
+    
+    should "be blocked from editing" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
 
+      within("#deliverable-details") do
+        fill_in "Title", :with => 'An updated title'
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'deliverables/edit'
+
+      assert_not_equal "An updated title", @fixed_deliverable.reload.title
+    end
+    
+    should "allow status only changes" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        select "Locked", :from => "Status"
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'contracts/show'
+
+      assert @fixed_deliverable.reload.locked?
+    end
+    
+  end
+  
+  context "a Deliverable on a closed Contract" do
+    setup do
+      assert @contract.close!
+    end
+    
+    should "be blocked from editing" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        fill_in "Title", :with => 'An updated title'
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'deliverables/edit'
+
+      assert_not_equal "An updated title", @fixed_deliverable.reload.title
+    end
+    
+    should "allow status only changes" do
+      visit_contract_page(@contract)
+      click_link_within "#deliverable_details_#{@fixed_deliverable.id}", 'Edit'
+      assert_response :success
+
+      within("#deliverable-details") do
+        select "Locked", :from => "Status"
+      end
+
+      click_button "Save"
+
+      assert_response :success
+      assert_template 'contracts/show'
+
+      assert @fixed_deliverable.reload.locked?
+    end
+    
+  end
 
 end
