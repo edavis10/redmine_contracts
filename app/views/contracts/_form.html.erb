@@ -7,7 +7,7 @@
 <div class="box tabular">
 <% form.inputs :name => l(:text_general_legend) do %>
   <%= form.input :name, :required => true %>
-  <%= form.input :status, :required => true, :collection => [["Open","open"],["Locked","locked"],["Closed","closed"]] %>
+  <%= form.input :status, :required => true, :collection => [["Open","open"],["Locked","locked"],["Closed","closed"]], :include_blank => false %>
   <%= form.input :account_executive, :required => true, :collection => @project.users.sort %>
   <li class="boolean optional">
     <%= label('contract', 'executed') %>
