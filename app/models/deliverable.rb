@@ -280,6 +280,11 @@ class Deliverable < ActiveRecord::Base
     end
   end
 
+  # Required attribute for AAJ's JournalFormatter
+  def name
+    title
+  end
+  
   # Accessors from the budget plugin that need to be wrapped
   def subject
     warn "[DEPRECATION] Deliverable#subject is deprecated.  Please use Deliverable#title instead."

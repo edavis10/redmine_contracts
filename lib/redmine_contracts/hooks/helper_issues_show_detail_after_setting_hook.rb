@@ -8,6 +8,11 @@ module RedmineContracts
       # * :detail => Detail about the journal change
       #
       def helper_issues_show_detail_after_setting(context = { })
+        # This will be skipped in ChiliProject 2.x because
+        # acts_as_journalized overrides the prop_key with the label
+        # 'deliverable_id' becomes 'Deliverable' (i18n)
+        #
+        # register_on_journal_formatter is used for ChiliProject 2.x support
         # TODO Later: Overwritting the caller is bad juju
         if context[:detail].prop_key == 'deliverable_id'
           context[:detail].reload
