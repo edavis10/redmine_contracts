@@ -121,6 +121,7 @@
             <th colspan="2"><%= l(:field_labor) %></th>
             <th colspan="2"><%= l(:field_overhead) %></th>
             <th colspan="2"><%= l(:field_fixed) %></th>
+            <th colspan="2"><%= l(:field_total) %></th>
           </tr>
         </thead>
 
@@ -135,6 +136,7 @@
               <%= format_budget_for_deliverable(deliverable, deliverable.labor_budget_spent, deliverable.labor_budget_total, :class => 'labor') %>
               <%= format_budget_for_deliverable(deliverable, deliverable.overhead_spent, deliverable.overhead_budget_total, :class => 'overhead') %>
               <%= format_budget_for_deliverable(deliverable, deliverable.fixed_budget_total_spent, deliverable.fixed_budget_total, :class => 'fixed') %>
+              <%= format_budget_for_deliverable(deliverable, deliverable.total_spent, deliverable.total, :class => 'total') %>
             <% end %>
 
             <tr id="deliverable_details_<%= h(deliverable.id) %>" class="ign">
