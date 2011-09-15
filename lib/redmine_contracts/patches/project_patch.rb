@@ -17,15 +17,25 @@ module RedmineContracts
 
       module InstanceMethods
         def billable_activities
-          activities.partition do |activity|
-            activity.billable?
-          end.first
+          activities_sorted_by_billable[:billable]
         end
 
         def non_billable_activities
-          activities.partition do |activity|
+          activities_sorted_by_billable[:non_billable]
+        end
+
+        private
+
+        def activities_sorted_by_billable
+          split_activities = activities.partition do |activity|
             activity.billable?
-          end.second
+          end
+
+          {
+            :billable => split_activities.first,
+            :non_billable => split_activities.second
+          }
+
         end
       end
     end
