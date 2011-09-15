@@ -103,7 +103,8 @@ module RedmineContracts
             if old_deliverable['total_hours'].present? || old_deliverable['cost_per_hour'].present?
               deliverable.labor_budgets << LaborBudget.new(:deliverable => deliverable,
                                                            :budget => @total_cost,
-                                                           :hours => old_deliverable['total_hours'])
+                                                           :hours => old_deliverable['total_hours'],
+                                                           :time_entry_activity => first_billable_activity(project))
             end
           else
             @total_cost = 0
@@ -227,6 +228,10 @@ module RedmineContracts
 
     def self.append_old_deliverable_to_notes(old_deliverable, new_deliverable)
       new_deliverable.notes += "Converted data:\n<pre>" + old_deliverable.pretty_inspect + "</pre>"
+    end
+
+    def self.first_billable_activity(project)
+      project.billable_activities.first || TimeEntryActivity.first
     end
   end
 end

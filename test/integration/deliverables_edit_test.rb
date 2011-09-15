@@ -13,6 +13,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     @hourly_deliverable = HourlyDeliverable.generate!(:contract => @contract, :manager => @manager, :title => 'An Hourly')
     
     @user = User.generate_user_with_permission_to_manage_budget(:project => @project)
+    configure_overhead_plugin
     
     login_as(@user.login, 'contracts')
   end

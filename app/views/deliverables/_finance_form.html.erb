@@ -13,7 +13,8 @@
         <%= labor_budget.hidden_field(:month) %>
       <tr>
         <td>
-          <%= release(3, "Select field for the Time Entry Activity in a td") %>
+          <%= labor_budget.label(:time_entry_activity_id, :class => "hidden") %>
+          <%= labor_budget.select(:time_entry_activity_id, options_from_collection_for_select(@project.billable_activities, :id, :name, labor_budget.object.time_entry_activity_id), {:include_blank => false}, {:class => 'financial'}) %>
         </td>
         <td>
           <p class="inline-hints"><%= labor_budget.label(:hours, l(:text_short_hours)) %></p>

@@ -16,6 +16,11 @@ module RedmineContracts
       end
 
       module InstanceMethods
+        def billable_activities
+          activities.partition do |activity|
+            activity.billable?
+          end.first
+        end
       end
     end
   end
