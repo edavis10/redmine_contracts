@@ -68,6 +68,15 @@ jQuery(function($) {
    }
   },
 
+  addNewDeliverableFinance = function(financeType) {
+    var t = $('#labor-budget-template').tmpl({});
+    var countOfExisting = $("#deliverable-labor tbody tr").size();
+    var recordLocation = countOfExisting + 1; // increments the Rails [n] placeholder
+    var newContent = t.html().replace(/\[0\]/g, "[" + recordLocation + "]"); 
+
+    $("<tr>" + newContent + '</tr>').appendTo('#deliverable-labor tbody');
+  },
+
   toggleSpecificDeliverableFields($('form.deliverable'));
 
   $('select#deliverable_type').change(function() {
