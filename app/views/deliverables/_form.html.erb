@@ -62,7 +62,7 @@
 <%= content_tag(:p, l(:text_missing_period), :class => 'nodata') %>
 <% end %>
 <% else %>
-<%= render :partial => 'finance_form', :locals => {:form => form, :labor_budgets => resource.labor_budgets.all(:order => 'id asc'), :overhead_budgets => resource.overhead_budgets, :fixed_budgets => resource.fixed_budgets, :label => l(:text_deliverable_finances), :fieldset_class => '' } %>
+<%= render :partial => 'finance_form', :locals => {:form => form, :labor_budgets => resource.labor_budgets, :overhead_budgets => resource.overhead_budgets, :fixed_budgets => resource.fixed_budgets, :label => l(:text_deliverable_finances), :fieldset_class => '' } %>
 <% end %>
 
 </div>

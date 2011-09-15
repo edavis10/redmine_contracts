@@ -14,7 +14,7 @@
     <%= content_tag(:label, l(:field_labor)) %>
     <table id="deliverable-labor" class="deliverable_finance_table">
       <tbody>
-      <% form.fields_for :labor_budgets, labor_budgets do |labor_budget| %>
+      <% form.fields_for :labor_budgets, labor_budgets.sort_by(&:id) do |labor_budget| %>
         <%= render :partial => 'labor_budget_form', :locals => {:labor_budget => labor_budget} %>
       <% end %>
       </tbody>
