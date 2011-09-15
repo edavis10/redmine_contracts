@@ -21,6 +21,12 @@ module RedmineContracts
             activity.billable?
           end.first
         end
+
+        def non_billable_activities
+          activities.partition do |activity|
+            activity.billable?
+          end.second
+        end
       end
     end
   end

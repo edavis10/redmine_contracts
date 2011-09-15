@@ -171,7 +171,8 @@ module RedmineContracts
         
         deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
                                                            :budget => old_deliverable['overhead'],
-                                                           :hours => hours.to_f.round(2))
+                                                           :hours => hours.to_f.round(2),
+                                                           :time_entry_activity => first_non_billable_activity(deliverable.project))
       elsif old_deliverable['overhead_percent'].present?
         overhead = total * (old_deliverable['overhead_percent'].to_f / 100)
         if @overhead_rate != 0
@@ -182,7 +183,8 @@ module RedmineContracts
           
         deliverable.overhead_budgets << OverheadBudget.new(:deliverable => deliverable,
                                                            :budget => overhead,
-                                                           :hours => hours.to_f.round(2))
+                                                           :hours => hours.to_f.round(2),
+                                                           :time_entry_activity => first_non_billable_activity(deliverable.project))
 
       end
     end
@@ -232,6 +234,10 @@ module RedmineContracts
 
     def self.first_billable_activity(project)
       project.billable_activities.first || TimeEntryActivity.first
+    end
+
+    def self.first_non_billable_activity(project)
+      project.non_billable_activities.first || TimeEntryActivity.first
     end
   end
 end

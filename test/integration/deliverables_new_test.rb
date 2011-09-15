@@ -238,6 +238,7 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     end
 
     within("#deliverable-overhead") do
+      select @non_billable_activity.name, :from => 'Activity'
       fill_in "hrs", :with => '10'
       fill_in "$", :with => '$1,000'
     end
@@ -266,6 +267,7 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     @overhead_budget = @deliverable.overhead_budgets.first
     assert_equal 10, @overhead_budget.hours
     assert_equal 1000.0, @overhead_budget.budget
+    assert_equal @non_billable_activity, @overhead_budget.time_entry_activity
 
     assert_equal 1, @deliverable.fixed_budgets.count
     @fixed_budget = @deliverable.fixed_budgets.first
