@@ -93,7 +93,7 @@ end
 
 class ActiveSupport::TestCase
   begin
-    require 'ruby_gc_test_patchs'
+    require 'ruby_gc_test_patch'
     include RubyGcTestPatch
   rescue LoadError
   end
