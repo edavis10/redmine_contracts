@@ -434,9 +434,10 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     # * fixed markup
     # * fixed paid checkbox
     # * fixed paid hidden field
+    # * fixed deleted (hidden)
     # * total (hidden)
     assert_select ".date-2010-01" do
-      assert_select "input", :count => 18
+      assert_select "input", :count => 19
       assert_select "textarea.wiki-edit", :count => 1 # Fixed description
     end
 
