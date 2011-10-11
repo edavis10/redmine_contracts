@@ -80,12 +80,14 @@ jQuery(function($) {
 
   addNewDeliverableFinance = function(financeType) {
     var t = $('#labor-budget-template').tmpl({});
-    var countOfExisting = $("tr.labor-budget-form").size();
-    var recordLocation = countOfExisting + 1; // increments the Rails [n] placeholder
-    var newContent = t.html().replace(/\[0\]/g, "[" + recordLocation + "]"); 
+    if (t.length > 0) {
+      var countOfExisting = $("tr.labor-budget-form").size();
+      var recordLocation = countOfExisting + 1; // increments the Rails [n] placeholder
+      var newContent = t.html().replace(/\[0\]/g, "[" + recordLocation + "]"); 
 
-    $("<tr class='labor-budget-form'>" + newContent + '</tr>').appendTo('#deliverable-labor tbody');
-    showDeliverableAddButton();
+      $("<tr class='labor-budget-form'>" + newContent + '</tr>').appendTo('#deliverable-labor tbody');
+      showDeliverableAddButton();
+    }
   },
 
   // Set the deleted flag for Rails and move it out of the row into
