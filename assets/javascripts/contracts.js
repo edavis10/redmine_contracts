@@ -68,6 +68,10 @@ jQuery(function($) {
    }
   },
 
+  showDeliverableAddButton = function() {
+    $('.add-labor a').hide().last().show();
+  },
+
   addNewDeliverableFinance = function(financeType) {
     var t = $('#labor-budget-template').tmpl({});
     var countOfExisting = $("#deliverable-labor tbody tr").size();
@@ -75,8 +79,10 @@ jQuery(function($) {
     var newContent = t.html().replace(/\[0\]/g, "[" + recordLocation + "]"); 
 
     $("<tr>" + newContent + '</tr>').appendTo('#deliverable-labor tbody');
+    showDeliverableAddButton();
   },
 
+  showDeliverableAddButton();
   toggleSpecificDeliverableFields($('form.deliverable'));
 
   $('select#deliverable_type').change(function() {

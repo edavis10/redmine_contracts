@@ -14,7 +14,7 @@
           <p class="inline-hints"><%= labor_budget.label(:budget, l(:text_dollar_sign)) %></p>
           <%= labor_budget.text_field(:budget, :value => format_deliverable_value_fields(labor_budget.object.budget), :class => 'financial') %>
         </td>
-        <td>
-          <%= release(3, "Green Add button for multiple records") %>
+        <td class="add-labor">
+          <%= link_to_function("Add", 'addNewDeliverableFinance("labor")', :class => 'icon icon-add', :style => 'display:none;') %>
         </td>
       </tr>
