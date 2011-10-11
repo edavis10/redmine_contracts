@@ -118,8 +118,12 @@ jQuery(function($) {
     if (t.length > 0) {
       var recordLocation = countOfExisting + 1; // increments the Rails [n] placeholder
       var newContent = t.html().replace(/\[0\]/g, "[" + recordLocation + "]"); 
+      var newItem = $(wrapperElement).html(newContent)
 
-      $(wrapperElement).html(newContent).appendTo(appendTemplateTo);
+      newItem.appendTo(appendTemplateTo);
+      newItem.find("textarea.wiki-edit").each(function () {
+        attachWikiToolbar(this.id);
+      });
       showDeliverableAddButtons();
     }
   },
@@ -201,3 +205,9 @@ jQuery(function($) {
         
     }    
 })(jQuery); 
+
+// Global functions outside of jQuery scoping
+function attachWikiToolbar(id) {
+  var jsToolBarInstance = new jsToolBar($(id));
+  jsToolBarInstance.draw();
+}
