@@ -1,3 +1,5 @@
+      <div class="fixed-budget-form">
+        <%= fixed_budget.hidden_field(:id) unless fixed_budget.object.new_record? %>
         <%= fixed_budget.hidden_field(:year) %>
         <%= fixed_budget.hidden_field(:month) %>
 
@@ -22,6 +24,10 @@
 
         <p class="inline-hints" style="display:none;"><%= fixed_budget.label(:description, l(:field_description), :for => "fixed-description#{fixed_budget.object.object_id}")%></p>
         <%= fixed_budget.text_area(:description, :class => 'wiki-edit', :rows => '5', :id => "fixed-description#{fixed_budget.object.object_id}") %>
-        <%= wikitoolbar_for "fixed-description#{fixed_budget.object.object_id}" %>
 
-        <p><%= release(3, "Green Add button for multiple records") %></p>
+        <p class="inline-hints add-fixed">
+          <%= fixed_budget.hidden_field "_destroy", :class=> "delete-flag" %>
+          <%= link_to_function(l(:button_delete), 'deleteDeliverableFinance(this)', :class => 'delete icon icon-del') %>
+          <%= link_to_function(l(:button_add), 'addNewDeliverableFixedItem()', :class => 'add icon icon-add', :style => 'display:none;') %>
+        </p>
+      </div>

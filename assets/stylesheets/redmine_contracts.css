@@ -522,3 +522,5 @@ input.financial{
 	#edit_contract_1 li#contract_billable_rate_input div{
 		margin-bottom: 10px;
 	}
+
+div.fixed-budget-form {padding: 5px 0;}

@@ -10,6 +10,12 @@
   <% end %>
 </script>
 
+<script type="text/html" id="fixed-budget-template">
+  <% form.fields_for :fixed_budgets, resource.fixed_budgets.new(:id => 0) do |fixed_budget| %>
+    <%= render :partial => 'fixed_budget_form', :locals => {:fixed_budget => fixed_budget} %>
+  <% end %>
+</script>
+
 <% form.inputs :name => label, :class => "deliverable-finances #{fieldset_class}" do %>
 
   <li style="display:none;" id='retainer-finances-message'>
@@ -44,6 +50,7 @@
 
       <% form.fields_for :fixed_budgets, fixed_budgets.sort_by(&:id) do |fixed_budget| %>
         <%= render :partial => 'fixed_budget_form', :locals => {:fixed_budget => fixed_budget} %>
+        <%= wikitoolbar_for "fixed-description#{fixed_budget.object.object_id}" %>
       <% end %>
 	  </div>
 	  

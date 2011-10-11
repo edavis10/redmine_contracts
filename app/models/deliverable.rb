@@ -13,7 +13,7 @@ class Deliverable < ActiveRecord::Base
 
   accepts_nested_attributes_for :labor_budgets, :allow_destroy => true
   accepts_nested_attributes_for :overhead_budgets, :allow_destroy => true
-  accepts_nested_attributes_for :fixed_budgets
+  accepts_nested_attributes_for :fixed_budgets, :allow_destroy => true
   
   # Validations
   validates_presence_of :title

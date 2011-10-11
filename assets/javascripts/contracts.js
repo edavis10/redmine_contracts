@@ -83,29 +83,43 @@ jQuery(function($) {
     } else {
       overheadLinks.hide().last().show();
     }
+    var fixedLinks = $('#deliverable-fixed .fixed-budget-form .add-fixed a.add')
+    if (fixedLinks.length == 0) {
+      // No link, add a blank form
+      addNewDeliverableFixedItem();
+    } else {
+      fixedLinks.hide().last().show();
+    }
   },
 
   addNewDeliverableLaborItem = function() {
     addNewDeliverableFinance('#labor-budget-template',
                              '#deliverable-labor tbody',
                              $("tr.labor-budget-form").size(),
-                             'labor-budget-form');
+                             '<tr class="labor-budget-form">');
   },
 
   addNewDeliverableOverheadItem = function() {
     addNewDeliverableFinance('#overhead-budget-template',
                              '#deliverable-overhead tbody',
                              $("tr.overhead-budget-form").size(),
-                             'overhead-budget-form');
+                             '<tr class="overhead-budget-form">');
   },
 
-  addNewDeliverableFinance = function(templateSelector, appendTemplateTo, countOfExisting, rowClass) {
+  addNewDeliverableFixedItem = function() {
+    addNewDeliverableFinance('#fixed-budget-template',
+                             '#deliverable-fixed.fixed-item-form',
+                             $("div.fixed-budget-form").size(),
+                             '<div class="fixed-budget-form">');
+  },
+
+  addNewDeliverableFinance = function(templateSelector, appendTemplateTo, countOfExisting, wrapperElement) {
     var t = $(templateSelector).tmpl({});
     if (t.length > 0) {
       var recordLocation = countOfExisting + 1; // increments the Rails [n] placeholder
       var newContent = t.html().replace(/\[0\]/g, "[" + recordLocation + "]"); 
 
-      $("<tr class='" + rowClass + "'>" + newContent + '</tr>').appendTo(appendTemplateTo);
+      $(wrapperElement).html(newContent).appendTo(appendTemplateTo);
       showDeliverableAddButtons();
     }
   },
