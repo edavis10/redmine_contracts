@@ -72,20 +72,26 @@ jQuery(function($) {
     var addLinks = $('table.deliverable_finance_table .add-labor a.add')
     if (addLinks.length == 0) {
       // No link, add a blank form
-      addNewDeliverableFinance("labor");
+      addNewDeliverableLaborItem();
     } else {
       addLinks.hide().last().show();
     }
   },
 
-  addNewDeliverableFinance = function(financeType) {
-    var t = $('#labor-budget-template').tmpl({});
+  addNewDeliverableLaborItem = function() {
+    addNewDeliverableFinance('#labor-budget-template',
+                             '#deliverable-labor tbody',
+                             $("tr.labor-budget-form").size(),
+                             'labor-budget-form');
+  },
+
+  addNewDeliverableFinance = function(templateSelector, appendTemplateTo, countOfExisting, rowClass) {
+    var t = $(templateSelector).tmpl({});
     if (t.length > 0) {
-      var countOfExisting = $("tr.labor-budget-form").size();
       var recordLocation = countOfExisting + 1; // increments the Rails [n] placeholder
       var newContent = t.html().replace(/\[0\]/g, "[" + recordLocation + "]"); 
 
-      $("<tr class='labor-budget-form'>" + newContent + '</tr>').appendTo('#deliverable-labor tbody');
+      $("<tr class='" + rowClass + "'>" + newContent + '</tr>').appendTo(appendTemplateTo);
       showDeliverableAddButton();
     }
   },
