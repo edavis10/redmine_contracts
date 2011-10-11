@@ -1,6 +1,7 @@
 <%= javascript_tag("var i18nStartDateEmpty = '#{l(:text_start_date_empty)}'") %>
 <%= javascript_tag("var i18nEndDateEmpty = '#{l(:text_end_date_empty)}'") %>
 <%= javascript_tag("var i18nChangedPeriodMessage = '#{l(:text_changed_period_message)}'") %>
+<%= javascript_tag("var i18nAreYouSure = '#{l(:text_are_you_sure)}'") %>
 
 <% if resource.locked? || resource.closed? || resource.contract_locked? || resource.contract_closed? %>
   <div class="error_msg">

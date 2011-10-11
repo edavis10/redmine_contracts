@@ -17,7 +17,7 @@
         </td>
         <td class="add-labor">
           <%= labor_budget.hidden_field "_destroy", :class=> "delete-flag" %>
-          <%= link_to_function("Remove", 'deleteDeliverableFinance(this)', :class => 'delete icon icon-del') %>
-          <%= link_to_function("Add", 'addNewDeliverableFinance("labor")', :class => 'add icon icon-add', :style => 'display:none;') %>
+          <%= link_to_function(l(:button_delete), 'deleteDeliverableFinance(this)', :class => 'delete icon icon-del') %>
+          <%= link_to_function(l(:button_add), 'addNewDeliverableFinance("labor")', :class => 'add icon icon-add', :style => 'display:none;') %>
         </td>
       </tr>
