@@ -421,6 +421,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     # * labor hidden month
     # * labor hours
     # * labor amount
+    # * labor deleted (hidden)
     # * overhead hidden year
     # * overhead hidden month
     # * overhead hours
@@ -434,7 +435,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     # * fixed paid hidden field
     # * total (hidden)
     assert_select ".date-2010-01" do
-      assert_select "input", :count => 16
+      assert_select "input", :count => 17
       assert_select "textarea.wiki-edit", :count => 1 # Fixed description
     end
 
