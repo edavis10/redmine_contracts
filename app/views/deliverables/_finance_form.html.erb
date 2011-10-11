@@ -24,27 +24,10 @@
   <li class="numeric optional">
     <%= content_tag(:label, l(:field_overhead)) %>
     <table id="deliverable-overhead" class="deliverable_finance_table">
-      
-      <% form.fields_for :overhead_budgets, overhead_budgets do |overhead_budget| %>
-        <%= overhead_budget.hidden_field(:year) %>
-        <%= overhead_budget.hidden_field(:month) %>
-      <tr>
-        <td>
-          <%= overhead_budget.label(:time_entry_activity_id, :class => "hidden") %>
-          <%= overhead_budget.select(:time_entry_activity_id, options_from_collection_for_select(@project.non_billable_activities, :id, :name, overhead_budget.object.time_entry_activity_id), {:include_blank => false}, {:class => 'financial'}) %>
-        </td>
-        <td>
-          <p class="inline-hints"><%= overhead_budget.label(:hours, l(:text_short_hours)) %></p>
-          <%= overhead_budget.text_field(:hours, :value => format_deliverable_value_fields(overhead_budget.object.hours),:class => 'financial') %>
-        </td>
-        <td>
-          <p class="inline-hints"><%= overhead_budget.label(:budget, l(:text_dollar_sign)) %></p>
-          <%= overhead_budget.text_field(:budget, :value => format_deliverable_value_fields(overhead_budget.object.budget), :class => 'financial') %>
-        </td>
-        <td>
-          <%= release(3, "Green Add button for multiple records") %>
-        </td>
-      </tr>
+      <tbody>
+      <% form.fields_for :overhead_budgets, overhead_budgets.sort_by(&:id) do |overhead_budget| %>
+        <%= render :partial => 'overhead_budget_form', :locals => {:overhead_budget => overhead_budget} %>
+      </tbody>
       <% end %>
     </table>
   </li>
