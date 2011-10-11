@@ -117,7 +117,9 @@ jQuery(function($) {
     var t = $(templateSelector).tmpl({});
     if (t.length > 0) {
       var recordLocation = countOfExisting + 1; // increments the Rails [n] placeholder
-      var newContent = t.html().replace(/\[0\]/g, "[" + recordLocation + "]"); 
+      var newContent = t.html().replace(/\[0\]/g, "[" + recordLocation + "]");
+      // New ids for textareas for the jsToolBar to attach to
+      newContent = newContent.replace(/fixed-description\d*/g, "fixed-description" + Math.floor(Math.random() * 100000000))
       var newItem = $(wrapperElement).html(newContent)
 
       newItem.appendTo(appendTemplateTo);
