@@ -69,7 +69,7 @@ jQuery(function($) {
   },
 
   showDeliverableAddButton = function() {
-    $('.add-labor a').hide().last().show();
+    $('.add-labor a.add').hide().last().show();
   },
 
   addNewDeliverableFinance = function(financeType) {
