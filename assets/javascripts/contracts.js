@@ -69,16 +69,28 @@ jQuery(function($) {
   },
 
   showDeliverableAddButton = function() {
-    $('.add-labor a.add').hide().last().show();
+    $('table .add-labor a.add').hide().last().show();
   },
 
   addNewDeliverableFinance = function(financeType) {
     var t = $('#labor-budget-template').tmpl({});
-    var countOfExisting = $("#deliverable-labor tbody tr").size();
+    var countOfExisting = $("tr.labor-budget-form").size();
     var recordLocation = countOfExisting + 1; // increments the Rails [n] placeholder
     var newContent = t.html().replace(/\[0\]/g, "[" + recordLocation + "]"); 
 
-    $("<tr>" + newContent + '</tr>').appendTo('#deliverable-labor tbody');
+    $("<tr class='labor-budget-form'>" + newContent + '</tr>').appendTo('#deliverable-labor tbody');
+    showDeliverableAddButton();
+  },
+
+  deleteDeliverableFinance = function(deleteLink) {
+    // Set the deleted flag for Rails and move it out of the row
+    $(deleteLink).parent().find('.delete-flag').val('1')
+    $(deleteLink).closest("form").
+      append(
+        $(deleteLink). // <a>
+        parent(). // <td>
+        parent().hide()
+      ) // <tr>
     showDeliverableAddButton();
   },
 

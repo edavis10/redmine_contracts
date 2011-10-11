@@ -1,5 +1,6 @@
-      <tr>
+      <tr class="labor-budget-form">
         <td>
+          <%= labor_budget.hidden_field(:id) unless labor_budget.object.new_record? %>
           <%= labor_budget.hidden_field(:year) %>
           <%= labor_budget.hidden_field(:month) %>
 
@@ -15,6 +16,8 @@
           <%= labor_budget.text_field(:budget, :value => format_deliverable_value_fields(labor_budget.object.budget), :class => 'financial') %>
         </td>
         <td class="add-labor">
+          <%= labor_budget.hidden_field "_destroy", :class=> "delete-flag" %>
+          <%= link_to_function("Remove", 'deleteDeliverableFinance(this)', :class => 'delete icon icon-del') %>
           <%= link_to_function("Add", 'addNewDeliverableFinance("labor")', :class => 'add icon icon-add', :style => 'display:none;') %>
         </td>
       </tr>
