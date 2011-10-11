@@ -68,13 +68,20 @@ jQuery(function($) {
    }
   },
 
-  showDeliverableAddButton = function() {
-    var addLinks = $('table.deliverable_finance_table .add-labor a.add')
-    if (addLinks.length == 0) {
+  showDeliverableAddButtons = function() {
+    var laborLinks = $('table.deliverable_finance_table .add-labor a.add')
+    if (laborLinks.length == 0) {
       // No link, add a blank form
       addNewDeliverableLaborItem();
     } else {
-      addLinks.hide().last().show();
+      laborLinks.hide().last().show();
+    }
+    var overheadLinks = $('table.deliverable_finance_table .add-overhead a.add')
+    if (overheadLinks.length == 0) {
+      // No link, add a blank form
+      addNewDeliverableOverheadItem();
+    } else {
+      overheadLinks.hide().last().show();
     }
   },
 
@@ -85,6 +92,13 @@ jQuery(function($) {
                              'labor-budget-form');
   },
 
+  addNewDeliverableOverheadItem = function() {
+    addNewDeliverableFinance('#overhead-budget-template',
+                             '#deliverable-overhead tbody',
+                             $("tr.overhead-budget-form").size(),
+                             'overhead-budget-form');
+  },
+
   addNewDeliverableFinance = function(templateSelector, appendTemplateTo, countOfExisting, rowClass) {
     var t = $(templateSelector).tmpl({});
     if (t.length > 0) {
@@ -92,7 +106,7 @@ jQuery(function($) {
       var newContent = t.html().replace(/\[0\]/g, "[" + recordLocation + "]"); 
 
       $("<tr class='" + rowClass + "'>" + newContent + '</tr>').appendTo(appendTemplateTo);
-      showDeliverableAddButton();
+      showDeliverableAddButtons();
     }
   },
 
@@ -111,11 +125,11 @@ jQuery(function($) {
         parent(). // <td>
         parent().hide()
       ); // <tr>
-      showDeliverableAddButton();
+      showDeliverableAddButtons();
     }
   },
 
-  showDeliverableAddButton();
+  showDeliverableAddButtons();
   toggleSpecificDeliverableFields($('form.deliverable'));
 
   $('select#deliverable_type').change(function() {

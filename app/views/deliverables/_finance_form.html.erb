@@ -4,6 +4,12 @@
   <% end %>
 </script>
 
+<script type="text/html" id="overhead-budget-template">
+  <% form.fields_for :overhead_budgets, resource.overhead_budgets.new(:id => 0) do |overhead_budget| %>
+    <%= render :partial => 'overhead_budget_form', :locals => {:overhead_budget => overhead_budget} %>
+  <% end %>
+</script>
+
 <% form.inputs :name => label, :class => "deliverable-finances #{fieldset_class}" do %>
 
   <li style="display:none;" id='retainer-finances-message'>
@@ -27,8 +33,8 @@
       <tbody>
       <% form.fields_for :overhead_budgets, overhead_budgets.sort_by(&:id) do |overhead_budget| %>
         <%= render :partial => 'overhead_budget_form', :locals => {:overhead_budget => overhead_budget} %>
-      </tbody>
       <% end %>
+      </tbody>
     </table>
   </li>
 

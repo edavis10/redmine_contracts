@@ -1,4 +1,4 @@
-      <tr>
+      <tr class="overhead-budget-form">
         <td>
           <%= overhead_budget.hidden_field(:year) %>
           <%= overhead_budget.hidden_field(:month) %>
@@ -14,7 +14,9 @@
           <p class="inline-hints"><%= overhead_budget.label(:budget, l(:text_dollar_sign)) %></p>
           <%= overhead_budget.text_field(:budget, :value => format_deliverable_value_fields(overhead_budget.object.budget), :class => 'financial') %>
         </td>
-        <td>
-          <%= release(3, "Green Add button for multiple records") %>
+        <td class="add-overhead">
+          <%= overhead_budget.hidden_field "_destroy", :class=> "delete-flag" %>
+          <%= link_to_function(l(:button_delete), 'deleteDeliverableFinance(this)', :class => 'delete icon icon-del') %>
+          <%= link_to_function(l(:button_add), 'addNewDeliverableOverheadItem()', :class => 'add icon icon-add', :style => 'display:none;') %>
         </td>
       </tr>
