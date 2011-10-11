@@ -69,7 +69,7 @@ jQuery(function($) {
   },
 
   showDeliverableAddButton = function() {
-    var addLinks = $('table .add-labor a.add')
+    var addLinks = $('table.deliverable_finance_table .add-labor a.add')
     if (addLinks.length == 0) {
       // No link, add a blank form
       addNewDeliverableFinance("labor");
@@ -88,16 +88,21 @@ jQuery(function($) {
     showDeliverableAddButton();
   },
 
+  // Set the deleted flag for Rails and move it out of the row into
+  // a hidden table
   deleteDeliverableFinance = function(deleteLink) {
     if (confirm(i18nAreYouSure)) {
-      // Set the deleted flag for Rails and move it out of the row
       $(deleteLink).parent().find('.delete-flag').val('1')
-      $(deleteLink).closest("form").
-        append(
-          $(deleteLink). // <a>
-          parent(). // <td>
-          parent().hide()
-        ) // <tr>
+      if ($('#deleted-finances').length == 0) {
+        $(deleteLink).
+          closest("form").
+          append($("<table style='display:none' id='deleted-finances'></table>"));
+      }
+      $('#deleted-finances').append(
+        $(deleteLink). // <a>
+        parent(). // <td>
+        parent().hide()
+      ); // <tr>
       showDeliverableAddButton();
     }
   },
