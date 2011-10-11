@@ -1,0 +1,27 @@
+        <%= fixed_budget.hidden_field(:year) %>
+        <%= fixed_budget.hidden_field(:month) %>
+
+        <p class="inline-hints"><%= fixed_budget.label(:title, l(:field_title))%>
+          <%= fixed_budget.text_field(:title) %>
+        </p>
+        
+        <p class="inline-hints">
+          <%= fixed_budget.label(:budget, l(:field_budget))%> <%= l(:text_dollar_sign) %>
+          <%= fixed_budget.text_field(:budget, :value => format_deliverable_value_fields(fixed_budget.object.budget), :class => 'financial') %>
+        </p>
+
+		    <p class="inline-hints">
+          <%= fixed_budget.label(:markup, l(:field_markup)) %> <%= l(:field_discount_hint) %>
+          <%= fixed_budget.text_field(:markup, :value => format_deliverable_value_fields_as_dollar_or_percent(fixed_budget.object.markup), :class => 'financial') %>
+        </p>
+
+        <p class="inline-hints">
+          <%= fixed_budget.label(:paid, l(:field_paid)) %>
+          <%= fixed_budget.check_box(:paid) %>
+        </p>
+
+        <p class="inline-hints" style="display:none;"><%= fixed_budget.label(:description, l(:field_description), :for => "fixed-description#{fixed_budget.object.object_id}")%></p>
+        <%= fixed_budget.text_area(:description, :class => 'wiki-edit', :rows => '5', :id => "fixed-description#{fixed_budget.object.object_id}") %>
+        <%= wikitoolbar_for "fixed-description#{fixed_budget.object.object_id}" %>
+
+        <p><%= release(3, "Green Add button for multiple records") %></p>
