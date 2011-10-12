@@ -9,7 +9,7 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
     @contract = Contract.generate!(:project => @project, :billable_rate => 10)
     @manager = User.generate!
     @deliverable1 = RetainerDeliverable.spawn(:contract => @contract, :manager => @manager, :title => "Retainer Title", :start_date => '2010-01-01', :end_date => '2010-03-31')
-    @deliverable1.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10)
+    @deliverable1.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10, :time_entry_activity => @billable_activity)
     @deliverable1.overhead_budgets << OverheadBudget.spawn(:budget => 200, :hours => 10)
 
     @deliverable1.save!
@@ -54,16 +54,42 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
 
 
   context "for an authorized request" do
-    should "render the finance report title section for the deliverable" do
+    setup do
       visit "/projects/#{@project.id}/contracts/#{@contract.id}/deliverables/#{@deliverable1.id}/finances"
 
       assert_response :success
+    end
+    
+    should "render the finance report title section for the deliverable" do
       assert_select "h2", :text => /#{@deliverable1.title}/
 
       assert_select "div#summary" do
         assert_select "span.spent", :text => /\$200/ # $100 * 2
         assert_select "span.total", :text => /\$300/ # $100 * 3
         assert_select "span.hours", :text => /2/
+      end
+    end
+
+    should "render the activities table for the deliverable" do
+      assert_select "h3", :text => /Activities/
+
+      assert_select "table#deliverable-labor-activities" do
+        assert_select "tr" do
+          assert_select "td.labor", :text => /#{@billable_activity.name}/
+          assert_select "td.spent-amount.labor", :text => /\$200/
+          assert_select "td.total-amount.labor", :text => /\$300/
+          assert_select "td.spent-hours.labor", :text => /2/
+          assert_select "td.total-hours.labor", :text => /30/ # 3 month retainer * 10
+        end
+
+        assert_select "tr.total" do
+          assert_select "td.labor", :text => /Totals/
+          assert_select "td.spent-amount.labor", :text => /\$200/
+          assert_select "td.total-amount.labor", :text => /\$300/
+          assert_select "td.spent-hours.labor", :text => /2/
+          assert_select "td.total-hours.labor", :text => /30/
+        end
+
       end
     end
 

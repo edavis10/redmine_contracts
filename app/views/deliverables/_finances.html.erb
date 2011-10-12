@@ -6,3 +6,56 @@
 </div>
 
 <h2><%= h(deliverable.title) %></h2>
+
+<h3>Activities</h3>
+
+<table id="deliverable-labor-activities">
+  <thead>
+    <th><%= l(:field_labor) %></th>
+    <th colspan="2"><%= l(:field_cost) %></th>
+    <th colspan="2"><%= l(:field_hours) %></th>
+  </thead>
+
+  <tbody>
+    <%# Each labor activity + non-budgeted activities %>
+    <% deliverable.billable_time_entry_activities.each do |activity| %>
+
+    <% content_tag_for(:tr, activity, :class => 'labor ' + cycle('even','')) do %>
+      <td class="labor">
+        <%= h(activity.name) %>
+      </td>
+      <td class="spent-amount labor">
+        <%= number_to_currency(deliverable.spent_for_activity(activity), :precision => 0) %>
+      </td>
+      <td class="total-amount labor">
+        <%= number_to_currency(deliverable.budget_for_activity(activity), :precision => 0) %>
+      </td>
+      <td class="spent-hours labor">
+        <%= number_with_precision(deliverable.hours_spent_for_activity(activity), :precision => 0) %>
+      </td>
+      <td class="total-hours labor">
+        <%= number_with_precision(deliverable.hours_budget_for_activity(activity), :precision => 0) %>
+      </td>
+    <% end %>
+
+    <% end %>
+    <tr class="total labor">
+      <td class="labor">
+        Totals
+      </td>
+      <td class="spent-amount labor">
+        $80
+      </td>
+      <td class="total-amount labor">
+        $100
+      </td>
+      <td class="spent-hours labor">
+        1.5
+      </td>
+      <td class="total-hours labor">
+        2
+      </td>
+    </tr>    
+    
+  </tbody>
+</table>
