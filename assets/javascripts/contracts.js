@@ -197,7 +197,8 @@ jQuery(function($) {
 
     $('#dialog-window').
       hide().
-      html('<h2>Hello</h2><p>This is a report for Deliverable #' + deliverableId + '.</p>').
+      html('').
+      load($(this).attr('href') + ".js").
       dialog({
         title: "",
         minWidth: 400,

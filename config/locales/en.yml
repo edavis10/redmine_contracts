@@ -101,3 +101,4 @@ en:
   text_contract_locked_warning: "This contract is locked and cannot be saved without changing it's status to Open."
   text_contract_closed_warning: "This contract is closed and cannot be saved without changing it's status to Open."
   field_time_entry_activity: "Activity"
+  text_deliverable_spending_summary: "You've spent %{spent} / %{total} and %{hours} Billable Hours"

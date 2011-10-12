@@ -38,7 +38,7 @@ class RedmineContracts::Hooks::ViewLayoutsBaseHtmlHeadTest < ActionController::T
 
       should "load jquery" do
         @response.body = hook
-        assert_select "script[src*=?]", "jquery-1.4.2.min.js"
+        assert_select "script[src*=?]", "jquery-1.4.4.min.js"
       end
 
       should "load the contracts.js JavaScript" do
@@ -60,7 +60,7 @@ class RedmineContracts::Hooks::ViewLayoutsBaseHtmlHeadTest < ActionController::T
 
       should "load jquery" do
         @response.body = hook
-        assert_select "script[src*=?]", "jquery-1.4.2.min.js"
+        assert_select "script[src*=?]", "jquery-1.4.4.min.js"
       end
 
       should "load the contracts.js JavaScript" do

@@ -36,6 +36,14 @@ class DeliverablesController < InheritedResources::Base
     end
   end
 
+  def finances
+    respond_to do |format|
+      format.js { render :partial => 'deliverables/finances', :locals => {:contract => @contract, :deliverable => @contract.deliverables.find(params[:id])} }
+      format.html { }
+    end
+    
+  end
+
   def destroy
     destroy!(:notice => l(:text_flash_deliverable_deleted, :name => resource.title)) { contract_url(@project, @contract) }
   end
