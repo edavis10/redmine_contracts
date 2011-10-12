@@ -83,4 +83,101 @@ class DeliverableTest < ActiveSupport::TestCase
       
     end
   end
+
+  context "#billable_time_entry_activities" do
+    setup do
+      configure_overhead_plugin
+      @project = Project.generate!(:identifier => 'main').reload
+      @contract = Contract.generate!(:project => @project, :billable_rate => 10)
+      @manager = User.generate!
+      @deliverable = RetainerDeliverable.spawn(:contract => @contract, :manager => @manager, :title => "Retainer Title", :start_date => '2010-01-01', :end_date => '2010-03-31')
+
+    end
+    
+    should "include all billable activities" do
+      @billable_activity2 = TimeEntryActivity.generate!.reload
+      @billable_activity2.custom_field_values = { @custom_field.id => 'true' }
+      assert @billable_activity2.save
+
+      assert @deliverable.billable_time_entry_activities.include?(@billable_activity), "Activity not included"
+      assert @deliverable.billable_time_entry_activities.include?(@billable_activity2), "Activity not included"
+      
+    end
+    
+    should "not include nonbillable activities" do
+      assert !@deliverable.billable_time_entry_activities.include?(@non_billable_activity3), "Non billable Activity included"
+    end
+    
+  end
+
+  context "#spent_for_activity" do
+    should "return the total amount spent for an activity" do
+      configure_overhead_plugin
+      @project = Project.generate!(:identifier => 'main').reload
+      @contract = Contract.generate!(:project => @project, :billable_rate => 10)
+      @manager = User.generate!
+      @deliverable = RetainerDeliverable.generate!(:contract => @contract, :manager => @manager, :title => "Retainer Title", :start_date => '2010-01-01', :end_date => '2010-03-31')
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :hours => 5,
+                                               :amount => 100
+                                             })
+
+      assert_equal 500.0, @deliverable.spent_for_activity(@billable_activity).to_f
+    end
+  end
+
+  context "#budget_for_activity" do
+    should "return the total amount budgeted for an activity" do
+      configure_overhead_plugin
+      @project = Project.generate!(:identifier => 'main').reload
+      @contract = Contract.generate!(:project => @project, :billable_rate => 10)
+      @manager = User.generate!
+      @deliverable = RetainerDeliverable.generate!(:contract => @contract, :manager => @manager, :title => "Retainer Title", :start_date => '2010-01-01', :end_date => '2010-03-31')
+      @deliverable.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10, :time_entry_activity => @billable_activity)
+      @deliverable.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10, :time_entry_activity => @billable_activity)
+      @deliverable.save!
+
+      assert_equal 600.0, @deliverable.budget_for_activity(@billable_activity).to_f # 200 * 3 months (retainer)
+    end
+    
+  end
+  
+  context "#hours_spent_for_activity" do
+    should "return the total hours spent for an activity" do
+      configure_overhead_plugin
+      @project = Project.generate!(:identifier => 'main').reload
+      @contract = Contract.generate!(:project => @project, :billable_rate => 10)
+      @manager = User.generate!
+      @deliverable = RetainerDeliverable.generate!(:contract => @contract, :manager => @manager, :title => "Retainer Title", :start_date => '2010-01-01', :end_date => '2010-03-31')
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :hours => 5,
+                                               :amount => 100
+                                             })
+
+      assert_equal 5.0, @deliverable.hours_spent_for_activity(@billable_activity).to_f
+
+    end
+    
+  end
+
+  context "#hours_budget_for_activity" do
+    should "return the total hours budgeted for an activity" do
+      configure_overhead_plugin
+      @project = Project.generate!(:identifier => 'main').reload
+      @contract = Contract.generate!(:project => @project, :billable_rate => 10)
+      @manager = User.generate!
+      @deliverable = RetainerDeliverable.generate!(:contract => @contract, :manager => @manager, :title => "Retainer Title", :start_date => '2010-01-01', :end_date => '2010-03-31')
+      @deliverable.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10, :time_entry_activity => @billable_activity)
+      @deliverable.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10, :time_entry_activity => @billable_activity)
+      @deliverable.save!
+
+      assert_equal 60.0, @deliverable.hours_budget_for_activity(@billable_activity).to_f # 20 * 3 months (retainer)
+    end
+    
+  end
+
 end

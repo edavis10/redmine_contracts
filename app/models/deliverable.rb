@@ -270,6 +270,45 @@ class Deliverable < ActiveRecord::Base
     type == "RetainerDeliverable"
   end
 
+  def billable_time_entry_activities
+    project.activities.select {|activity| activity.billable? }
+  end
+
+  # Total amount spent ($) for a given activity
+  def spent_for_activity(activity)
+    issues.all.inject(0.0) do |all_issues_total, issue|
+      all_issues_total += issue.time_entries.all(:conditions => {:activity_id => activity.id}).sum(&:cost)
+      all_issues_total
+    end
+  end
+
+  # Total hours spent for a given activity
+  def hours_spent_for_activity(activity)
+    issue_ids = issues.collect(&:id)
+    TimeEntry.sum(:hours,
+                  :conditions => ["#{TimeEntry.table_name}.issue_id IN (?) AND activity_id IN (?)", issue_ids, activity.id])
+  end
+
+  # Total budget ($) for a given activity
+  def budget_for_activity(activity)
+    labor = labor_budgets.sum(:budget,
+                              :conditions => ["#{LaborBudget.table_name}.time_entry_activity_id IN (?)", activity.id])
+    overhead = overhead_budgets.sum(:budget,
+                                    :conditions => ["#{OverheadBudget.table_name}.time_entry_activity_id IN (?)", activity.id])
+
+    labor.to_f + overhead.to_f
+  end
+  
+  # Total budget (hours) a given activity
+  def hours_budget_for_activity(activity)
+    labor = labor_budgets.sum(:hours,
+                              :conditions => ["#{LaborBudget.table_name}.time_entry_activity_id IN (?)", activity.id])
+    overhead = overhead_budgets.sum(:hours,
+                                    :conditions => ["#{OverheadBudget.table_name}.time_entry_activity_id IN (?)", activity.id])
+
+    labor.to_f + overhead.to_f
+  end
+
   def self.valid_types
     ['FixedDeliverable','HourlyDeliverable','RetainerDeliverable']
   end
