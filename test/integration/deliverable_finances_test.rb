@@ -15,18 +15,12 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
     @deliverable1.save!
     @user = User.generate_user_with_permission_to_manage_budget(:project => @project)
     # 2 hours of $100 billable work
-    @issue1 = Issue.generate_for_project!(@project)
-    @time_entry1 = TimeEntry.generate!(:issue => @issue1,
-                                       :project => @project,
-                                       :activity => @billable_activity,
-                                       :spent_on => Date.today,
-                                       :hours => 2,
-                                       :user => @manager)
-    @rate = Rate.generate!(:project => @project,
-                           :user => @manager,
-                           :date_in_effect => Date.yesterday,
-                           :amount => 100)
-    @deliverable1.issues << @issue1
+    create_issue_with_time_for_deliverable(@deliverable1, {
+                                             :activity => @billable_activity,
+                                             :user => @manager,
+                                             :hours => 2,
+                                             :amount => 100
+                                           })
 
     @user.reload
     login_as(@user.login, 'contracts')

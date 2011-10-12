@@ -123,4 +123,26 @@ class ActiveSupport::TestCase
     assert !@non_billable_activity.billable?
 
   end
+
+  def create_issue_with_time_for_deliverable(deliverable, options)
+    project = deliverable.project
+    user = options[:user]
+    activity = options[:activity]
+    amount = options[:amount] || 100
+    hours = options[:hours] || 2
+    
+    issue = Issue.generate_for_project!(project)
+    time_entry = TimeEntry.generate!(:issue => issue,
+                                       :project => project,
+                                       :activity => activity,
+                                       :spent_on => Date.today,
+                                       :hours => hours,
+                                       :user => user)
+    rate = Rate.generate!(:project => project,
+                           :user => user,
+                           :date_in_effect => Date.yesterday,
+                           :amount => amount)
+    deliverable.issues << issue
+    issue
+  end
 end
