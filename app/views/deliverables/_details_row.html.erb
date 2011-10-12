@@ -53,7 +53,9 @@
                       </tfoot>
                       <tbody>
                         <tr>
-                          <td class="l"><a href="#"><strong><%= l(:field_labor) %></strong></a><%= release(3, "Deliverable lightbox") %></td>
+                          <td class="l">
+                            <%= link_to(l(:field_labor), "#", :class => 'deliverable-action-link deliverable-lightbox', "data-deliverable-id" => h(deliverable.id)) %>
+                          </td>
                           <td class="labor_budget_spent <%= overage_class(deliverable.labor_budget_spent(validated_period), deliverable.labor_budget_total(validated_period)) %>">
                             <%= h(format_value_field_for_contracts(deliverable.labor_budget_spent(validated_period))) %>
                           </td>
@@ -66,7 +68,9 @@
                           </td>
                         </tr>
                         <tr>
-                          <td class="l"><a href="#"><strong><%= l(:field_overhead) %></strong></a><%= release(3, "Deliverable lightbox") %></td>
+                          <td class="l">
+                            <%= link_to(l(:field_overhead), "#", :class => 'deliverable-action-link deliverable-lightbox', "data-deliverable-id" => h(deliverable.id)) %>
+                          </td>
                           <td class="overhead_budget_spent <%= overage_class(deliverable.overhead_spent(validated_period), deliverable.overhead_budget_total(validated_period)) %>">
                             <%= h(format_value_field_for_contracts(deliverable.overhead_spent(validated_period))) %>
                           </td>

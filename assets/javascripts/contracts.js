@@ -183,6 +183,34 @@ jQuery(function($) {
     var deliverable_url = $(this).closest('form').attr('action');
     $(this).closest('tr').load(deliverable_url, this.form.serialize());
   });
+
+  // Add a div for jquery UI windows. Need to check because other plugins
+  // use the same element id for the same purpose.
+  //
+  // TODO: add dialog-window to ChiliProject core
+  if ($('#dialog-window').length == 0) {
+    $("<div id='dialog-window'>").appendTo('body');
+  }
+
+  $('.deliverable-lightbox').live('click', function() {
+    var deliverableId = $(this).data('deliverable-id');
+
+    $('#dialog-window').
+      hide().
+      html('<h2>Hello</h2><p>This is a report for Deliverable #' + deliverableId + '.</p>').
+      dialog({
+        title: "",
+        minWidth: 400,
+        width: 850,
+        buttons: {
+          "Close": function() {
+            $(this).dialog("close");
+          }
+        }
+      });
+
+    return false;
+  });
 });
 
 /* Jquery Table Expander Plugin */
