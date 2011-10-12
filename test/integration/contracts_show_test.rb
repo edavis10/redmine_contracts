@@ -261,7 +261,52 @@ class ContractsShowTest < ActionController::IntegrationTest
       assert_select "td.fixed.spent-amount", :text => /1,000/
     end
   end
-  
+
+  should "show the total budget for a Deliverable" do
+    @manager = User.generate!
+
+    @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager, :total => '5404')
+
+    visit_contract_page(@contract)
+    assert_select "table#deliverables" do
+      assert_select "td.total.total-amount", :text => /5,404/
+    end
+
+  end
+
+  should "show the total spent for a Deliverable" do
+    configure_overhead_plugin
+    @manager = User.generate!
+    @contract.billable_rate = 200
+    assert @contract.save
+
+    @deliverable1 = HourlyDeliverable.generate!(:contract => @contract, :manager => @manager, :total => '1504')
+
+    @issue1 = Issue.generate_for_project!(@project)
+    @time_entry1 = TimeEntry.generate!(:issue => @issue1,
+                                       :project => @project,
+                                       :activity => @billable_activity,
+                                       :spent_on => Date.today,
+                                       :hours => 15,
+                                       :user => @manager)
+
+    @rate = Rate.generate!(:project => @project,
+                           :user => @manager,
+                           :date_in_effect => Date.yesterday,
+                           :amount => 100)
+
+    @deliverable1.issues << @issue1
+
+    assert_equal 1, @deliverable1.issues.count
+
+    visit_contract_page(@contract)
+    assert_select "table#deliverables" do
+      # Using the contract billable rate and not the user rate because it's income, not an expense
+      assert_select "td.total.spent-amount", :text => /3,000/
+    end
+
+  end
+
   should "show each fixed budget item in the details for the Deliverable" do
     @manager = User.generate!
 

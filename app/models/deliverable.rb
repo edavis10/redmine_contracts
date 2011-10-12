@@ -11,9 +11,9 @@ class Deliverable < ActiveRecord::Base
   has_many :fixed_budgets
   has_many :issues, :dependent => :nullify
 
-  accepts_nested_attributes_for :labor_budgets
-  accepts_nested_attributes_for :overhead_budgets
-  accepts_nested_attributes_for :fixed_budgets
+  accepts_nested_attributes_for :labor_budgets, :allow_destroy => true
+  accepts_nested_attributes_for :overhead_budgets, :allow_destroy => true
+  accepts_nested_attributes_for :fixed_budgets, :allow_destroy => true
   
   # Validations
   validates_presence_of :title
@@ -31,7 +31,8 @@ class Deliverable < ActiveRecord::Base
   delegate "open?", :to => :contract, :prefix => true, :allow_nil => true
   delegate "closed?", :to => :contract, :prefix => true, :allow_nil => true
   delegate "locked?", :to => :contract, :prefix => true, :allow_nil => true
-
+  delegate :project, :to => :contract, :allow_nil => true
+  
   # Callbacks
   before_destroy :block_on_locked_contracts
   before_destroy :block_on_closed_contracts
@@ -280,6 +281,11 @@ class Deliverable < ActiveRecord::Base
     end
   end
 
+  # Required attribute for AAJ's JournalFormatter
+  def name
+    title
+  end
+  
   # Accessors from the budget plugin that need to be wrapped
   def subject
     warn "[DEPRECATION] Deliverable#subject is deprecated.  Please use Deliverable#title instead."

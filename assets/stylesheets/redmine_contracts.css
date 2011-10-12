@@ -26,6 +26,7 @@ html>body .tabular li {overflow:hidden;}
 .tabular li.hidden { height: 0; padding: 0; margin: 0; }
 /* End tabular */
 
+.hidden { display: none; }
 a.contract-delete {color: red; }
 .overage { color: #A40000; }
 
@@ -521,3 +522,5 @@ input.financial{
 	#edit_contract_1 li#contract_billable_rate_input div{
 		margin-bottom: 10px;
 	}
+
+div.fixed-budget-form {padding: 5px 0;}

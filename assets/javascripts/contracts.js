@@ -68,6 +68,88 @@ jQuery(function($) {
    }
   },
 
+  showDeliverableAddButtons = function() {
+    var laborLinks = $('table.deliverable_finance_table .add-labor a.add')
+    if (laborLinks.length == 0) {
+      // No link, add a blank form
+      addNewDeliverableLaborItem();
+    } else {
+      laborLinks.hide().last().show();
+    }
+    var overheadLinks = $('table.deliverable_finance_table .add-overhead a.add')
+    if (overheadLinks.length == 0) {
+      // No link, add a blank form
+      addNewDeliverableOverheadItem();
+    } else {
+      overheadLinks.hide().last().show();
+    }
+    var fixedLinks = $('#deliverable-fixed .fixed-budget-form .add-fixed a.add')
+    if (fixedLinks.length == 0) {
+      // No link, add a blank form
+      addNewDeliverableFixedItem();
+    } else {
+      fixedLinks.hide().last().show();
+    }
+  },
+
+  addNewDeliverableLaborItem = function() {
+    addNewDeliverableFinance('#labor-budget-template',
+                             '#deliverable-labor tbody',
+                             $("tr.labor-budget-form").size(),
+                             '<tr class="labor-budget-form">');
+  },
+
+  addNewDeliverableOverheadItem = function() {
+    addNewDeliverableFinance('#overhead-budget-template',
+                             '#deliverable-overhead tbody',
+                             $("tr.overhead-budget-form").size(),
+                             '<tr class="overhead-budget-form">');
+  },
+
+  addNewDeliverableFixedItem = function() {
+    addNewDeliverableFinance('#fixed-budget-template',
+                             '#deliverable-fixed.fixed-item-form',
+                             $("div.fixed-budget-form").size(),
+                             '<div class="fixed-budget-form">');
+  },
+
+  addNewDeliverableFinance = function(templateSelector, appendTemplateTo, countOfExisting, wrapperElement) {
+    var t = $(templateSelector).tmpl({});
+    if (t.length > 0) {
+      var recordLocation = countOfExisting + 1; // increments the Rails [n] placeholder
+      var newContent = t.html().replace(/\[0\]/g, "[" + recordLocation + "]");
+      // New ids for textareas for the jsToolBar to attach to
+      newContent = newContent.replace(/fixed-description\d*/g, "fixed-description" + Math.floor(Math.random() * 100000000))
+      var newItem = $(wrapperElement).html(newContent)
+
+      newItem.appendTo(appendTemplateTo);
+      newItem.find("textarea.wiki-edit").each(function () {
+        attachWikiToolbar(this.id);
+      });
+      showDeliverableAddButtons();
+    }
+  },
+
+  // Set the deleted flag for Rails and move it out of the row into
+  // a hidden table
+  deleteDeliverableFinance = function(deleteLink) {
+    if (confirm(i18nAreYouSure)) {
+      $(deleteLink).parent().find('.delete-flag').val('1')
+      if ($('#deleted-finances').length == 0) {
+        $(deleteLink).
+          closest("form").
+          append($("<table style='display:none' id='deleted-finances'></table>"));
+      }
+      $('#deleted-finances').append(
+        $(deleteLink). // <a>
+        parent(). // <td>
+        parent().hide()
+      ); // <tr>
+      showDeliverableAddButtons();
+    }
+  },
+
+  showDeliverableAddButtons();
   toggleSpecificDeliverableFields($('form.deliverable'));
 
   $('select#deliverable_type').change(function() {
@@ -125,3 +207,9 @@ jQuery(function($) {
         
     }    
 })(jQuery); 
+
+// Global functions outside of jQuery scoping
+function attachWikiToolbar(id) {
+  var jsToolBarInstance = new jsToolBar($(id));
+  jsToolBarInstance.draw();
+}

@@ -1,0 +1,23 @@
+      <tr class="labor-budget-form">
+        <td>
+          <%= labor_budget.hidden_field(:id) unless labor_budget.object.new_record? %>
+          <%= labor_budget.hidden_field(:year) %>
+          <%= labor_budget.hidden_field(:month) %>
+
+          <%= labor_budget.label(:time_entry_activity_id, :class => "hidden") %>
+          <%= labor_budget.select(:time_entry_activity_id, options_from_collection_for_select(@project.billable_activities, :id, :name, labor_budget.object.time_entry_activity_id), {:include_blank => false}, {:class => 'financial'}) %>
+        </td>
+        <td>
+          <p class="inline-hints"><%= labor_budget.label(:hours, l(:text_short_hours)) %></p>
+          <%= labor_budget.text_field(:hours, :value => format_deliverable_value_fields(labor_budget.object.hours), :class => 'financial') %>
+        </td>
+        <td>
+          <p class="inline-hints"><%= labor_budget.label(:budget, l(:text_dollar_sign)) %></p>
+          <%= labor_budget.text_field(:budget, :value => format_deliverable_value_fields(labor_budget.object.budget), :class => 'financial') %>
+        </td>
+        <td class="add-labor">
+          <%= labor_budget.hidden_field "_destroy", :class=> "delete-flag" %>
+          <%= link_to_function(l(:button_delete), 'deleteDeliverableFinance(this)', :class => 'delete icon icon-del') %>
+          <%= link_to_function(l(:button_add), 'addNewDeliverableLaborItem()', :class => 'add icon icon-add', :style => 'display:none;') %>
+        </td>
+      </tr>

@@ -13,6 +13,7 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     @hourly_deliverable = HourlyDeliverable.generate!(:contract => @contract, :manager => @manager, :title => 'An Hourly')
     
     @user = User.generate_user_with_permission_to_manage_budget(:project => @project)
+    configure_overhead_plugin
     
     login_as(@user.login, 'contracts')
   end
@@ -420,10 +421,12 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     # * labor hidden month
     # * labor hours
     # * labor amount
+    # * labor deleted (hidden)
     # * overhead hidden year
     # * overhead hidden month
     # * overhead hours
     # * overhead amount
+    # * overhead deleted (hidden)
     # * fixed hidden year
     # * fixed hidden month
     # * fixed title
@@ -431,9 +434,10 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     # * fixed markup
     # * fixed paid checkbox
     # * fixed paid hidden field
+    # * fixed deleted (hidden)
     # * total (hidden)
     assert_select ".date-2010-01" do
-      assert_select "input", :count => 16
+      assert_select "input", :count => 19
       assert_select "textarea.wiki-edit", :count => 1 # Fixed description
     end
 

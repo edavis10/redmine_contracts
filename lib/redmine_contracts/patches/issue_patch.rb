@@ -12,6 +12,17 @@ module RedmineContracts
           delegate :title, :to => :deliverable, :prefix => true, :allow_nil => true
           delegate :contract, :to => :deliverable, :allow_nil => true
 
+          # ChiliProject 2.x support for acts_as_journalized.
+          # Used to format the journal details on the Issue page
+          #
+          # See RedmineContracts::Hooks::HelperIssuesShowDetailAfterSettingHook
+          # for <2.x and Redmine version
+          #
+          # TODO: Will not support permissions or custom code in the formatter.
+          if Issue.respond_to?(:register_on_journal_formatter)
+            register_on_journal_formatter(:named_association, 'deliverable_id')
+          end
+          
           def contract_name
             contract.try(:name)
           end

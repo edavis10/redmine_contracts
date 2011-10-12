@@ -3,8 +3,10 @@ class LaborBudget < ActiveRecord::Base
 
   # Associations
   belongs_to :deliverable
+  belongs_to :time_entry_activity
 
   # Validations
+  validates_presence_of :time_entry_activity_id
 
   # Accessors
   include DollarizedAttribute
