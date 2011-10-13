@@ -112,7 +112,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     @deliverable3 = HourlyDeliverable.generate!(:contract => @contract, :manager => @manager)
     visit_contract_page(@contract)
 
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       [@deliverable1, @deliverable2].each do |deliverable|
         assert_select "td.end-date", :text => /#{format_date(deliverable.end_date)}/
         assert_select "td.type", :text => "F"
@@ -141,7 +141,7 @@ class ContractsShowTest < ActionController::IntegrationTest
                           :budget => 200.0)
 
     visit_contract_page(@contract)
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "td.labor", :text => /4,201/
     end
 
@@ -159,7 +159,7 @@ class ContractsShowTest < ActionController::IntegrationTest
                              :budget => 200.0)
 
     visit_contract_page(@contract)
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "td.overhead", :text => /4,201/
     end
 
@@ -193,7 +193,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     assert_equal 1, @deliverable1.issues.count
 
     visit_contract_page(@contract)
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "td.labor", :text => /1,000/
     end
 
@@ -227,7 +227,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     assert_equal 1, @deliverable1.issues.count
 
     visit_contract_page(@contract)
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "td.overhead", :text => /2,000/
     end
 
@@ -242,7 +242,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     FixedBudget.generate!(:deliverable => @deliverable1, :budget => '$2,000', :markup => '200%')
 
     visit_contract_page(@contract)
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "td.fixed", :text => /3,000/
     end
 
@@ -257,7 +257,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     FixedBudget.generate!(:deliverable => @deliverable1, :budget => '$2,000', :markup => '200%')
 
     visit_contract_page(@contract)
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "td.fixed.spent-amount", :text => /1,000/
     end
   end
@@ -268,7 +268,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     @deliverable1 = FixedDeliverable.generate!(:contract => @contract, :manager => @manager, :total => '5404')
 
     visit_contract_page(@contract)
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "td.total.total-amount", :text => /5,404/
     end
 
@@ -300,7 +300,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     assert_equal 1, @deliverable1.issues.count
 
     visit_contract_page(@contract)
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       # Using the contract billable rate and not the user rate because it's income, not an expense
       assert_select "td.total.spent-amount", :text => /3,000/
     end
@@ -316,7 +316,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     @budget2 = FixedBudget.generate!(:deliverable => @deliverable1, :title => 'Item 2', :budget => '$2,000', :markup => '200%')
 
     visit_contract_page(@contract)
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "#deliverable_details_#{@deliverable1.id}" do
         assert_select "tr#fixed_budget_#{@budget1.id}" do
           assert_select 'td.fixed_title', :text => /#{@budget1.title}/
@@ -343,7 +343,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     @budget2 = FixedBudget.generate!(:deliverable => @deliverable1, :title => 'Item 2', :budget => '$2,000', :markup => '200%')
 
     visit_contract_page(@contract)
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "#deliverable_details_#{@deliverable1.id}" do
         assert_select 'td.fixed_markup_budget_spent', :text => '4,100'
         assert_select 'td.fixed_markup_budget_total', :text => '4,100'
@@ -379,7 +379,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     assert_equal 1, @deliverable1.issues.count
 
     visit_contract_page(@contract)
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "td.labor_hours_spent", :text => /10/
       assert_select "td.labor_hours", :text => /100/
     end
@@ -414,7 +414,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     assert_equal 1, @deliverable1.issues.count
 
     visit_contract_page(@contract)
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "td.overhead_hours_spent", :text => /5/
       assert_select "td.overhead_hours", :text => /100/
     end
@@ -458,7 +458,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     assert_equal 1, @deliverable1.issues.count
 
     visit_contract_page(@contract)
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "td.total_hours_spent", :text => /15/
       assert_select "td.total_hours", :text => /200/
     end
@@ -484,7 +484,7 @@ class ContractsShowTest < ActionController::IntegrationTest
     assert_equal 4, @deliverable1.issues.count
 
     visit_contract_page(@contract)
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "tr" do
         assert_select "td a", :text => /#{@status1}/
         assert_select "td.number a", :text => /3/
@@ -610,7 +610,7 @@ class ContractsShowTest < ActionController::IntegrationTest
 
     visit_contract_page(@contract)
 
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "#deliverable_details_#{@retainer_deliverable.id}" do
         assert_select ".deliverable-current-period", :text => /February 2010/i
       end
@@ -624,7 +624,7 @@ class ContractsShowTest < ActionController::IntegrationTest
 
     visit_contract_page(@contract)
 
-    assert_select "table#deliverables" do
+    assert_select "table#deliverables-table" do
       assert_select "#deliverable_details_#{@retainer_deliverable.id}" do
         assert_select "select#retainer_period_change_#{@retainer_deliverable.id}" do
           assert_select "option", /All/
