@@ -103,4 +103,4 @@ en:
   field_time_entry_activity: "Activity"
   text_deliverable_spending_summary: "You've spent %{spent} / %{total} and %{hours} Billable Hours"
   field_cost: "Cost"
-
+  field_spent_estimate: "Spent / Est."
