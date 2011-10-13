@@ -22,38 +22,38 @@
     <% deliverable.billable_time_entry_activities.each do |activity| %>
 
     <% content_tag_for(:tr, activity, :class => 'labor ' + cycle('even','')) do %>
-      <td class="labor">
+      <td class="">
         <%= h(activity.name) %>
       </td>
-      <td class="spent-amount labor <%= overage_class(deliverable.spent_for_activity(activity), deliverable.budget_for_activity(activity)) %>">
+      <td class="financial spent-amount <%= overage_class(deliverable.spent_for_activity(activity), deliverable.budget_for_activity(activity)) %>">
         <%= number_to_currency(deliverable.spent_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="total-amount labor">
+      <td class="financial total-amount">
         <%= number_to_currency(deliverable.budget_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="spent-hours labor <%= overage_class(deliverable.hours_spent_for_activity(activity), deliverable.hours_budget_for_activity(activity)) %>">
+      <td class="numeric spent-hours <%= overage_class(deliverable.hours_spent_for_activity(activity), deliverable.hours_budget_for_activity(activity)) %>">
         <%= number_with_precision(deliverable.hours_spent_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="total-deliverable-hours labor">
+      <td class="numeric total-deliverable-hours">
         <%= number_with_precision(deliverable.hours_budget_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
       </td>
     <% end %>
 
     <% end %>
     <tr class="total summary-row labor">
-      <td class="labor">
+      <td class="">
         Totals
       </td>
-      <td class="spent-amount labor <%= overage_class(deliverable.labor_budget_spent, deliverable.labor_budget_total) %>">
+      <td class="financial spent-amount <%= overage_class(deliverable.labor_budget_spent, deliverable.labor_budget_total) %>">
         <%= number_to_currency(deliverable.labor_budget_spent, :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="total-amount labor">
+      <td class="financial total-amount">
         <%= number_to_currency(deliverable.labor_budget_total, :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="spent-hours labor <%= overage_class(deliverable.labor_hours_spent_total, deliverable.labor_budget_hours) %>">
+      <td class="numeric spent-hours <%= overage_class(deliverable.labor_hours_spent_total, deliverable.labor_budget_hours) %>">
         <%= number_with_precision(deliverable.labor_hours_spent_total, :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="total-deliverable-hours labor">
+      <td class="numeric total-deliverable-hours">
         <%= number_with_precision(deliverable.labor_budget_hours, :precision => Deliverable::ViewPrecision) %>
       </td>
     </tr>    
@@ -72,38 +72,38 @@
     <% deliverable.non_billable_time_entry_activities.each do |activity| %>
 
     <% content_tag_for(:tr, activity, :class => 'overhead ' + cycle('even','')) do %>
-      <td class="overhead">
+      <td class="">
         <%= h(activity.name) %>
       </td>
-      <td class="spent-amount overhead <%= overage_class(deliverable.spent_for_activity(activity), deliverable.budget_for_activity(activity)) %>">
+      <td class="financial spent-amount <%= overage_class(deliverable.spent_for_activity(activity), deliverable.budget_for_activity(activity)) %>">
         <%= number_to_currency(deliverable.spent_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="total-amount overhead">
+      <td class="financial total-amount">
         <%= number_to_currency(deliverable.budget_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="spent-hours overhead <%= overage_class(deliverable.hours_spent_for_activity(activity), deliverable.hours_budget_for_activity(activity)) %>">
+      <td class="numeric spent-hours <%= overage_class(deliverable.hours_spent_for_activity(activity), deliverable.hours_budget_for_activity(activity)) %>">
         <%= number_with_precision(deliverable.hours_spent_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="total-deliverable-hours overhead">
+      <td class="numeric total-deliverable-hours">
         <%= number_with_precision(deliverable.hours_budget_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
       </td>
     <% end %>
 
     <% end %>
     <tr class="total summary-row overhead">
-      <td class="overhead">
+      <td class="">
         Totals
       </td>
-      <td class="spent-amount overhead <%= overage_class(deliverable.overhead_spent, deliverable.overhead_budget_total) %>">
+      <td class="financial spent-amount <%= overage_class(deliverable.overhead_spent, deliverable.overhead_budget_total) %>">
         <%= number_to_currency(deliverable.overhead_spent, :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="total-amount overhead">
+      <td class="financial total-amount">
         <%= number_to_currency(deliverable.overhead_budget_total, :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="spent-hours overhead <%= overage_class(deliverable.overhead_hours_spent_total, deliverable.overhead_budget_hours) %>">
+      <td class="numeric spent-hours <%= overage_class(deliverable.overhead_hours_spent_total, deliverable.overhead_budget_hours) %>">
         <%= number_with_precision(deliverable.overhead_hours_spent_total, :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="total-deliverable-hours overhead">
+      <td class="numeric total-deliverable-hours">
         <%= number_with_precision(deliverable.overhead_budget_hours, :precision => Deliverable::ViewPrecision) %>
       </td>
     </tr>    
@@ -127,26 +127,26 @@
     <% deliverable.users_with_billable_time.sort.each do |user| %>
 
     <% content_tag_for(:tr, user, :class => 'labor ' + cycle('even','')) do %>
-      <td class="labor">
+      <td class="">
         <%= h(user.name) %>
       </td>
-      <td class="amount-cost labor">
+      <td class="financial amount-cost">
         <%= number_to_currency(deliverable.spent_for_user(user, true), :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="time-cost labor">
+      <td class="numeric time-cost">
         <%= number_with_precision(deliverable.hours_spent_for_user(user, true), :precision => Deliverable::ViewPrecision) %>
       </td>
     <% end %>
 
     <% end %>
     <tr class="total summary-row labor">
-      <td class="labor">
+      <td class="">
         Totals
       </td>
-      <td class="amount-cost labor">
+      <td class="financial amount-cost">
         <%= number_to_currency(deliverable.labor_budget_spent, :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="time-cost labor">
+      <td class="numeric time-cost">
         <%= number_with_precision(deliverable.labor_hours_spent_total, :precision => Deliverable::ViewPrecision) %>
       </td>
     </tr>    
@@ -165,26 +165,26 @@
     <% deliverable.users_with_non_billable_time.sort.each do |user| %>
 
     <% content_tag_for(:tr, user, :class => 'overhead ' + cycle('even','')) do %>
-      <td class="overhead">
+      <td class="">
         <%= h(user.name) %>
       </td>
-      <td class="amount-cost overhead">
+      <td class="financial amount-cost">
         <%= number_to_currency(deliverable.spent_for_user(user, false), :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="time-cost overhead">
+      <td class="numeric time-cost">
         <%= number_with_precision(deliverable.hours_spent_for_user(user, false), :precision => Deliverable::ViewPrecision) %>
       </td>
     <% end %>
 
     <% end %>
     <tr class="total summary-row overhead">
-      <td class="overhead">
+      <td class="">
         Totals
       </td>
-      <td class="amount-cost overhead">
+      <td class="financial amount-cost">
         <%= number_to_currency(deliverable.overhead_spent, :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="time-cost overhead">
+      <td class="numeric time-cost">
         <%= number_with_precision(deliverable.overhead_hours_spent_total, :precision => Deliverable::ViewPrecision) %>
       </td>
     </tr>    

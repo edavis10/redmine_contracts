@@ -51,10 +51,8 @@ padding-left: 0px; /* Don't pad submit buttons */
 
 .deliverable_finance_table td { padding-left: 0px; }
 
-input.financial{
-	 text-align: right;
-	 width: 65px;
-}
+.financial, .numeric { text-align: right; }
+input.financial{ width: 65px; }
 
 table.striped-contract-style { border-collapse: collapse; }
 
@@ -535,3 +533,4 @@ div.fixed-budget-form {padding: 5px 0;}
 .deliverable-finance-report { float: left; padding: 0 5px; }
 #finance-summary { font-size: 1.2em; color: #666666; }
 #finance-summary span { padding: 0; font-weight: bold; color: #000000; }
+table.striped-contract-style td.financial, table.striped-contract-style td.numeric { text-align: right; }

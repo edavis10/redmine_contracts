@@ -80,20 +80,20 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
 
     should "render the labor activities table for the deliverable" do
       assert_select "table#deliverable-labor-activities" do
-        assert_select "tr" do
-          assert_select "td.labor", :text => /#{@billable_activity.name}/
-          assert_select "td.spent-amount.labor", :text => /\$200/
-          assert_select "td.total-amount.labor", :text => /\$300/
-          assert_select "td.spent-hours.labor", :text => /2/
-          assert_select "td.total-deliverable-hours.labor", :text => /30/ # 3 month retainer * 10
+        assert_select "tr.labor" do
+          assert_select "td", :text => /#{@billable_activity.name}/
+          assert_select "td.spent-amount", :text => /\$200/
+          assert_select "td.total-amount", :text => /\$300/
+          assert_select "td.spent-hours", :text => /2/
+          assert_select "td.total-deliverable-hours", :text => /30/ # 3 month retainer * 10
         end
 
-        assert_select "tr.summary-row" do
-          assert_select "td.labor", :text => /Totals/
-          assert_select "td.spent-amount.labor", :text => /\$200/
-          assert_select "td.total-amount.labor", :text => /\$300/
-          assert_select "td.spent-hours.labor", :text => /2/
-          assert_select "td.total-deliverable-hours.labor", :text => /30/
+        assert_select "tr.summary-row.labor" do
+          assert_select "td", :text => /Totals/
+          assert_select "td.spent-amount", :text => /\$200/
+          assert_select "td.total-amount", :text => /\$300/
+          assert_select "td.spent-hours", :text => /2/
+          assert_select "td.total-deliverable-hours", :text => /30/
         end
 
       end
@@ -101,20 +101,20 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
 
     should "render the overhead activities table for the deliverable" do
       assert_select "table#deliverable-overhead-activities" do
-        assert_select "tr" do
-          assert_select "td.overhead", :text => /#{@non_billable_activity.name}/
-          assert_select "td.spent-amount.overhead", :text => /\$500/
-          assert_select "td.total-amount.overhead", :text => /\$600/
-          assert_select "td.spent-hours.overhead", :text => /5/
-          assert_select "td.total-deliverable-hours.overhead", :text => /30/ # 3 month retainer * 10
+        assert_select "tr.overhead" do
+          assert_select "td", :text => /#{@non_billable_activity.name}/
+          assert_select "td.spent-amount", :text => /\$500/
+          assert_select "td.total-amount", :text => /\$600/
+          assert_select "td.spent-hours", :text => /5/
+          assert_select "td.total-deliverable-hours", :text => /30/ # 3 month retainer * 10
         end
 
-        assert_select "tr.summary-row" do
-          assert_select "td.overhead", :text => /Totals/
-          assert_select "td.spent-amount.overhead", :text => /\$500/
-          assert_select "td.total-amount.overhead", :text => /\$600/
-          assert_select "td.spent-hours.overhead", :text => /5/
-          assert_select "td.total-deliverable-hours.overhead", :text => /30/
+        assert_select "tr.summary-row.overhead" do
+          assert_select "td", :text => /Totals/
+          assert_select "td.spent-amount", :text => /\$500/
+          assert_select "td.total-amount", :text => /\$600/
+          assert_select "td.spent-hours", :text => /5/
+          assert_select "td.total-deliverable-hours", :text => /30/
         end
 
       end
@@ -122,16 +122,16 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
 
     should "render the labor finances for each user for the deliverable" do
       assert_select "table#deliverable-labor-users" do
-        assert_select "tr" do
-          assert_select "td.labor", :text => /#{@manager.name}/
-          assert_select "td.amount-cost.labor", :text => /\$200/
-          assert_select "td.time-cost.labor", :text => /2/
+        assert_select "tr.labor" do
+          assert_select "td", :text => /#{@manager.name}/
+          assert_select "td.amount-cost", :text => /\$200/
+          assert_select "td.time-cost", :text => /2/
         end
 
         assert_select "tr.summary-row" do
-          assert_select "td.labor", :text => /Totals/
-          assert_select "td.amount-cost.labor", :text => /\$200/
-          assert_select "td.time-cost.labor", :text => /2/
+          assert_select "td", :text => /Totals/
+          assert_select "td.amount-cost", :text => /\$200/
+          assert_select "td.time-cost", :text => /2/
         end
 
       end
@@ -139,16 +139,16 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
 
     should "render the overhead finances for each user for the deliverable" do
       assert_select "table#deliverable-overhead-users" do
-        assert_select "tr" do
-          assert_select "td.overhead", :text => /#{@manager.name}/
-          assert_select "td.amount-cost.overhead", :text => /\$500/
-          assert_select "td.time-cost.overhead", :text => /5/
+        assert_select "tr.overhead" do
+          assert_select "td", :text => /#{@manager.name}/
+          assert_select "td.amount-cost", :text => /\$500/
+          assert_select "td.time-cost", :text => /5/
         end
 
-        assert_select "tr.summary-row" do
-          assert_select "td.overhead", :text => /Totals/
-          assert_select "td.amount-cost.overhead", :text => /\$500/
-          assert_select "td.time-cost.overhead", :text => /5/
+        assert_select "tr.summary-row.overhead" do
+          assert_select "td", :text => /Totals/
+          assert_select "td.amount-cost", :text => /\$500/
+          assert_select "td.time-cost", :text => /5/
         end
 
       end
