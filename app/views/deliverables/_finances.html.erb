@@ -7,7 +7,9 @@
 
 <h2><%= h(deliverable.title) %></h2>
 
-<div id="deliverable-activities" class="deliverable-finance-report" style="<%= css_width_calculator(2) %>">
+<% has_categories = deliverable.project.issue_categories.count > 0 %>
+
+<div id="deliverable-activities" class="deliverable-finance-report" style="<%= css_width_calculator( has_categories ? 3 : 2) %>">
 <h3>Activities</h3>
 
 <table id="deliverable-labor-activities" class="striped-contract-style">
@@ -113,7 +115,7 @@
 
 </div><%# /div#activities %>
 
-<div id="deliverable-users" class="deliverable-finance-report" style="<%= css_width_calculator(2) %>" >
+<div id="deliverable-users" class="deliverable-finance-report" style="<%= css_width_calculator( has_categories ? 3 : 2) %>" >
 <h3>Users</h3>
 
 <table id="deliverable-labor-users" class="striped-contract-style">
@@ -193,3 +195,112 @@
 </table>
 
 </div><%# /div.users %>
+
+<% if has_categories %>
+<div id="deliverable-issue-categories" class="deliverable-finance-report" style="<%= css_width_calculator( has_categories ? 3 : 2) %>" >
+<h3>Issue Categories</h3>
+
+<table id="deliverable-labor-issue-categories" class="striped-contract-style">
+  <thead>
+    <th><%= l(:field_labor) %></th>
+    <th><%= l(:field_cost) %></th>
+    <th><%= l(:field_hours) %></th>
+  </thead>
+
+  <tbody>
+    <% deliverable.issue_categories_with_billable_time.sort.each do |category| %>
+
+    <% content_tag_for(:tr, category, :class => 'labor ' + cycle('even','')) do %>
+      <td class="">
+        <%= h(category.name) %>
+      </td>
+      <td class="financial amount-cost">
+        <%= number_to_currency(deliverable.spent_for_issue_category(category, true), :precision => Deliverable::ViewPrecision) %>
+      </td>
+      <td class="numeric time-cost">
+        <%= number_with_precision(deliverable.hours_spent_for_issue_category(category, true), :precision => Deliverable::ViewPrecision) %>
+      </td>
+    <% end %>
+
+    <% end %>
+
+    <% content_tag_for(:tr, IssueCategory.new, :class => 'labor ' + cycle('even','')) do %>
+      <td class="">
+        <%= l(:label_none) %>
+      </td>
+      <td class="financial amount-cost">
+        <%= number_to_currency(deliverable.spent_for_issue_category(nil, true), :precision => Deliverable::ViewPrecision) %>
+      </td>
+      <td class="numeric time-cost">
+        <%= number_with_precision(deliverable.hours_spent_for_issue_category(nil, true), :precision => Deliverable::ViewPrecision) %>
+      </td>
+    <% end %>
+
+    <tr class="total summary-row labor">
+      <td class="">
+        Totals
+      </td>
+      <td class="financial amount-cost">
+        <%= number_to_currency(deliverable.labor_budget_spent, :precision => Deliverable::ViewPrecision) %>
+      </td>
+      <td class="numeric time-cost">
+        <%= number_with_precision(deliverable.labor_hours_spent_total, :precision => Deliverable::ViewPrecision) %>
+      </td>
+    </tr>    
+    
+  </tbody>
+</table>
+
+<table id="deliverable-overhead-issue-categories" class="striped-contract-style">
+  <thead>
+    <th><%= l(:field_overhead) %></th>
+    <th><%= l(:field_cost) %></th>
+    <th><%= l(:field_hours) %></th>
+  </thead>
+
+  <tbody>
+    <% deliverable.issue_categories_with_non_billable_time.sort.each do |category| %>
+
+    <% content_tag_for(:tr, category, :class => 'overhead ' + cycle('even','')) do %>
+      <td class="">
+        <%= h(category.name) %>
+      </td>
+      <td class="financial amount-cost">
+        <%= number_to_currency(deliverable.spent_for_issue_category(category, false), :precision => Deliverable::ViewPrecision) %>
+      </td>
+      <td class="numeric time-cost">
+        <%= number_with_precision(deliverable.hours_spent_for_issue_category(category, false), :precision => Deliverable::ViewPrecision) %>
+      </td>
+    <% end %>
+
+    <% end %>
+
+    <% content_tag_for(:tr, IssueCategory.new, :class => 'labor ' + cycle('even','')) do %>
+      <td class="">
+        <%= l(:label_none) %>
+      </td>
+      <td class="financial amount-cost">
+        <%= number_to_currency(deliverable.spent_for_issue_category(nil, false), :precision => Deliverable::ViewPrecision) %>
+      </td>
+      <td class="numeric time-cost">
+        <%= number_with_precision(deliverable.hours_spent_for_issue_category(nil, false), :precision => Deliverable::ViewPrecision) %>
+      </td>
+    <% end %>
+
+    <tr class="total summary-row overhead">
+      <td class="">
+        Totals
+      </td>
+      <td class="financial amount-cost">
+        <%= number_to_currency(deliverable.overhead_spent, :precision => Deliverable::ViewPrecision) %>
+      </td>
+      <td class="numeric time-cost">
+        <%= number_with_precision(deliverable.overhead_hours_spent_total, :precision => Deliverable::ViewPrecision) %>
+      </td>
+    </tr>    
+    
+  </tbody>
+</table>
+
+</div><%# /div.users %>
+<% end %>
