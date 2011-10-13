@@ -145,4 +145,12 @@ class ActiveSupport::TestCase
     deliverable.issues << issue
     issue
   end
+
+  def create_contract_and_deliverable
+    @project = Project.generate!(:identifier => 'main').reload
+    @contract = Contract.generate!(:project => @project, :billable_rate => 10)
+    @manager = User.generate!
+    @deliverable = RetainerDeliverable.generate!(:contract => @contract, :manager => @manager, :title => "Retainer Title", :start_date => '2010-01-01', :end_date => '2010-03-31')
+
+  end
 end
