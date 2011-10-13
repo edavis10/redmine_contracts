@@ -32,8 +32,8 @@ a.contract-delete {color: red; }
 
 /* Positioning */
 
-#deliverables td.labor, #deliverables td.overhead, #deliverables td.fixed { text-align: center; }
-#deliverables td.labor div, #deliverables td.overhead div, #deliverables td.fixed div { text-align: right; display: inline; padding: 0 5px; width: 50%; }
+.striped-contract-style td.labor, .striped-contract-style td.overhead, .striped-contract-style td.fixed { text-align: center; }
+.striped-contract-style td.labor div, .striped-contract-style td.overhead div, .striped-contract-style td.fixed div { text-align: right; display: inline; padding: 0 5px; width: 50%; }
 .spent, .budget { text-align: right; padding: 0 5px; }
 
 span.contract-details-label { font-weight: bold; }
@@ -55,6 +55,8 @@ input.financial{
 	 text-align: right;
 	 width: 65px;
 }
+
+table.striped-contract-style { border-collapse: collapse; }
 
 #content .error_msg{
 	background: #ffd5d5;
@@ -213,17 +215,17 @@ input.financial{
 				background: url(../../../images/arrow_expanded.png) no-repeat;
 			}
 			
-		#deliverables .arrow{
+		.striped-contract-style .arrow{
 			background: url(../../../images/arrow_collapsed.png) no-repeat;
 			background-position: 0 6px;
 			
 		}
-			#deliverables .arrow.alt{
+			.striped-contract-style .arrow.alt{
 				background: url(../../../images/arrow_expanded.png) no-repeat;
 				background-position: 0 6px;
 			}
 		
-			#deliverables .arrow span{
+			.striped-contract-style .arrow span{
 				padding-left: 15px;
 			}
 		
@@ -270,12 +272,12 @@ input.financial{
 	}
 	
 	#contract-terms span.red,
-	#deliverables span.red,
+	.striped-contract-style span.red,
 	#milestones span.red{
 		color: #990000;
 	}
 
-#deliverables h3,
+.striped-contract-style h3,
 #milestones h3,
 #content #history h3{
 	float: left;
@@ -284,41 +286,41 @@ input.financial{
 	padding-left: 0;
 }
 
-#content #deliverables .actions,
+#content .striped-contract-style .actions,
 #content #milestones .actions{
 	float: right;
 	margin-top: 20px;
 }
 
-	#content #deliverables .actions a,
+	#content .striped-contract-style .actions a,
 	#content #milestones .actions a{
 		font-size: 13px;
 		color: #3e3e3e;
 		margin-left: 20px;
 	}
 
-#deliverables table{
+table.striped-contract-style {
 	width: 100%;
 	margin-bottom: 20px;
 }
 
-#content #deliverables table thead tr th{
+#content table.striped-contract-style thead tr th{
 	border-right: 1px solid #e6e6e6;
 	text-align: center;
 	font-weight: bold;
 }
 
-#content #deliverables table thead tr{
+#content table.striped-contract-style thead tr{
 	border-bottom: 1px solid #e6e6e6;
 }
 
-#content #deliverables table th,
-#content #deliverables table td{
+#content table.striped-contract-style th,
+#content table.striped-contract-style td{
 	padding: 6px;
 }
 
 
-#content #deliverables table td, #content #deliverables table th,
+#content table.striped-contract-style td, #content table.striped-contract-style th,
 #content #milestones table td, #content #milestones table th,
 #content #contract_list table td, #content #contract_list table th {
 	border:1px solid #e6e6e6;
@@ -329,121 +331,121 @@ input.financial{
 	z-index: 99;
 }
 
-#content #deliverables table tr.noborder td{
+#content table.striped-contract-style tr.noborder td{
 	border-bottom: 0;
 }
 
-#content #deliverables table tr.ign td{
+#content table.striped-contract-style tr.ign td{
 	border-top: 0;
 	padding: 0;
 }
 
-#content #deliverables table tr.ign td table td{
+#content table.striped-contract-style tr.ign td table td{
 	padding: 2px 5px 2px 5px;
 }
 
-#content #deliverables table tr{
+#content table.striped-contract-style tr{
 	background-color: #edf6fa;
 }
 
-#content #deliverables table tr td.white{
+#content table.striped-contract-style tr td.white{
 	background-color: #f6fafd;	
 }
 
-#content #deliverables table tr.even,
-#content #deliverables table tr.even:hover {
+#content table.striped-contract-style tr.even,
+#content table.striped-contract-style tr.even:hover {
 	background-color:#dff3fc;
 }
 
-#content #deliverables table tr.ign tr{
+#content table.striped-contract-style tr.ign tr{
 	background: transparent;
 }
 
 
-	#content #deliverables div.title{
+	#content .striped-contract-style div.title{
 		background: #FFF;
 		padding: 6px;
 		border-bottom: 1px solid #e4eff4;
 	}
-	#content #deliverables .title a {
+	#content .striped-contract-style .title a {
 		margin-right: 6px;
 	}
-		#content #deliverables .title img{
+		#content .striped-contract-style .title img{
 			vertical-align: middle;
 
 		}
 		
-	#content #deliverables .click td{
+	#content .striped-contract-style .click td{
 		cursor: pointer;
 	}
 		
-	#content #deliverables .expanded{
+	#content .striped-contract-style .expanded{
 		border: 1px solid #c8d0d4;
 		margin: 5px;
 		margin-top: 0;
 		background: #f6fbfd;
 	}
 
-	#content #deliverables .expanded fieldset{
+	#content .striped-contract-style .expanded fieldset{
 		border: none;
 	}
 
-	#content #deliverables .info{
+	#content .striped-contract-style .info{
 		width: 45%;
 		float: left;
 	}
 	
-		#content #deliverables .info p{
+		#content .striped-contract-style .info p{
 			margin: 10px 0 10px 10px;
     }
     
-    #content #deliverables .info ul{
+    #content .striped-contract-style .info ul{
 			margin: 10px 0 10px 10px;
       padding-left: 10px;
       list-style: inherit;
 		}
-		#content #deliverables .info form fieldset{
+		#content .striped-contract-style .info form fieldset{
 			margin-left: 10px;
 			margin-bottom: 10px;
 		}
 	
-		#content #deliverables .info table{
+		#content .striped-contract-style .info table{
 			width: auto;
 			margin: 0 0 0 10px;
 		}
-		#content #deliverables .info table td{
+		#content .striped-contract-style .info table td{
 			border: 0;
 			padding: 2px 5px 2px 5px;
 		}
 		
-		#content #deliverables .finance table{
+		#content .striped-contract-style .finance table{
 			border-left: 1px solid #e4eff4;
 		}
 		
-		#content #deliverables .finance table td,
-		#content #deliverables .issue_status table td{
+		#content .striped-contract-style .finance table td,
+		#content .striped-contract-style .issue_status table td{
 			border: 0px;
 			border-right: 1px solid #e4eff4;
 			text-align: right;
 			padding: 2px 5px 2px 5px;
 		}
 		
-		#content #deliverables .finance table td.l,
-		#content #deliverables .issue_status table td.l{
+		#content .striped-contract-style .finance table td.l,
+		#content .striped-contract-style .issue_status table td.l{
 			text-align: left;
 		}
 		
-	#content #deliverables .finance{
+	#content .striped-contract-style .finance{
 		float: left;
 		width: 39%;
 	}
-		#content #deliverables .finance table{
+		#content .striped-contract-style .finance table{
 			margin: 0;
 			padding: 0;
 		}
 		
-		#content #deliverables .finance table thead th,
-		#content #deliverables .issue_status table thead th{
+		#content .striped-contract-style .finance table thead th,
+		#content .striped-contract-style .issue_status table thead th{
 			background: #FFF;
 			border: 0;
 			font-weight: bold;
@@ -452,31 +454,36 @@ input.financial{
 			padding: 6px;
 		}
 		
-		#content #deliverables .finance table thead th{
+		#content .striped-contract-style .finance table thead th{
 			border-right: 1px solid #e4eff4;
 		}
 		
-		#content #deliverables .finance table tbody tr.total td,
+		#content .striped-contract-style .finance table tbody tr.total td,
 		#contract-terms table tbody tr.total td{
 			border-top: 1px solid #bed3dd;
 		}
 		
-	#content #deliverables .issue_status{
+	#content .striped-contract-style .issue_status{
 		float: left;
 		width: 16%;
 	}
 	
-		#content #deliverables .issue_status table tbody tr td{
+		#content .striped-contract-style .issue_status table tbody tr td{
 			border-right: 0;
 			color: #277d94;
 			text-align: left;
 		}
-		#content #deliverables .issue_status table tbody tr td.number { 
+		#content .striped-contract-style .issue_status table tbody tr td.number { 
 			text-align: right; 
 		}
 
-		
-	#content #deliverables a,
+
+#content table.striped-contract-style tr.summary-row {
+	 background-color: #FFF;
+	 font-weight: bold;
+}
+
+	#content .striped-contract-style a,
 	#content .c_overview a{
 		color: #277d94;
 	}

@@ -85,15 +85,15 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
           assert_select "td.spent-amount.labor", :text => /\$200/
           assert_select "td.total-amount.labor", :text => /\$300/
           assert_select "td.spent-hours.labor", :text => /2/
-          assert_select "td.total-hours.labor", :text => /30/ # 3 month retainer * 10
+          assert_select "td.total-deliverable-hours.labor", :text => /30/ # 3 month retainer * 10
         end
 
-        assert_select "tr.total" do
+        assert_select "tr.summary-row" do
           assert_select "td.labor", :text => /Totals/
           assert_select "td.spent-amount.labor", :text => /\$200/
           assert_select "td.total-amount.labor", :text => /\$300/
           assert_select "td.spent-hours.labor", :text => /2/
-          assert_select "td.total-hours.labor", :text => /30/
+          assert_select "td.total-deliverable-hours.labor", :text => /30/
         end
 
       end
@@ -106,15 +106,15 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
           assert_select "td.spent-amount.overhead", :text => /\$500/
           assert_select "td.total-amount.overhead", :text => /\$600/
           assert_select "td.spent-hours.overhead", :text => /5/
-          assert_select "td.total-hours.overhead", :text => /30/ # 3 month retainer * 10
+          assert_select "td.total-deliverable-hours.overhead", :text => /30/ # 3 month retainer * 10
         end
 
-        assert_select "tr.total" do
+        assert_select "tr.summary-row" do
           assert_select "td.overhead", :text => /Totals/
           assert_select "td.spent-amount.overhead", :text => /\$500/
           assert_select "td.total-amount.overhead", :text => /\$600/
           assert_select "td.spent-hours.overhead", :text => /5/
-          assert_select "td.total-hours.overhead", :text => /30/
+          assert_select "td.total-deliverable-hours.overhead", :text => /30/
         end
 
       end

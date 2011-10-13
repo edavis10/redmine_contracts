@@ -7,9 +7,10 @@
 
 <h2><%= h(deliverable.title) %></h2>
 
+<div id="deliverable-activities" style="width: 33%">
 <h3>Activities</h3>
 
-<table id="deliverable-labor-activities">
+<table id="deliverable-labor-activities" class="striped-contract-style">
   <thead>
     <th><%= l(:field_labor) %></th>
     <th colspan="2"><%= l(:field_cost) %></th>
@@ -33,13 +34,13 @@
       <td class="spent-hours labor">
         <%= number_with_precision(deliverable.hours_spent_for_activity(activity), :precision => 0) %>
       </td>
-      <td class="total-hours labor">
+      <td class="total-deliverable-hours labor">
         <%= number_with_precision(deliverable.hours_budget_for_activity(activity), :precision => 0) %>
       </td>
     <% end %>
 
     <% end %>
-    <tr class="total labor">
+    <tr class="total summary-row labor">
       <td class="labor">
         Totals
       </td>
@@ -52,7 +53,7 @@
       <td class="spent-hours labor">
         <%= number_with_precision(deliverable.labor_hours_spent_total, :precision => 0) %>
       </td>
-      <td class="total-hours labor">
+      <td class="total-deliverable-hours labor">
         <%= number_with_precision(deliverable.labor_budget_hours, :precision => 0) %>
       </td>
     </tr>    
@@ -60,7 +61,7 @@
   </tbody>
 </table>
 
-<table id="deliverable-overhead-activities">
+<table id="deliverable-overhead-activities" class="striped-contract-style">
   <thead>
     <th><%= l(:field_overhead) %></th>
     <th colspan="2"><%= l(:field_cost) %></th>
@@ -83,13 +84,13 @@
       <td class="spent-hours overhead">
         <%= number_with_precision(deliverable.hours_spent_for_activity(activity), :precision => 0) %>
       </td>
-      <td class="total-hours overhead">
+      <td class="total-deliverable-hours overhead">
         <%= number_with_precision(deliverable.hours_budget_for_activity(activity), :precision => 0) %>
       </td>
     <% end %>
 
     <% end %>
-    <tr class="total overhead">
+    <tr class="total summary-row overhead">
       <td class="overhead">
         Totals
       </td>
@@ -102,10 +103,12 @@
       <td class="spent-hours overhead">
         <%= number_with_precision(deliverable.overhead_hours_spent_total, :precision => 0) %>
       </td>
-      <td class="total-hours overhead">
+      <td class="total-deliverable-hours overhead">
         <%= number_with_precision(deliverable.overhead_budget_hours, :precision => 0) %>
       </td>
     </tr>    
     
   </tbody>
 </table>
+
+</div><%# /div#activities %>
