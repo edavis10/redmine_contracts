@@ -274,6 +274,10 @@ class Deliverable < ActiveRecord::Base
     project.activities.select {|activity| activity.billable? }
   end
 
+  def non_billable_time_entry_activities
+    project.activities.reject {|activity| activity.billable? }
+  end
+
   # Total amount spent ($) for a given activity
   def spent_for_activity(activity)
     issues.all.inject(0.0) do |all_issues_total, issue|

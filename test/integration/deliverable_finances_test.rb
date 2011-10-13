@@ -22,6 +22,14 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
                                              :amount => 100
                                            })
 
+    # 5 hours of $100 nonbillable work
+    create_issue_with_time_for_deliverable(@deliverable1, {
+                                             :activity => @non_billable_activity,
+                                             :user => @manager,
+                                             :hours => 5,
+                                             :amount => 100
+                                           })
+
     @user.reload
     login_as(@user.login, 'contracts')
   end
@@ -70,9 +78,7 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
       end
     end
 
-    should "render the activities table for the deliverable" do
-      assert_select "h3", :text => /Activities/
-
+    should "render the labor activities table for the deliverable" do
       assert_select "table#deliverable-labor-activities" do
         assert_select "tr" do
           assert_select "td.labor", :text => /#{@billable_activity.name}/
@@ -88,6 +94,27 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
           assert_select "td.total-amount.labor", :text => /\$300/
           assert_select "td.spent-hours.labor", :text => /2/
           assert_select "td.total-hours.labor", :text => /30/
+        end
+
+      end
+    end
+
+    should "render the overhead activities table for the deliverable" do
+      assert_select "table#deliverable-overhead-activities" do
+        assert_select "tr" do
+          assert_select "td.overhead", :text => /#{@non_billable_activity.name}/
+          assert_select "td.spent-amount.overhead", :text => /\$500/
+          assert_select "td.total-amount.overhead", :text => /\$600/
+          assert_select "td.spent-hours.overhead", :text => /5/
+          assert_select "td.total-hours.overhead", :text => /30/ # 3 month retainer * 10
+        end
+
+        assert_select "tr.total" do
+          assert_select "td.overhead", :text => /Totals/
+          assert_select "td.spent-amount.overhead", :text => /\$500/
+          assert_select "td.total-amount.overhead", :text => /\$600/
+          assert_select "td.spent-hours.overhead", :text => /5/
+          assert_select "td.total-hours.overhead", :text => /30/
         end
 
       end

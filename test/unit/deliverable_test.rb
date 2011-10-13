@@ -101,7 +101,29 @@ class DeliverableTest < ActiveSupport::TestCase
     end
     
     should "not include nonbillable activities" do
-      assert !@deliverable.billable_time_entry_activities.include?(@non_billable_activity3), "Non billable Activity included"
+      assert !@deliverable.billable_time_entry_activities.include?(@non_billable_activity), "Non billable Activity included"
+    end
+    
+  end
+
+  context "#non_billable_time_entry_activities" do
+    setup do
+      configure_overhead_plugin
+      create_contract_and_deliverable
+    end
+    
+    should "include all billable activities" do
+      @non_billable_activity2 = TimeEntryActivity.generate!.reload
+      @non_billable_activity2.custom_field_values = { @custom_field.id => 'false' }
+      assert @non_billable_activity2.save
+
+      assert @deliverable.non_billable_time_entry_activities.include?(@non_billable_activity), "Activity not included"
+      assert @deliverable.non_billable_time_entry_activities.include?(@non_billable_activity2), "Activity not included"
+      
+    end
+    
+    should "not include billable activities" do
+      assert !@deliverable.non_billable_time_entry_activities.include?(@billable_activity), "Billable Activity included"
     end
     
   end

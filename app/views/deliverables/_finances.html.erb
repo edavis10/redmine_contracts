@@ -59,3 +59,53 @@
     
   </tbody>
 </table>
+
+<table id="deliverable-overhead-activities">
+  <thead>
+    <th><%= l(:field_overhead) %></th>
+    <th colspan="2"><%= l(:field_cost) %></th>
+    <th colspan="2"><%= l(:field_hours) %></th>
+  </thead>
+
+  <tbody>
+    <% deliverable.non_billable_time_entry_activities.each do |activity| %>
+
+    <% content_tag_for(:tr, activity, :class => 'overhead ' + cycle('even','')) do %>
+      <td class="overhead">
+        <%= h(activity.name) %>
+      </td>
+      <td class="spent-amount overhead">
+        <%= number_to_currency(deliverable.spent_for_activity(activity), :precision => 0) %>
+      </td>
+      <td class="total-amount overhead">
+        <%= number_to_currency(deliverable.budget_for_activity(activity), :precision => 0) %>
+      </td>
+      <td class="spent-hours overhead">
+        <%= number_with_precision(deliverable.hours_spent_for_activity(activity), :precision => 0) %>
+      </td>
+      <td class="total-hours overhead">
+        <%= number_with_precision(deliverable.hours_budget_for_activity(activity), :precision => 0) %>
+      </td>
+    <% end %>
+
+    <% end %>
+    <tr class="total overhead">
+      <td class="overhead">
+        Totals
+      </td>
+      <td class="spent-amount overhead">
+        <%= number_to_currency(deliverable.overhead_spent, :precision => 0) %>
+      </td>
+      <td class="total-amount overhead">
+        <%= number_to_currency(deliverable.overhead_budget_total, :precision => 0) %>
+      </td>
+      <td class="spent-hours overhead">
+        <%= number_with_precision(deliverable.overhead_hours_spent_total, :precision => 0) %>
+      </td>
+      <td class="total-hours overhead">
+        <%= number_with_precision(deliverable.overhead_budget_hours, :precision => 0) %>
+      </td>
+    </tr>    
+    
+  </tbody>
+</table>
