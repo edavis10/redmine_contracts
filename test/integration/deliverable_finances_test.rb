@@ -7,7 +7,7 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
     configure_overhead_plugin
     @project = Project.generate!(:identifier => 'main').reload
     @contract = Contract.generate!(:project => @project, :billable_rate => 10)
-    @manager = User.generate!
+    @manager = User.generate!.reload
     @deliverable1 = RetainerDeliverable.spawn(:contract => @contract, :manager => @manager, :title => "Retainer Title", :start_date => '2010-01-01', :end_date => '2010-03-31')
     @deliverable1.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10, :time_entry_activity => @billable_activity)
     @deliverable1.overhead_budgets << OverheadBudget.spawn(:budget => 200, :hours => 10)
@@ -115,6 +115,23 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
           assert_select "td.total-amount.overhead", :text => /\$600/
           assert_select "td.spent-hours.overhead", :text => /5/
           assert_select "td.total-deliverable-hours.overhead", :text => /30/
+        end
+
+      end
+    end
+
+    should "render the labor finances for each user for the deliverable" do
+      assert_select "table#deliverable-labor-users" do
+        assert_select "tr" do
+          assert_select "td.labor", :text => /#{@manager.name}/
+          assert_select "td.amount-cost.labor", :text => /\$200/
+          assert_select "td.time-cost.labor", :text => /2/
+        end
+
+        assert_select "tr.summary-row" do
+          assert_select "td.labor", :text => /Totals/
+          assert_select "td.amount-cost.labor", :text => /\$200/
+          assert_select "td.time-cost.labor", :text => /2/
         end
 
       end

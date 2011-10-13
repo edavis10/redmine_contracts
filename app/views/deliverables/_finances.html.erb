@@ -112,3 +112,46 @@
 </table>
 
 </div><%# /div#activities %>
+
+<div id="deliverable-users" style="width: 33%">
+<h3>Users</h3>
+
+<table id="deliverable-labor-users" class="striped-contract-style">
+  <thead>
+    <th><%= l(:field_labor) %></th>
+    <th><%= l(:field_cost) %></th>
+    <th><%= l(:field_hours) %></th>
+  </thead>
+
+  <tbody>
+    <% deliverable.users_with_billable_time.sort.each do |user| %>
+
+    <% content_tag_for(:tr, user, :class => 'labor ' + cycle('even','')) do %>
+      <td class="labor">
+        <%= h(user.name) %>
+      </td>
+      <td class="amount-cost labor">
+        <%= number_to_currency(deliverable.spent_for_user(user, true), :precision => 0) %>
+      </td>
+      <td class="time-cost labor">
+        <%= number_with_precision(deliverable.hours_spent_for_user(user, true), :precision => 0) %>
+      </td>
+    <% end %>
+
+    <% end %>
+    <tr class="total summary-row labor">
+      <td class="labor">
+        Totals
+      </td>
+      <td class="amount-cost labor">
+        <%= number_to_currency(deliverable.labor_budget_spent, :precision => 0) %>
+      </td>
+      <td class="time-cost labor">
+        <%= number_with_precision(deliverable.labor_hours_spent_total, :precision => 0) %>
+      </td>
+    </tr>    
+    
+  </tbody>
+</table>
+
+</div><%# /div.users %>
