@@ -186,4 +186,62 @@ class DeliverableTest < ActiveSupport::TestCase
     
   end
 
+  context "#users_with_billable_time" do
+    setup do
+      configure_overhead_plugin
+      create_contract_and_deliverable
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager
+                                             })
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @non_billable_activity,
+                                               :user => @manager
+                                             })
+      @non_billable_user = User.generate!
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @non_billable_activity,
+                                               :user => @non_billable_user
+                                             })
+
+    end
+    
+    should "include users with billable Time Entries" do
+      assert @deliverable.users_with_billable_time.include?(@manager), "Manager not included"
+    end
+    
+    should "not include users with only nonbillable Time Entries" do
+      assert !@deliverable.users_with_billable_time.include?(@non_billable_user), "Non billable user included"
+    end
+  end
+  
+  context "#users_with_non_billable_time" do
+    setup do
+      configure_overhead_plugin
+      create_contract_and_deliverable
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager
+                                             })
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @non_billable_activity,
+                                               :user => @manager
+                                             })
+      @billable_user = User.generate!
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @billable_user
+                                             })
+
+    end
+    
+    should "include users with billable Time Entries" do
+      assert @deliverable.users_with_non_billable_time.include?(@manager), "Manager not included"
+    end
+    
+    should "not include users with only nonbillable Time Entries" do
+      assert !@deliverable.users_with_non_billable_time.include?(@billable_user), "Billable user included"
+    end
+  end
+
 end

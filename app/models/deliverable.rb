@@ -313,6 +313,30 @@ class Deliverable < ActiveRecord::Base
     labor.to_f + overhead.to_f
   end
 
+  # Array of users who have logged billable time to the deliverable
+  def users_with_billable_time
+    users_with_time(true)
+  end
+
+  # Array of users who have logged non-billable time to the deliverable
+  def users_with_non_billable_time
+    users_with_time(false)
+  end
+
+  # Array of users who have logged a type of time to the deliverable
+  #
+  # @params billable_time_only Boolean Only count billable (true) or non-billable (false) time
+  def users_with_time(billable_time_only)
+    time_entries = project.time_entries.all(:conditions => ["#{TimeEntry.table_name}.issue_id IN (?)", issue_ids])
+
+    time_entries.inject([]) do |users, time_entry|
+      if time_entry.billable? == billable_time_only
+        users << time_entry.user unless users.include?(time_entry.user)
+      end
+      users
+    end
+  end
+
   def self.valid_types
     ['FixedDeliverable','HourlyDeliverable','RetainerDeliverable']
   end
