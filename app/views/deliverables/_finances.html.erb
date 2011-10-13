@@ -1,4 +1,4 @@
-<div id="summary" class="contextual">
+<div id="finance-summary" class="contextual">
   <%= l(:text_deliverable_spending_summary,
         :spent => content_tag(:span, h(number_to_currency(deliverable.labor_budget_spent, :precision => Deliverable::ViewPrecision)), :class => 'spent'),
         :total => content_tag(:span, h(number_to_currency(deliverable.labor_budget_total, :precision => Deliverable::ViewPrecision)), :class => 'total'),

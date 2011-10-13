@@ -71,7 +71,7 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
     should "render the finance report title section for the deliverable" do
       assert_select "h2", :text => /#{@deliverable1.title}/
 
-      assert_select "div#summary" do
+      assert_select "div#finance-summary" do
         assert_select "span.spent", :text => /\$200/ # $100 * 2
         assert_select "span.total", :text => /\$300/ # $100 * 3
         assert_select "span.hours", :text => /2/
