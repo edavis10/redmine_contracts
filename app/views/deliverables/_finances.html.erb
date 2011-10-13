@@ -25,13 +25,13 @@
       <td class="labor">
         <%= h(activity.name) %>
       </td>
-      <td class="spent-amount labor">
+      <td class="spent-amount labor <%= overage_class(deliverable.spent_for_activity(activity), deliverable.budget_for_activity(activity)) %>">
         <%= number_to_currency(deliverable.spent_for_activity(activity), :precision => 0) %>
       </td>
       <td class="total-amount labor">
         <%= number_to_currency(deliverable.budget_for_activity(activity), :precision => 0) %>
       </td>
-      <td class="spent-hours labor">
+      <td class="spent-hours labor <%= overage_class(deliverable.hours_spent_for_activity(activity), deliverable.hours_budget_for_activity(activity)) %>">
         <%= number_with_precision(deliverable.hours_spent_for_activity(activity), :precision => 0) %>
       </td>
       <td class="total-deliverable-hours labor">
@@ -44,13 +44,13 @@
       <td class="labor">
         Totals
       </td>
-      <td class="spent-amount labor">
+      <td class="spent-amount labor <%= overage_class(deliverable.labor_budget_spent, deliverable.labor_budget_total) %>">
         <%= number_to_currency(deliverable.labor_budget_spent, :precision => 0) %>
       </td>
       <td class="total-amount labor">
         <%= number_to_currency(deliverable.labor_budget_total, :precision => 0) %>
       </td>
-      <td class="spent-hours labor">
+      <td class="spent-hours labor <%= overage_class(deliverable.labor_hours_spent_total, deliverable.labor_budget_hours) %>">
         <%= number_with_precision(deliverable.labor_hours_spent_total, :precision => 0) %>
       </td>
       <td class="total-deliverable-hours labor">
@@ -75,13 +75,13 @@
       <td class="overhead">
         <%= h(activity.name) %>
       </td>
-      <td class="spent-amount overhead">
+      <td class="spent-amount overhead <%= overage_class(deliverable.spent_for_activity(activity), deliverable.budget_for_activity(activity)) %>">
         <%= number_to_currency(deliverable.spent_for_activity(activity), :precision => 0) %>
       </td>
       <td class="total-amount overhead">
         <%= number_to_currency(deliverable.budget_for_activity(activity), :precision => 0) %>
       </td>
-      <td class="spent-hours overhead">
+      <td class="spent-hours overhead <%= overage_class(deliverable.hours_spent_for_activity(activity), deliverable.hours_budget_for_activity(activity)) %>">
         <%= number_with_precision(deliverable.hours_spent_for_activity(activity), :precision => 0) %>
       </td>
       <td class="total-deliverable-hours overhead">
@@ -94,13 +94,13 @@
       <td class="overhead">
         Totals
       </td>
-      <td class="spent-amount overhead">
+      <td class="spent-amount overhead <%= overage_class(deliverable.overhead_spent, deliverable.overhead_budget_total) %>">
         <%= number_to_currency(deliverable.overhead_spent, :precision => 0) %>
       </td>
       <td class="total-amount overhead">
         <%= number_to_currency(deliverable.overhead_budget_total, :precision => 0) %>
       </td>
-      <td class="spent-hours overhead">
+      <td class="spent-hours overhead <%= overage_class(deliverable.overhead_hours_spent_total, deliverable.overhead_budget_hours) %>">
         <%= number_with_precision(deliverable.overhead_hours_spent_total, :precision => 0) %>
       </td>
       <td class="total-deliverable-hours overhead">
