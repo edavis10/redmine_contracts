@@ -318,4 +318,160 @@ class DeliverableTest < ActiveSupport::TestCase
     end
 
   end
+
+  context "#issue_categories_with_billable_time" do
+    setup do
+      configure_overhead_plugin
+      create_contract_and_deliverable
+      @category_one = IssueCategory.generate!(:project => @project)
+      @category_two = IssueCategory.generate!(:project => @project)
+
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :issue_category => @category_one
+                                             })
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @non_billable_activity,
+                                               :user => @manager,
+                                               :issue_category => @category_one
+                                             })
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @non_billable_activity,
+                                               :user => @manager,
+                                               :issue_category => @category_two
+                                             })
+
+    end
+    
+    should "include categories with billable Time Entries" do
+      assert @deliverable.issue_categories_with_billable_time.include?(@category_one)
+    end
+    
+    should "not include categories with only nonbillable Time Entries" do
+      assert !@deliverable.issue_categories_with_billable_time.include?(@category_two)
+    end
+  end
+  
+  context "#issue_categories_with_non_billable_time" do
+    setup do
+      configure_overhead_plugin
+      create_contract_and_deliverable
+      @category_one = IssueCategory.generate!(:project => @project)
+      @category_two = IssueCategory.generate!(:project => @project)
+
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @non_billable_activity,
+                                               :user => @manager,
+                                               :issue_category => @category_one
+                                             })
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :issue_category => @category_one
+                                             })
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :issue_category => @category_two
+                                             })
+
+    end
+    
+    should "include categories with non-billable Time Entries" do
+      assert @deliverable.issue_categories_with_non_billable_time.include?(@category_one)
+    end
+    
+    should "not include categories with only billable Time Entries" do
+      assert !@deliverable.issue_categories_with_non_billable_time.include?(@category_two)
+    end
+  end
+
+  context "#spent_for_issue_category" do
+    setup do
+      configure_overhead_plugin
+      create_contract_and_deliverable
+      @category_one = IssueCategory.generate!(:project => @project)
+
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :hours => 5,
+                                               :amount => 100,
+                                               :issue_category => @category_one
+                                             })
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :hours => 5,
+                                               :amount => 100,
+                                               :issue_category => @category_one
+                                             })
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @non_billable_activity,
+                                               :user => @manager,
+                                               :hours => 5,
+                                               :amount => 100,
+                                               :issue_category => @category_one
+                                             })
+
+    end
+    
+    context "with billable_time_only as true" do
+      should "return the total cost the category has logged on billable time entries" do
+        assert_equal 1000, @deliverable.spent_for_issue_category(@category_one, true)
+      end
+    end
+    
+    context "with billable_time_only as false" do
+      should "return the total cost the category has logged on non-billable time entries" do
+        assert_equal 500, @deliverable.spent_for_issue_category(@category_one, false)
+      end
+    end
+
+  end
+
+  context "#hours_spent_for_issue_category" do
+    setup do
+      configure_overhead_plugin
+      create_contract_and_deliverable
+      @category_one = IssueCategory.generate!(:project => @project)
+
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :hours => 5,
+                                               :amount => 100,
+                                               :issue_category => @category_one
+                                             })
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :hours => 5,
+                                               :amount => 100,
+                                               :issue_category => @category_one
+                                             })
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @non_billable_activity,
+                                               :user => @manager,
+                                               :hours => 5,
+                                               :amount => 100,
+                                               :issue_category => @category_one
+                                             })
+
+    end
+    
+    context "with billable_time_only as true" do
+      should "return the total hours the category has logged on billable time entries" do
+        assert_equal 10, @deliverable.hours_spent_for_issue_category(@category_one, true)
+      end
+    end
+    
+    context "with billable_time_only as false" do
+      should "return the total hours the category has logged on non-billable time entries" do
+        assert_equal 5, @deliverable.hours_spent_for_issue_category(@category_one, false)
+      end
+    end
+
+  end
 end

@@ -130,8 +130,9 @@ class ActiveSupport::TestCase
     activity = options[:activity]
     amount = options[:amount] || 100
     hours = options[:hours] || 2
+    issue_category = options[:issue_category]
     
-    issue = Issue.generate_for_project!(project)
+    issue = Issue.generate_for_project!(project, :category_id => issue_category.try(:id))
     time_entry = TimeEntry.generate!(:issue => issue,
                                        :project => project,
                                        :activity => activity,

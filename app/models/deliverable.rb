@@ -337,6 +337,27 @@ class Deliverable < ActiveRecord::Base
     end
   end
 
+  # Array of Issue Categories that have billable time logged
+  def issue_categories_with_billable_time
+    issue_categories_with_time(true)
+  end
+
+  # Array of Issue Categories that have non-billable time logged
+  def issue_categories_with_non_billable_time
+    issue_categories_with_time(false)
+  end
+
+  def issue_categories_with_time(billable_time_only)
+    time_entries = project.time_entries.all(:conditions => ["#{TimeEntry.table_name}.issue_id IN (?)", issue_ids])
+
+    time_entries.inject([]) do |categories, time_entry|
+      if time_entry.billable? == billable_time_only && time_entry.issue.present? && time_entry.issue.category.present?
+        categories << time_entry.issue.category unless categories.include?(time_entry.issue.category)
+      end
+      categories
+    end
+  end
+
   def spent_for_user(user, billable_time_only)
     time_entries = project.time_entries.all(:conditions => ["#{TimeEntry.table_name}.issue_id IN (?) AND #{TimeEntry.table_name}.user_id IN (?)", issue_ids, user.id])
 
@@ -345,6 +366,18 @@ class Deliverable < ActiveRecord::Base
 
   def hours_spent_for_user(user, billable_time_only)
     time_entries = project.time_entries.all(:conditions => ["#{TimeEntry.table_name}.issue_id IN (?) AND #{TimeEntry.table_name}.user_id IN (?)", issue_ids, user.id])
+
+    time_entries.select {|time| time.billable? == billable_time_only }.sum(&:hours)
+  end
+
+  def spent_for_issue_category(category, billable_time_only)
+    time_entries = project.time_entries.all(:conditions => ["#{TimeEntry.table_name}.issue_id IN (?) AND #{Issue.table_name}.category_id IN (?)", issue_ids, category.id], :include => [:issue])
+
+    time_entries.select {|time| time.billable? == billable_time_only }.sum(&:cost)
+  end
+
+  def hours_spent_for_issue_category(category, billable_time_only)
+    time_entries = project.time_entries.all(:conditions => ["#{TimeEntry.table_name}.issue_id IN (?) AND #{Issue.table_name}.category_id IN (?)", issue_ids, category.id], :include => [:issue])
 
     time_entries.select {|time| time.billable? == billable_time_only }.sum(&:hours)
   end
