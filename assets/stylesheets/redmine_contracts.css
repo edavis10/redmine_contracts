@@ -32,7 +32,7 @@ a.contract-delete {color: red; }
 
 /* Positioning */
 
-.striped-contract-style td.labor, .striped-contract-style td.overhead, .striped-contract-style td.fixed { text-align: center; }
+.striped-contract-style td.labor, .striped-contract-style td.overhead, .striped-contract-style td.fixed { text-align: right; }
 .striped-contract-style td.labor div, .striped-contract-style td.overhead div, .striped-contract-style td.fixed div { text-align: right; display: inline; padding: 0 5px; width: 50%; }
 .spent, .budget { text-align: right; padding: 0 5px; }
 
