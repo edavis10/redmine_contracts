@@ -244,4 +244,39 @@ class DeliverableTest < ActiveSupport::TestCase
     end
   end
 
+  context "#hours_spent_for_user" do
+    setup do
+      configure_overhead_plugin
+      create_contract_and_deliverable
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :hours => 5
+                                             })
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :hours => 5
+                                             })
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @non_billable_activity,
+                                               :user => @manager,
+                                               :hours => 5
+                                             })
+
+    end
+    
+    context "with billable_time_only as true" do
+      should "return the total number of hours the user has logged on billable time entries" do
+        assert_equal 10, @deliverable.hours_spent_for_user(@manager, true)
+      end
+    end
+    
+    context "with billable_time_only as false" do
+      should "return the total number of hours the user has logged on non-billable time entries" do
+        assert_equal 5, @deliverable.hours_spent_for_user(@manager, false)
+      end
+    end
+
+  end
 end

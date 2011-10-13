@@ -337,6 +337,12 @@ class Deliverable < ActiveRecord::Base
     end
   end
 
+  def hours_spent_for_user(user, billable_time_only)
+    time_entries = project.time_entries.all(:conditions => ["#{TimeEntry.table_name}.issue_id IN (?) AND #{TimeEntry.table_name}.user_id IN (?)", issue_ids, user.id])
+
+    time_entries.select {|time| time.billable? == billable_time_only }.sum(&:hours)
+  end
+
   def self.valid_types
     ['FixedDeliverable','HourlyDeliverable','RetainerDeliverable']
   end
