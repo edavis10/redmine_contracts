@@ -137,5 +137,22 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
       end
     end
 
+    should "render the overhead finances for each user for the deliverable" do
+      assert_select "table#deliverable-overhead-users" do
+        assert_select "tr" do
+          assert_select "td.overhead", :text => /#{@manager.name}/
+          assert_select "td.amount-cost.overhead", :text => /\$500/
+          assert_select "td.time-cost.overhead", :text => /5/
+        end
+
+        assert_select "tr.summary-row" do
+          assert_select "td.overhead", :text => /Totals/
+          assert_select "td.amount-cost.overhead", :text => /\$500/
+          assert_select "td.time-cost.overhead", :text => /5/
+        end
+
+      end
+    end
+
   end
 end
