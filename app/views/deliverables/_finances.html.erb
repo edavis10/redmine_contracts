@@ -44,16 +44,16 @@
         Totals
       </td>
       <td class="spent-amount labor">
-        $80
+        <%= number_to_currency(deliverable.labor_budget_spent, :precision => 0) %>
       </td>
       <td class="total-amount labor">
-        $100
+        <%= number_to_currency(deliverable.labor_budget_total, :precision => 0) %>
       </td>
       <td class="spent-hours labor">
-        1.5
+        <%= number_with_precision(deliverable.labor_hours_spent_total, :precision => 0) %>
       </td>
       <td class="total-hours labor">
-        2
+        <%= number_with_precision(deliverable.labor_budget_hours, :precision => 0) %>
       </td>
     </tr>    
     
