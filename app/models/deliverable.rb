@@ -371,13 +371,25 @@ class Deliverable < ActiveRecord::Base
   end
 
   def spent_for_issue_category(category, billable_time_only)
-    time_entries = project.time_entries.all(:conditions => ["#{TimeEntry.table_name}.issue_id IN (?) AND #{Issue.table_name}.category_id IN (?)", issue_ids, category.id], :include => [:issue])
+    conditions = ARCondition.new(["#{TimeEntry.table_name}.issue_id IN (?)", issue_ids])
+    if category.present?
+      conditions.add(["#{Issue.table_name}.category_id IN (?)", category.id])
+    else
+      conditions.add("#{Issue.table_name}.category_id IS NULL")
+    end
+    time_entries = project.time_entries.all(:conditions => conditions.conditions, :include => [:issue])
 
     time_entries.select {|time| time.billable? == billable_time_only }.sum(&:cost)
   end
 
   def hours_spent_for_issue_category(category, billable_time_only)
-    time_entries = project.time_entries.all(:conditions => ["#{TimeEntry.table_name}.issue_id IN (?) AND #{Issue.table_name}.category_id IN (?)", issue_ids, category.id], :include => [:issue])
+    conditions = ARCondition.new(["#{TimeEntry.table_name}.issue_id IN (?)", issue_ids])
+    if category.present?
+      conditions.add(["#{Issue.table_name}.category_id IN (?)", category.id])
+    else
+      conditions.add("#{Issue.table_name}.category_id IS NULL")
+    end
+    time_entries = project.time_entries.all(:conditions => conditions.conditions, :include => [:issue])
 
     time_entries.select {|time| time.billable? == billable_time_only }.sum(&:hours)
   end
