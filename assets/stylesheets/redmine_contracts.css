@@ -49,7 +49,7 @@ padding-left: 0px; /* Don't pad submit buttons */
 
 #retainer-finances-message label { margin-left: 0px; width: 600px; text-align: left;} /* reposition the label */
 
-#content .deliverable_finance_table td { padding-left: 0px; }
+.deliverable_finance_table td { padding-left: 0px; }
 
 input.financial{
 	 text-align: right;
@@ -58,18 +58,18 @@ input.financial{
 
 table.striped-contract-style { border-collapse: collapse; }
 
-#content .error_msg{
+.error_msg{
 	background: #ffd5d5;
 	color: #a40000;
 	border: 1px solid #a40000;
 	margin: 5px 0 10px 0;
 }
 
-	#content .error_msg p{
+	.error_msg p{
 		padding: 6px;
     color: #a40000;
 	}
-	#content .error_msg p a {
+	.error_msg p a {
     color: #a40000;
     text-decoration: underline;
   }
@@ -84,13 +84,13 @@ table.striped-contract-style { border-collapse: collapse; }
 	
 }
 
-#content .contract .fixed-item,
-#content .contract .fixed-item-form {
+.contract .fixed-item,
+.contract .fixed-item-form {
 	border-top: 1px dotted #999;
 	padding-top: 15px;
 }
 
-#content .contract .fixed-items {
+.contract .fixed-items {
 	padding-bottom: 15px;
 	border-bottom: 1px dotted #999;
 }
@@ -106,8 +106,8 @@ table.striped-contract-style { border-collapse: collapse; }
 	width: 190px;
 }
 
-#content .contract table td,
-#content .contract table th{
+.contract table td,
+.contract table th{
 	padding: 2px 5px 2px 5px;
 }
 
@@ -116,22 +116,22 @@ table.striped-contract-style { border-collapse: collapse; }
 	padding-left: 155px
 }
 
-#content table.deliverable_finance_table{
+table.deliverable_finance_table{
 	width: 600px;
 }
 
-	#content table.deliverable_finance_table select{
+	table.deliverable_finance_table select{
 		width: 145px;
 	}
 
-	#content table.deliverable_finance_table input{
+	table.deliverable_finance_table input{
 		text-align: right;
 		width: 65px;
 	}
 
-#content table.deliverable_finance_table,
-#content table.deliverable_finance_table tr,
-#content table.deliverable_finance_table tr td{
+table.deliverable_finance_table,
+table.deliverable_finance_table tr,
+table.deliverable_finance_table tr td{
 	border: 0;
 }
 
@@ -144,24 +144,24 @@ table.striped-contract-style { border-collapse: collapse; }
 	display: block;
 }
 
-#content #contract_list table{
+#contract_list table{
 	margin-bottom: 20px;
 }
 
-#content #contract_list table tbody tr td.name a{
+#contract_list table tbody tr td.name a{
 	color: #2f8fa5;
 	text-decoration: none;
 }
 
-#content #contract_list table tbody tr td.name a:hover{
+#contract_list table tbody tr td.name a:hover{
 	text-decoration: underline;
 }
 
-#content #contract_list table tbody tr td.priority_1{
+#contract_list table tbody tr td.priority_1{
 	background: #ffaaaa;
 }
 
-#content .c_overview{
+.c_overview{
 	background: #edf6fa;
 	border: 1px solid #dcebf0;
 	-moz-border-radius: 5px;
@@ -171,23 +171,23 @@ table.striped-contract-style { border-collapse: collapse; }
 	margin-bottom: 20px;
 }
 
-	#content .c_overview table{
+	.c_overview table{
 		width: 230px;
 		float: left;
 		border: 0;
 	}
-		#content .c_overview table.left{
+		.c_overview table.left{
 			float:left;
 			width:30%;
 		}
 		
-		#content .c_overview table.middle{
+		.c_overview table.middle{
 			margin-right:3%;
 			margin-left:3%;
 			width:auto;
 		}
 		
-		#content .c_overview table.right{
+		.c_overview table.right{
 			width:30%;
 			max-width:300px;
 			float:right;
@@ -195,23 +195,23 @@ table.striped-contract-style { border-collapse: collapse; }
 		
 		
 	
-		#content .c_overview table td{
+		.c_overview table td{
 			border: 0;
 			text-align: left;
 		}
 		
-		#content .c_overview table tr:hover td,
-		#content .c_overview table tr:hover,
-		#content .c_overview table td:hover{
+		.c_overview table tr:hover td,
+		.c_overview table tr:hover,
+		.c_overview table td:hover{
 			background: transparent;
 		}
 		
-		#content .c_overview a.expand{
+		.c_overview a.expand{
 			background: url(../../../images/arrow_collapsed.png) no-repeat;
 			padding-left: 15px;
 		}
 		
-			#content .c_overview a.expand.alt{
+			.c_overview a.expand.alt{
 				background: url(../../../images/arrow_expanded.png) no-repeat;
 			}
 			
@@ -243,7 +243,7 @@ table.striped-contract-style { border-collapse: collapse; }
 		border-top: 1px solid #dee0e1;
 	}
 	
-	#content #contract-terms table tr.padd td{
+	#contract-terms table tr.padd td{
 		padding-top: 10px;
 	}
 
@@ -267,7 +267,7 @@ table.striped-contract-style { border-collapse: collapse; }
 	}
 	
 	#contract-terms table tr.grey td,
-	#content .contract .grey{
+	.contract .grey{
 		color: #808080;
 	}
 	
@@ -279,21 +279,21 @@ table.striped-contract-style { border-collapse: collapse; }
 
 .striped-contract-style h3,
 #milestones h3,
-#content #history h3{
+#history h3{
 	float: left;
 	font-size: 22px;
 	border: 0;
 	padding-left: 0;
 }
 
-#content .striped-contract-style .actions,
-#content #milestones .actions{
+.striped-contract-style .actions,
+#milestones .actions{
 	float: right;
 	margin-top: 20px;
 }
 
-	#content .striped-contract-style .actions a,
-	#content #milestones .actions a{
+	.striped-contract-style .actions a,
+	#milestones .actions a{
 		font-size: 13px;
 		color: #3e3e3e;
 		margin-left: 20px;
@@ -304,25 +304,25 @@ table.striped-contract-style {
 	margin-bottom: 20px;
 }
 
-#content table.striped-contract-style thead tr th{
+table.striped-contract-style thead tr th{
 	border-right: 1px solid #e6e6e6;
 	text-align: center;
 	font-weight: bold;
 }
 
-#content table.striped-contract-style thead tr{
+table.striped-contract-style thead tr{
 	border-bottom: 1px solid #e6e6e6;
 }
 
-#content table.striped-contract-style th,
-#content table.striped-contract-style td{
+table.striped-contract-style th,
+table.striped-contract-style td{
 	padding: 6px;
 }
 
 
-#content table.striped-contract-style td, #content table.striped-contract-style th,
-#content #milestones table td, #content #milestones table th,
-#content #contract_list table td, #content #contract_list table th {
+table.striped-contract-style td, table.striped-contract-style th,
+#milestones table td, #milestones table th,
+#contract_list table td, #contract_list table th {
 	border:1px solid #e6e6e6;
 	border-style: solid;
 	text-align:left;
@@ -331,121 +331,121 @@ table.striped-contract-style {
 	z-index: 99;
 }
 
-#content table.striped-contract-style tr.noborder td{
+table.striped-contract-style tr.noborder td{
 	border-bottom: 0;
 }
 
-#content table.striped-contract-style tr.ign td{
+table.striped-contract-style tr.ign td{
 	border-top: 0;
 	padding: 0;
 }
 
-#content table.striped-contract-style tr.ign td table td{
+table.striped-contract-style tr.ign td table td{
 	padding: 2px 5px 2px 5px;
 }
 
-#content table.striped-contract-style tr{
+table.striped-contract-style tr{
 	background-color: #edf6fa;
 }
 
-#content table.striped-contract-style tr td.white{
+table.striped-contract-style tr td.white{
 	background-color: #f6fafd;	
 }
 
-#content table.striped-contract-style tr.even,
-#content table.striped-contract-style tr.even:hover {
+table.striped-contract-style tr.even,
+table.striped-contract-style tr.even:hover {
 	background-color:#dff3fc;
 }
 
-#content table.striped-contract-style tr.ign tr{
+table.striped-contract-style tr.ign tr{
 	background: transparent;
 }
 
 
-	#content .striped-contract-style div.title{
+	.striped-contract-style div.title{
 		background: #FFF;
 		padding: 6px;
 		border-bottom: 1px solid #e4eff4;
 	}
-	#content .striped-contract-style .title a {
+	.striped-contract-style .title a {
 		margin-right: 6px;
 	}
-		#content .striped-contract-style .title img{
+		.striped-contract-style .title img{
 			vertical-align: middle;
 
 		}
 		
-	#content .striped-contract-style .click td{
+	.striped-contract-style .click td{
 		cursor: pointer;
 	}
 		
-	#content .striped-contract-style .expanded{
+	.striped-contract-style .expanded{
 		border: 1px solid #c8d0d4;
 		margin: 5px;
 		margin-top: 0;
 		background: #f6fbfd;
 	}
 
-	#content .striped-contract-style .expanded fieldset{
+	.striped-contract-style .expanded fieldset{
 		border: none;
 	}
 
-	#content .striped-contract-style .info{
+	.striped-contract-style .info{
 		width: 45%;
 		float: left;
 	}
 	
-		#content .striped-contract-style .info p{
+		.striped-contract-style .info p{
 			margin: 10px 0 10px 10px;
     }
     
-    #content .striped-contract-style .info ul{
+    .striped-contract-style .info ul{
 			margin: 10px 0 10px 10px;
       padding-left: 10px;
       list-style: inherit;
 		}
-		#content .striped-contract-style .info form fieldset{
+		.striped-contract-style .info form fieldset{
 			margin-left: 10px;
 			margin-bottom: 10px;
 		}
 	
-		#content .striped-contract-style .info table{
+		.striped-contract-style .info table{
 			width: auto;
 			margin: 0 0 0 10px;
 		}
-		#content .striped-contract-style .info table td{
+		.striped-contract-style .info table td{
 			border: 0;
 			padding: 2px 5px 2px 5px;
 		}
 		
-		#content .striped-contract-style .finance table{
+		.striped-contract-style .finance table{
 			border-left: 1px solid #e4eff4;
 		}
 		
-		#content .striped-contract-style .finance table td,
-		#content .striped-contract-style .issue_status table td{
+		.striped-contract-style .finance table td,
+		.striped-contract-style .issue_status table td{
 			border: 0px;
 			border-right: 1px solid #e4eff4;
 			text-align: right;
 			padding: 2px 5px 2px 5px;
 		}
 		
-		#content .striped-contract-style .finance table td.l,
-		#content .striped-contract-style .issue_status table td.l{
+		.striped-contract-style .finance table td.l,
+		.striped-contract-style .issue_status table td.l{
 			text-align: left;
 		}
 		
-	#content .striped-contract-style .finance{
+	.striped-contract-style .finance{
 		float: left;
 		width: 39%;
 	}
-		#content .striped-contract-style .finance table{
+		.striped-contract-style .finance table{
 			margin: 0;
 			padding: 0;
 		}
 		
-		#content .striped-contract-style .finance table thead th,
-		#content .striped-contract-style .issue_status table thead th{
+		.striped-contract-style .finance table thead th,
+		.striped-contract-style .issue_status table thead th{
 			background: #FFF;
 			border: 0;
 			font-weight: bold;
@@ -454,69 +454,69 @@ table.striped-contract-style {
 			padding: 6px;
 		}
 		
-		#content .striped-contract-style .finance table thead th{
+		.striped-contract-style .finance table thead th{
 			border-right: 1px solid #e4eff4;
 		}
 		
-		#content .striped-contract-style .finance table tbody tr.total td,
+		.striped-contract-style .finance table tbody tr.total td,
 		#contract-terms table tbody tr.total td{
 			border-top: 1px solid #bed3dd;
 		}
 		
-	#content .striped-contract-style .issue_status{
+	.striped-contract-style .issue_status{
 		float: left;
 		width: 16%;
 	}
 	
-		#content .striped-contract-style .issue_status table tbody tr td{
+		.striped-contract-style .issue_status table tbody tr td{
 			border-right: 0;
 			color: #277d94;
 			text-align: left;
 		}
-		#content .striped-contract-style .issue_status table tbody tr td.number { 
+		.striped-contract-style .issue_status table tbody tr td.number { 
 			text-align: right; 
 		}
 
 
-#content table.striped-contract-style tr.summary-row {
+table.striped-contract-style tr.summary-row {
 	 background-color: #FFF;
 	 font-weight: bold;
 }
 
-	#content .striped-contract-style a,
-	#content .c_overview a{
+	.striped-contract-style a,
+	.c_overview a{
 		color: #277d94;
 	}
 	
-	#content #milestones .options{
+	#milestones .options{
 		float: left;
 		width: 300px;
 		margin-top: 20px;
 		margin-left: 10px;
 	}
 	
-#content #milestones table{
+#milestones table{
 	margin: 0;padding: 0;
 }	
 		
-	#content #milestones table thead th{
+	#milestones table thead th{
 		font-weight: bold;
 		text-align: center;
 	}
 	
-	#content #milestones table tr.odd{
+	#milestones table tr.odd{
 		background: #dff3fc;
 	}
 
-	#content #milestones table tr.even{
+	#milestones table tr.even{
 		background: #edf6fa;
 	}
 	
-	#content #milestones table tr.highlight td{
+	#milestones table tr.highlight td{
 		border-top: 2px solid #5fccf9;
 	}
 	
-	#content #milestones .c{
+	#milestones .c{
 		text-align: center;
 	}
 
