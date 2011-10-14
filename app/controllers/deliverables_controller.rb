@@ -8,6 +8,7 @@ class DeliverablesController < InheritedResources::Base
 
   helper :contracts
   helper :contract_formatter
+  include ContractsHelper
   
   def index
     redirect_to contract_url(@project, @contract)
@@ -37,8 +38,16 @@ class DeliverablesController < InheritedResources::Base
   end
 
   def finances
+    @deliverable = @contract.deliverables.find(params[:id])
+    period = extract_period(params[:period])
+    if period
+      @period = validate_period(@deliverable, period)
+    else
+      @period = nil
+    end
+    
     respond_to do |format|
-      format.js { render :partial => 'deliverables/finances', :locals => {:contract => @contract, :deliverable => @contract.deliverables.find(params[:id])} }
+      format.js { render :partial => 'deliverables/finances', :locals => {:contract => @contract, :deliverable => @deliverable, :period => @period } }
       format.html { }
     end
     

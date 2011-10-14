@@ -7,6 +7,16 @@
 
 <h2><%= h(deliverable.title) %></h2>
 
+<% if deliverable.retainer? %>
+<div class="deliverable-period">
+  <form method="get" action="<%= finances_contract_deliverable_path(deliverable.project, contract, deliverable, :format => 'js') %>">
+    <select name="period" id="retainer_period_change_<%= h(deliverable.id) %>" class="retainer_period_change">
+      <%= retainer_period_options(deliverable, :selected => period) %>
+    </select>
+  </form>
+</div>
+<% end %>
+
 <% has_categories = deliverable.project.issue_categories.count > 0 %>
 
 <div id="deliverable-activities" class="deliverable-finance-report" style=" width: 48%">
