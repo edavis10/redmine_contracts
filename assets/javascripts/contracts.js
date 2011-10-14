@@ -1,5 +1,5 @@
 jQuery(function($) {
-  $("#ajax-indicator").ajaxStart(function(){ $(this).show();  });
+  $("#ajax-indicator").ajaxStart(function(){ $(this).show().css('z-index', '9999');  });
   $("#ajax-indicator").ajaxStop(function(){ $(this).hide();  });
 
   var right_align = $('#contract-terms .finance tr td:nth-child ~ td, .c_overview table.right tr td:nth-child ~ td, #deliverables table tr.click td:nth-child(5) ~ td, .deliverable_finance_table tr.aright td:nth-child ~ td');
