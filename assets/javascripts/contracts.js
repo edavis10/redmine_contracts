@@ -203,6 +203,8 @@ jQuery(function($) {
         title: "",
         minWidth: 400,
         width: 850,
+        minHeight: 400,
+        height: 500,
         buttons: {
           "Close": function() {
             $(this).dialog("close");
