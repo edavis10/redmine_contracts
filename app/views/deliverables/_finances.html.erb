@@ -9,7 +9,7 @@
 
 <% has_categories = deliverable.project.issue_categories.count > 0 %>
 
-<div id="deliverable-activities" class="deliverable-finance-report" style="<%= css_width_calculator( has_categories ? 3 : 2) %>">
+<div id="deliverable-activities" class="deliverable-finance-report" style=" width: 48%">
 <h3>Activities</h3>
 
 <table id="deliverable-labor-activities" class="striped-contract-style">
@@ -115,7 +115,7 @@
 
 </div><%# /div#activities %>
 
-<div id="deliverable-users" class="deliverable-finance-report" style="<%= css_width_calculator( has_categories ? 3 : 2) %>" >
+<div id="deliverable-users" class="deliverable-finance-report" style=" width: 48%" >
 <h3>Users</h3>
 
 <table id="deliverable-labor-users" class="striped-contract-style">
@@ -197,7 +197,7 @@
 </div><%# /div.users %>
 
 <% if has_categories %>
-<div id="deliverable-issue-categories" class="deliverable-finance-report" style="<%= css_width_calculator( has_categories ? 3 : 2) %>" >
+<div id="deliverable-issue-categories" class="deliverable-finance-report" style=" width: 48%" >
 <h3>Issue Categories</h3>
 
 <table id="deliverable-labor-issue-categories" class="striped-contract-style">

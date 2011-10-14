@@ -180,15 +180,4 @@ module ContractsHelper
       ''
     end
   end
-
-  # Simple calculator to dynamically figure out the css width %
-  # to fill a container. <100% is used to allow some padding.
-  def css_width_calculator(number_of_elements)
-    case number_of_elements
-    when 2
-      " width: 48%"
-    when 3
-      " width: 31%"
-    end
-  end
 end
