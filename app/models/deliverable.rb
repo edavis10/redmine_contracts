@@ -279,32 +279,44 @@ class Deliverable < ActiveRecord::Base
   end
 
   # Total amount spent ($) for a given activity
-  def spent_for_activity(activity)
+  def spent_for_activity(activity, options={})
+    period = options[:period] || nil
     issues.all.inject(0.0) do |all_issues_total, issue|
-      all_issues_total += issue.time_entries.all(:conditions => {:activity_id => activity.id}).sum(&:cost)
+      conditions = ARCondition.new(["activity_id IN (?)", activity.id])
+      if period.present?
+        conditions.add(["tyear = ? AND tmonth = ?", period.year, period.month])
+      end
+      all_issues_total += issue.time_entries.all(:conditions => conditions.conditions).sum(&:cost)
       all_issues_total
     end
   end
 
   # Total hours spent for a given activity
-  def hours_spent_for_activity(activity)
+  def hours_spent_for_activity(activity, options={})
     issue_ids = issues.collect(&:id)
     TimeEntry.sum(:hours,
                   :conditions => ["#{TimeEntry.table_name}.issue_id IN (?) AND activity_id IN (?)", issue_ids, activity.id])
   end
 
   # Total budget ($) for a given activity
-  def budget_for_activity(activity)
-    labor = labor_budgets.sum(:budget,
-                              :conditions => ["#{LaborBudget.table_name}.time_entry_activity_id IN (?)", activity.id])
-    overhead = overhead_budgets.sum(:budget,
-                                    :conditions => ["#{OverheadBudget.table_name}.time_entry_activity_id IN (?)", activity.id])
-
+  def budget_for_activity(activity, options={})
+    period = options[:period] || nil
+    labor_conditions = ARCondition.new(["#{LaborBudget.table_name}.time_entry_activity_id IN (?)", activity.id])
+    overhead_conditions = ARCondition.new(["#{OverheadBudget.table_name}.time_entry_activity_id IN (?)", activity.id])
+    if period.present?
+      labor_conditions.add(["#{LaborBudget.table_name}.year = ?", period.year])
+      labor_conditions.add(["#{LaborBudget.table_name}.month = ?", period.month])
+      overhead_conditions.add(["#{OverheadBudget.table_name}.year = ?", period.year])
+      overhead_conditions.add(["#{OverheadBudget.table_name}.month = ?", period.month])
+    end
+    
+    labor = labor_budgets.sum(:budget, :conditions => labor_conditions.conditions)
+    overhead = overhead_budgets.sum(:budget, :conditions => overhead_conditions.conditions)
     labor.to_f + overhead.to_f
   end
   
   # Total budget (hours) a given activity
-  def hours_budget_for_activity(activity)
+  def hours_budget_for_activity(activity, options={})
     labor = labor_budgets.sum(:hours,
                               :conditions => ["#{LaborBudget.table_name}.time_entry_activity_id IN (?)", activity.id])
     overhead = overhead_budgets.sum(:hours,

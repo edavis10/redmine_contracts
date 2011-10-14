@@ -37,17 +37,17 @@
       <td class="">
         <%= h(activity.name) %>
       </td>
-      <td class="financial spent-amount <%= overage_class(deliverable.spent_for_activity(activity), deliverable.budget_for_activity(activity)) %>">
-        <%= number_to_currency(deliverable.spent_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
+      <td class="financial spent-amount <%= overage_class(deliverable.spent_for_activity(activity, :period => period), deliverable.budget_for_activity(activity, :period => period)) %>">
+        <%= number_to_currency(deliverable.spent_for_activity(activity, :period => period), :precision => Deliverable::ViewPrecision) %>
       </td>
       <td class="financial total-amount">
-        <%= number_to_currency(deliverable.budget_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
+        <%= number_to_currency(deliverable.budget_for_activity(activity, :period => period), :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="numeric spent-hours <%= overage_class(deliverable.hours_spent_for_activity(activity), deliverable.hours_budget_for_activity(activity)) %>">
-        <%= number_with_precision(deliverable.hours_spent_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
+      <td class="numeric spent-hours <%= overage_class(deliverable.hours_spent_for_activity(activity, :period => period), deliverable.hours_budget_for_activity(activity, :period => period)) %>">
+        <%= number_with_precision(deliverable.hours_spent_for_activity(activity, :period => period), :precision => Deliverable::ViewPrecision) %>
       </td>
       <td class="numeric total-deliverable-hours">
-        <%= number_with_precision(deliverable.hours_budget_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
+        <%= number_with_precision(deliverable.hours_budget_for_activity(activity, :period => period), :precision => Deliverable::ViewPrecision) %>
       </td>
     <% end %>
 
@@ -87,17 +87,17 @@
       <td class="">
         <%= h(activity.name) %>
       </td>
-      <td class="financial spent-amount <%= overage_class(deliverable.spent_for_activity(activity), deliverable.budget_for_activity(activity)) %>">
-        <%= number_to_currency(deliverable.spent_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
+      <td class="financial spent-amount <%= overage_class(deliverable.spent_for_activity(activity, :period => period), deliverable.budget_for_activity(activity, :period => period)) %>">
+        <%= number_to_currency(deliverable.spent_for_activity(activity, :period => period), :precision => Deliverable::ViewPrecision) %>
       </td>
       <td class="financial total-amount">
-        <%= number_to_currency(deliverable.budget_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
+        <%= number_to_currency(deliverable.budget_for_activity(activity, :period => period), :precision => Deliverable::ViewPrecision) %>
       </td>
-      <td class="numeric spent-hours <%= overage_class(deliverable.hours_spent_for_activity(activity), deliverable.hours_budget_for_activity(activity)) %>">
-        <%= number_with_precision(deliverable.hours_spent_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
+      <td class="numeric spent-hours <%= overage_class(deliverable.hours_spent_for_activity(activity, :period => period), deliverable.hours_budget_for_activity(activity, :period => period)) %>">
+        <%= number_with_precision(deliverable.hours_spent_for_activity(activity, :period => period), :precision => Deliverable::ViewPrecision) %>
       </td>
       <td class="numeric total-deliverable-hours">
-        <%= number_with_precision(deliverable.hours_budget_for_activity(activity), :precision => Deliverable::ViewPrecision) %>
+        <%= number_with_precision(deliverable.hours_budget_for_activity(activity, :period => period), :precision => Deliverable::ViewPrecision) %>
       </td>
     <% end %>
 

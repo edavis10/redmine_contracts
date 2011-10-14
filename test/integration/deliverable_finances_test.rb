@@ -205,4 +205,92 @@ class DeliverableFinancesShowTest < ActionController::IntegrationTest
       end
     end
   end
+
+  context "for a request for a different period" do
+    setup do
+      @period = "2010-02"
+      visit "/projects/#{@project.id}/contracts/#{@contract.id}/deliverables/#{@deliverable1.id}/finances?period=#{@period}"
+
+      assert_response :success
+
+      # All work done in setup() is past this period, only these items should show up.
+      Rate.generate!(:project => @deliverable1.project,
+                     :user => @manager,
+                     :date_in_effect => Date.new(2010, 2, 15),
+                     :amount => 45)
+      # 2 hours of $45 billable work
+      create_issue_with_time_for_deliverable(@deliverable1, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :hours => 2,
+                                               :spent_on => Date.new(2010, 2,15),
+                                               :skip_rate => true,
+                                               :issue_category => @category_on_billable
+                                             })
+      # 1 hour of $45 billable work with no category
+      create_issue_with_time_for_deliverable(@deliverable1, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :hours => 1,
+                                               :spent_on => Date.new(2010, 2,15),
+                                               :skip_rate => true,
+                                               :issue_category => nil
+                                             })
+      # 3 hours of $45 nonbillable work
+      create_issue_with_time_for_deliverable(@deliverable1, {
+                                               :activity => @non_billable_activity,
+                                               :user => @manager,
+                                               :hours => 3,
+                                               :spent_on => Date.new(2010, 2, 15),
+                                               :skip_rate => true,
+                                               :issue_category => @category_on_non_billable
+                                             })
+
+    end
+
+    should "calculate activity values based on the period only" do
+      # Labor
+      assert_select "table#deliverable-labor-activities" do
+        assert_select "tr.labor" do
+          assert_select "td", :text => /#{@billable_activity.name}/
+          assert_select "td.spent-amount", :text => /\$135/ # 3 * $45
+          assert_select "td.total-amount", :text => /\$100/ # 1 month
+          assert_select "td.spent-hours", :text => /3/
+          assert_select "td.total-deliverable-hours", :text => /10/ # 1 month
+        end
+
+        assert_select "tr.summary-row.labor" do
+          assert_select "td", :text => /Totals/
+          assert_select "td.spent-amount", :text => /\$135/
+          assert_select "td.total-amount", :text => /\$100/
+          assert_select "td.spent-hours", :text => /3/
+          assert_select "td.total-deliverable-hours", :text => /10/
+        end
+
+      end
+
+      # Overhead
+      assert_select "table#deliverable-overhead-activities" do
+        assert_select "tr.overhead" do
+          assert_select "td", :text => /#{@non_billable_activity.name}/
+          assert_select "td.spent-amount", :text => /\$135/
+          assert_select "td.total-amount", :text => /\$200/
+          assert_select "td.spent-hours", :text => /3/
+          assert_select "td.total-deliverable-hours", :text => /10/ # 3 month retainer * 10
+        end
+
+        assert_select "tr.summary-row.overhead" do
+          assert_select "td", :text => /Totals/
+          assert_select "td.spent-amount", :text => /\$135/
+          assert_select "td.total-amount", :text => /\$200/
+          assert_select "td.spent-hours", :text => /5/
+          assert_select "td.total-deliverable-hours", :text => /10/
+        end
+      end
+      
+    end
+
+    should "calculate user values based on the period only"
+    should "calculate issue category values based on the period only"
+  end
 end

@@ -141,6 +141,31 @@ class DeliverableTest < ActiveSupport::TestCase
 
       assert_equal 500.0, @deliverable.spent_for_activity(@billable_activity).to_f
     end
+
+    should "return the total amount spent for an activity during the period" do
+      configure_overhead_plugin
+      create_contract_and_deliverable
+      Rate.generate!(:project => @deliverable.project,
+                     :user => @manager,
+                     :date_in_effect => Date.new(2010, 2, 15),
+                     :amount => 45)
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :hours => 5,
+                                               :amount => 100
+                                             })
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :hours => 2,
+                                               :spent_on => Date.new(2010, 2,15),
+                                               :skip_rate => true,
+                                               :issue_category => @category_on_billable
+                                             })
+      
+      assert_equal 90.0, @deliverable.spent_for_activity(@billable_activity, :period => Date.new(2010,2,1)).to_f
+    end
   end
 
   context "#budget_for_activity" do
@@ -153,7 +178,17 @@ class DeliverableTest < ActiveSupport::TestCase
 
       assert_equal 600.0, @deliverable.budget_for_activity(@billable_activity).to_f # 200 * 3 months (retainer)
     end
-    
+
+    should "return the total amount budgeted for an activity during the period" do
+      configure_overhead_plugin
+      create_contract_and_deliverable
+      @deliverable.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10, :time_entry_activity => @billable_activity)
+      @deliverable.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10, :time_entry_activity => @billable_activity)
+      @deliverable.save!
+
+      assert_equal 200.0, @deliverable.budget_for_activity(@billable_activity, :period => Date.new(2010,2,1)).to_f # 200 * 1 months (retainer)
+    end
+
   end
   
   context "#hours_spent_for_activity" do
@@ -170,7 +205,8 @@ class DeliverableTest < ActiveSupport::TestCase
       assert_equal 5.0, @deliverable.hours_spent_for_activity(@billable_activity).to_f
 
     end
-    
+
+    should "return the total hours spent for an activity during the period"
   end
 
   context "#hours_budget_for_activity" do
@@ -183,7 +219,8 @@ class DeliverableTest < ActiveSupport::TestCase
 
       assert_equal 60.0, @deliverable.hours_budget_for_activity(@billable_activity).to_f # 20 * 3 months (retainer)
     end
-    
+
+    should "return the total hours budgeted for an activity during the period" do
   end
 
   context "#users_with_billable_time" do

@@ -131,18 +131,20 @@ class ActiveSupport::TestCase
     amount = options[:amount] || 100
     hours = options[:hours] || 2
     issue_category = options[:issue_category]
+    skip_rate = options[:skip_rate] || false
+    spent_on = options[:spent_on] || Date.today
     
     issue = Issue.generate_for_project!(project, :category_id => issue_category.try(:id))
     time_entry = TimeEntry.generate!(:issue => issue,
                                        :project => project,
                                        :activity => activity,
-                                       :spent_on => Date.today,
+                                       :spent_on => spent_on,
                                        :hours => hours,
                                        :user => user)
     rate = Rate.generate!(:project => project,
                            :user => user,
                            :date_in_effect => Date.yesterday,
-                           :amount => amount)
+                           :amount => amount) unless skip_rate
     deliverable.issues << issue
     issue
   end
