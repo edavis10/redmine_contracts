@@ -26,7 +26,7 @@
     <%= content_tag(:label, l(:field_labor)) %>
     <table id="deliverable-labor" class="deliverable_finance_table">
       <tbody>
-      <% form.fields_for :labor_budgets, labor_budgets.sort_by(&:id) do |labor_budget| %>
+      <% form.fields_for :labor_budgets, labor_budgets.sort_by {|b| b.id || 0 } do |labor_budget| %>
         <%= render :partial => 'labor_budget_form', :locals => {:labor_budget => labor_budget} %>
       <% end %>
       </tbody>
@@ -37,7 +37,7 @@
     <%= content_tag(:label, l(:field_overhead)) %>
     <table id="deliverable-overhead" class="deliverable_finance_table">
       <tbody>
-      <% form.fields_for :overhead_budgets, overhead_budgets.sort_by(&:id) do |overhead_budget| %>
+      <% form.fields_for :overhead_budgets, overhead_budgets.sort_by {|b| b.id || 0 } do |overhead_budget| %>
         <%= render :partial => 'overhead_budget_form', :locals => {:overhead_budget => overhead_budget} %>
       <% end %>
       </tbody>
@@ -48,7 +48,7 @@
     <div id="deliverable-fixed" class="fixed-item-form">
 		  <label for="contract_discount">Fixed</label>
 
-      <% form.fields_for :fixed_budgets, fixed_budgets.sort_by(&:id) do |fixed_budget| %>
+      <% form.fields_for :fixed_budgets, fixed_budgets.sort_by {|b| b.id || 0 } do |fixed_budget| %>
         <%= render :partial => 'fixed_budget_form', :locals => {:fixed_budget => fixed_budget} %>
         <%= wikitoolbar_for "fixed-description#{fixed_budget.object.object_id}" %>
       <% end %>
