@@ -2,7 +2,7 @@
   <%= l(:text_deliverable_spending_summary,
         :spent => content_tag(:span, h(number_to_currency(deliverable.labor_budget_spent, :precision => Deliverable::ViewPrecision)), :class => 'spent'),
         :total => content_tag(:span, h(number_to_currency(deliverable.labor_budget_total, :precision => Deliverable::ViewPrecision)), :class => 'total'),
-        :hours => content_tag(:span, h(deliverable.labor_hours_spent_total), :class => 'hours')) %>
+        :hours => content_tag(:span, h(number_with_precision(deliverable.labor_hours_spent_total, :precision => Deliverable::ViewPrecision)), :class => 'hours')) %>
 </div>
 
 <h2><%= h(deliverable.title) %></h2>
