@@ -206,7 +206,28 @@ class DeliverableTest < ActiveSupport::TestCase
 
     end
 
-    should "return the total hours spent for an activity during the period"
+    should "return the total hours spent for an activity during the period" do
+      configure_overhead_plugin
+      create_contract_and_deliverable
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :hours => 5,
+                                               :amount => 100,
+                                               :spent_on => Date.new(2011,10,1)
+                                             })
+      create_issue_with_time_for_deliverable(@deliverable, {
+                                               :activity => @billable_activity,
+                                               :user => @manager,
+                                               :hours => 2,
+                                               :amount => 100,
+                                               :spent_on => Date.new(2011,11,1)
+                                             })
+
+      assert_equal 2.0, @deliverable.hours_spent_for_activity(@billable_activity, :period => Date.new(2011,11,5)).to_f
+      
+    end
+    
   end
 
   context "#hours_budget_for_activity" do
@@ -221,6 +242,14 @@ class DeliverableTest < ActiveSupport::TestCase
     end
 
     should "return the total hours budgeted for an activity during the period" do
+      configure_overhead_plugin
+      create_contract_and_deliverable
+      @deliverable.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10, :time_entry_activity => @billable_activity)
+      @deliverable.labor_budgets << LaborBudget.spawn(:budget => 100, :hours => 10, :time_entry_activity => @billable_activity)
+      @deliverable.save!
+
+      assert_equal 20.0, @deliverable.hours_budget_for_activity(@billable_activity, :period => Date.new(2010, 2, 5)).to_f # 20 * 1 months (retainer)
+    end
   end
 
   context "#users_with_billable_time" do
