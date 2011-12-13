@@ -22,7 +22,7 @@ en:
   field_account_executive_short: "Acct. Mgr."
   field_end_date: "End Date"
   text_new_contract: "New Contract"
-  text_edit_contract_name: "Edit {{name}}"
+  text_edit_contract_name: "Edit %{name}"
   field_billable_rate: "Billable Rate"
   field_billable_rate_hint: "$"
   field_discount: "Discount"
@@ -34,7 +34,7 @@ en:
   field_details: "Details"
   button_add_new: Add New
   text_new_deliverable: New Deliverable
-  text_edit_deliverable_title: "Edit {{title}}"
+  text_edit_deliverable_title: "Edit %{title}"
   field_manager: Manager
   field_labor: Labor
   field_overhead: Overhead
@@ -43,7 +43,7 @@ en:
   field_feature_sign_off: Feature Sign Off
   field_warranty_sign_off: Warranty Sign Off
   text_deliverable_finances: Deliverable Finances
-  text_deliverable_finances_date: "Deliverable Finances - {{date}}"
+  text_deliverable_finances_date: "Deliverable Finances - %{date}"
   text_short_hours: hrs
   text_dollar_sign: '$'
   field_client_point_of_contact: "Point of Contact"
@@ -85,15 +85,15 @@ en:
   text_changed_period_message: "The period for this deliverable has been changed. Would you like to expand/shrink the Deliverable Finances?"
   field_current_period: "Current period"
   text_retainer_monthly_message: "Enter budget for a representative month. Any overrides to individual months can be done via the editor after saving."
-  text_flash_deliverable_created: "Deliverable: {{name}} was successfully created."
-  text_flash_deliverable_updated: "Deliverable: {{name}} was successfully updated."
-  text_flash_deliverable_deleted: "Deliverable: {{name}} was successfully deleted."
+  text_flash_deliverable_created: "Deliverable: %{name} was successfully created."
+  text_flash_deliverable_updated: "Deliverable: %{name} was successfully updated."
+  text_flash_deliverable_deleted: "Deliverable: %{name} was successfully deleted."
   field_budget: Budget
   field_markup: Markup
   field_paid: Paid
   field_spent: Spent
   field_profit: Profit
-  text_error_message_orphaned_time: "There is {{amount}} worth of time clocked to issues that are not assigned to any deliverables."
+  text_error_message_orphaned_time: "There is %{amount} worth of time clocked to issues that are not assigned to any deliverables."
   text_error_message_update_orphaned_time: "Please update the orphaned issues."
   field_estimated: Estimated
   text_deliverable_locked_warning: "This deliverable is locked and cannot be saved without changing it's status to Open."
