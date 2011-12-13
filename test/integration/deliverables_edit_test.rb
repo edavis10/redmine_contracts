@@ -118,6 +118,34 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_equal 1000.0, @overhead_budget.budget
   end
 
+  should "not create new budget items for the deliverable if the activity, hours, and dollars are not all blank" do
+    TimeEntryActivity.destroy_all
+    visit_contract_page(@contract)
+    click_link_within "#deliverable_details_#{@hourly_deliverable.id}", 'Edit'
+    assert_response :success
+    assert_template 'deliverables/edit'
+
+    within("#deliverable-labor") do
+      fill_in "hrs", :with => ''
+      fill_in "$", :with => '$0'
+    end
+
+    within("#deliverable-overhead") do
+      fill_in "hrs", :with => '0'
+      fill_in "$", :with => ''
+    end
+
+    click_button "Save"
+
+    assert_response :success
+    assert_template 'contracts/show'
+
+    @hourly_deliverable.reload
+    assert_equal 0, @hourly_deliverable.labor_budgets.count
+    assert_equal 0, @hourly_deliverable.overhead_budgets.count
+    assert_equal 0, @hourly_deliverable.fixed_budgets.count
+  end
+
   should "show allow editing the Deliverable Finances section for each Retainer period" do
     @retainer_deliverable = RetainerDeliverable.spawn(:contract => @contract, :manager => @manager, :title => "Retainer")
     @retainer_deliverable.labor_budgets << @labor_budget = LaborBudget.spawn(:deliverable => @retainer_deliverable, :budget => 1000, :hours => 10)
@@ -476,8 +504,8 @@ class DeliverablesEditTest < ActionController::IntegrationTest
     assert_equal [100, nil, nil], @retainer_deliverable.overhead_budgets.collect(&:hours)
     assert_equal [100, nil, nil], @retainer_deliverable.overhead_budgets.collect(&:budget)
 
-    assert_equal 3, @retainer_deliverable.fixed_budgets.count
-    assert_equal [600, nil, nil], @retainer_deliverable.fixed_budgets.collect(&:budget)
+    assert_equal 1, @retainer_deliverable.fixed_budgets.count
+    assert_equal [600], @retainer_deliverable.fixed_budgets.collect(&:budget)
   end
 
   context "locked deliverable" do

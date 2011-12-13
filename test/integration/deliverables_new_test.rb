@@ -278,4 +278,50 @@ class DeliverablesNewTest < ActionController::IntegrationTest
     
   end
 
+  should "not create new budget items for the deliverable if the activity, hours, and dollars are all blank" do
+    @manager = User.generate!
+    @role = Role.generate!
+    User.add_to_project(@manager, @project, @role)
+    TimeEntryActivity.destroy_all
+    
+    visit_contract_page(@contract)
+    click_link 'Add New'
+    assert_response :success
+
+    within("#deliverable-details") do
+      fill_in "Title", :with => 'A New Deliverable with blanks'
+      select "Hourly", :from => "Type"
+      select @manager.name, :from => "Manager"
+    end
+
+    within("#deliverable-labor") do
+      # no activity selected
+      fill_in "hrs", :with => ''
+      fill_in "$", :with => '$0'
+    end
+
+    within("#deliverable-overhead") do
+      # no activity selected
+      fill_in "hrs", :with => '0'
+      fill_in "$", :with => ''
+    end
+
+    within("#deliverable-fixed") do
+      fill_in "title", :with => ''
+      fill_in "budget", :with => '$0'
+      fill_in "markup", :with => ''
+    end
+    
+    click_button "Save"
+
+    assert_response :success
+    assert_template 'contracts/show'
+
+    @deliverable = Deliverable.last
+    assert_equal "A New Deliverable with blanks", @deliverable.title
+    assert_equal 0, @deliverable.labor_budgets.count
+    assert_equal 0, @deliverable.overhead_budgets.count
+    assert_equal 0, @deliverable.fixed_budgets.count
+  end
+  
 end
