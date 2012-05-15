@@ -1,4 +1,4 @@
-<% if project.module_enabled?(:contracts) && User.current.allowed_to?(:assign_deliverable_to_issue, project) %>
+<% if project && project.module_enabled?(:contracts) && User.current.allowed_to?(:assign_deliverable_to_issue, project) %>
   <p>
     <%= label_tag(:deliverable_id, l(:field_deliverable)) %>
     <%= select_tag('deliverable_id',
