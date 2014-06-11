@@ -18,10 +18,10 @@ module RedmineContracts
           context[:detail].reload
           
           d = Deliverable.find_by_id(context[:detail].value)
-          context[:detail].value = d.title if d.present? && d.title.present?
+          context[:detail].value = d.title if d.try(:title)
 
           d = Deliverable.find_by_id(context[:detail].old_value)
-          context[:detail].old_value = d.title if d.present? && d.title.present?
+          context[:detail].old_value = d.title if d.try(:title)
         end
         ''
       end
